@@ -1,0 +1,18 @@
+{
+  "id": "extraspecialcore:demo_settings",
+  "title": "Demo Settings",
+  "layout": "CLASSIC",
+  "themePreset": "CLEAN",
+  "backdrop": "GRID",
+  "components": [
+    { "asset": "esc:header", "slot": "title", "props": { "title": "{bind:title}", "subtitle": "Declarative ESC profile" } },
+    { "asset": "esc:doc_panel", "slot": "body", "props": { "text": "{bind:doc}" } },
+    { "asset": "esc:status", "slot": "body", "props": { "text": "{bind:status}" } },
+    { "asset": "esc:button_bar", "slot": "footer", "props": { "buttons": "apply,reset,back" } }
+  ],
+  "actions": {
+    "apply": "action:apply",
+    "reset": "action:reset",
+    "back": "action:back"
+  }
+}

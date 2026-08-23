@@ -1,0 +1,24 @@
+{
+  "required": true,
+  "package": "dev.corgitaco.dataanchor.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "client": [
+    "client.LevelMixin"
+  ],
+  "mixins": [
+    "BlockEntityMixin",
+    "ChunkAccessMixin",
+    "ChunkMapMixin",
+    "ChunkSerializerMixin",
+    "EntityMixin",
+    "LevelMixin",
+    "ServerEntityMixin",
+    "ServerLevelMixin",
+    "PlayerListMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "Data_Anchor-common-1.20.1-common-refmap.json"
+}

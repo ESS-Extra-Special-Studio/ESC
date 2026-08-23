@@ -1,0 +1,82 @@
+{
+  "ui.focus": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.focus",
+    "sounds": [{ "name": "extraspecialcore:ui/focus", "stream": false }]
+  },
+  "ui.focus_alt": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.focus_alt",
+    "sounds": [{ "name": "extraspecialcore:ui/focus_alt", "stream": false }]
+  },
+  "ui.select": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.select",
+    "sounds": [{ "name": "extraspecialcore:ui/select", "stream": false }]
+  },
+  "ui.confirm": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.confirm",
+    "sounds": [{ "name": "extraspecialcore:ui/confirm", "stream": false }]
+  },
+  "ui.back": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.back",
+    "sounds": [{ "name": "extraspecialcore:ui/back", "stream": false }]
+  },
+  "ui.close": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.close",
+    "sounds": [{ "name": "extraspecialcore:ui/close", "stream": false }]
+  },
+  "ui.carousel_left": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.carousel_left",
+    "sounds": [{ "name": "extraspecialcore:ui/carousel_left", "stream": false }]
+  },
+  "ui.carousel_right": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.carousel_right",
+    "sounds": [{ "name": "extraspecialcore:ui/carousel_right", "stream": false }]
+  },
+  "ui.move": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.move",
+    "sounds": [{ "name": "extraspecialcore:ui/move", "stream": false }]
+  },
+  "ui.expand": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.expand",
+    "sounds": [{ "name": "extraspecialcore:ui/expand", "stream": false }]
+  },
+  "ui.collapse": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.collapse",
+    "sounds": [{ "name": "extraspecialcore:ui/collapse", "stream": false }]
+  },
+  "ui.layout_switch": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.layout_switch",
+    "sounds": [{ "name": "extraspecialcore:ui/layout_switch", "stream": false }]
+  },
+  "ui.layout_confirm": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.layout_confirm",
+    "sounds": [{ "name": "extraspecialcore:ui/layout_confirm", "stream": false }]
+  },
+  "ui.error": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.error",
+    "sounds": [{ "name": "extraspecialcore:ui/error", "stream": false }]
+  },
+  "ui.unavailable": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.unavailable",
+    "sounds": [{ "name": "extraspecialcore:ui/unavailable", "stream": false }]
+  },
+  "ui.notification": {
+    "category": "ui",
+    "subtitle": "esc.subtitle.ui.notification",
+    "sounds": [{ "name": "extraspecialcore:ui/notification", "stream": false }]
+  }
+}

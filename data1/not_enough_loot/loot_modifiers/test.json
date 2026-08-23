@@ -1,0 +1,10 @@
+{
+  "type": "not_enough_loot:berezka_loot_modificator",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "berezka_api:chests/simple_chest"
+    }
+  ],
+  "lootTable": "minecraft:chests/bastion_treasure"
+}
