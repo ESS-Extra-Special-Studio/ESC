@@ -1,0 +1,26 @@
+ExtraSpecialCore bundled UI fonts — keep this file when redistributing the mod.
+
+extraspecialcore:fira_code
+  Fira Code (Nerd Font build used in-repo). SIL Open Font License 1.1.
+  upstream: https://github.com/ryanoasis/nerd-fonts
+
+extraspecialcore:monocraft
+  Monocraft by Idrees Hassan. SIL Open Font License 1.1.
+  upstream: https://github.com/IdreesInc/Monocraft
+
+extraspecialcore:gnu_unifont
+  GNU Unifont. GNU GPLv2+ with the GNU GPLv2 font exception (see COPYING in upstream tarball).
+  Large coverage font; increases JAR size noticeably.
+  upstream: https://www.gnu.org/software/unifont/
+
+extraspecialcore:pixel_block
+  Bundled glyphs are Tiny5 (Google Fonts / OFL), not HipFonts “Block Craft”.
+  HipFonts Block Craft is commonly offered under a demo/personal licence on portals;
+  we do NOT redistribute it here. Use Tiny5 for a distributable pixel/blocks look, or ship
+  your own licensed TTF via a resource pack / mod overlay if you buy Block Craft rights.
+
+extraspecialcore:press_start_2p
+  Press Start 2P by CodeMan38. SIL Open Font License 1.1 (via Google Fonts source tree).
+
+extraspecialcore:vt323
+  VT323 by Peter Hull. SIL Open Font License 1.1 (via Google Fonts source tree).
