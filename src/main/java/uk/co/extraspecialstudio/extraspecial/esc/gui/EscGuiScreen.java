@@ -63,7 +63,8 @@ public final class EscGuiScreen extends EscScreen {
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        renderBackground(g, mouseX, mouseY, partialTick);
+        // EscBackground is the full-screen backdrop; do not dim here — Screen.render
+        // would re-apply renderBackground on top of hub chrome via super.render.
         EscBackground.render(g, new EscRect(0, 0, width, height), style.theme());
         EscPanel.renderPanel(g, contentBounds, style);
         EscAssetRenderContext ctx = new EscAssetRenderContext(

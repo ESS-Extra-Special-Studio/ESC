@@ -5,6 +5,12 @@
 
 ---
 
+## Unreleased
+
+Fixed:
+EscScreen keeps `renderBackground` empty (no blur, no dim). World dimming uses `renderWorldDim()` once before chrome so `super.render` cannot darken ESH, Pip-Boy, or other already-drawn panels.
+Call Airdrop / Internet / Panel Settings call `renderWorldDim` for Forge-parity backdrop without double-dim.
+
 ## Version 2.0.1
 
 Update by: Extra_Special_K

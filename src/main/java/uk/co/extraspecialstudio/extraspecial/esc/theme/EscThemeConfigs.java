@@ -62,45 +62,110 @@ public final class EscThemeConfigs {
 
     static {
         ModConfigSpec.Builder common = new ModConfigSpec.Builder();
-        common.comment("ESC theme — defaults and modpack/server override.",
-                "Hierarchy: ESC default → pack/server → application → player (if unlocked).")
+
+        // ========== COMMON: PACK / SERVER THEME ==========
+        common.comment(
+                "============================================================",
+                "PACK / SERVER THEME (COMMON)",
+                "Synced to joining clients. Hub UI never writes these fields.",
+                "Hierarchy: ESC default → pack/server → application → player.",
+                "============================================================"
+            )
             .push("theme");
         DEFAULT_PRESET = common
-            .comment("VANILLA, FALLOUT, MAGIC, APOCALYPSE, CYBER, CLEAN, INDUSTRIAL, HIGH_CONTRAST, MATRIX, OCEAN, CLOUDS, GROWTH, EMBER",
-                "Fresh install / ESH first-run uses GROWTH (ESH green chrome over the forest backdrop).")
+            .comment(
+                "----- START HERE: DEFAULT LOOK -----",
+                "Preset when no pack override is active.",
+                "VANILLA, FALLOUT, MAGIC, APOCALYPSE, CYBER, CLEAN, INDUSTRIAL,",
+                "HIGH_CONTRAST, MATRIX, OCEAN, CLOUDS, GROWTH, EMBER.",
+                "Fresh install / ESH first-run uses GROWTH. Default: GROWTH."
+            )
             .define("defaultPreset", "GROWTH");
-        PACK_OVERRIDE = common.define("packOverride", false);
-        LOCK_PLAYERS = common.define("lockPlayers", true);
-        PACK_PRESET = common.define("packPreset", "FALLOUT");
+        PACK_OVERRIDE = common
+            .comment(
+                "----- PACK OVERRIDE -----",
+                "true: use packPreset / colours / frame below instead of defaultPreset.",
+                "Default: false."
+            )
+            .define("packOverride", false);
+        LOCK_PLAYERS = common
+            .comment(
+                "When pack override is on: true blocks player Border/Text/Accent.",
+                "Default: true."
+            )
+            .define("lockPlayers", true);
+        PACK_PRESET = common
+            .comment("Preset name used while packOverride is true. Default: FALLOUT.")
+            .define("packPreset", "FALLOUT");
         PACK_EFFECT = common
-            .comment("Optional effect package: NONE, TERMINAL, FALLOUT, CLEAN, HUD, CINEMATIC")
+            .comment(
+                "Optional effect package: NONE, TERMINAL, FALLOUT, CLEAN, HUD, CINEMATIC.",
+                "Empty = none. Default: empty."
+            )
             .define("effectPreset", "");
         PACK_FRAME = common
-            .comment("Optional frame override: SQUARE, ROUNDED_SOFT, CHAMFER, CUT_CORNER, BRACKET")
+            .comment(
+                "Optional frame override: SQUARE, ROUNDED_SOFT, CHAMFER, CUT_CORNER, BRACKET.",
+                "Empty = preset default. Default: empty."
+            )
             .define("frameStyle", "");
-        PACK_BORDER = common.define("border", "");
-        PACK_TEXT = common.define("text", "");
-        PACK_BODY = common.define("body", "");
-        PACK_ACCENT = common.define("accent", "");
-        PACK_PANEL = common.define("panel", "");
-        PACK_OPACITY = common.defineInRange("panelOpacity", -1.0, -1.0, 1.0);
+        PACK_BORDER = common
+            .comment("Optional border colour token or #hex. Empty = preset. Default: empty.")
+            .define("border", "");
+        PACK_TEXT = common
+            .comment("Optional title text colour token or #hex. Empty = preset. Default: empty.")
+            .define("text", "");
+        PACK_BODY = common
+            .comment("Optional body text colour token or #hex. Empty = preset. Default: empty.")
+            .define("body", "");
+        PACK_ACCENT = common
+            .comment("Optional accent colour token or #hex. Empty = preset. Default: empty.")
+            .define("accent", "");
+        PACK_PANEL = common
+            .comment("Optional panel fill #hex. Empty = preset. Default: empty.")
+            .define("panel", "");
+        PACK_OPACITY = common
+            .comment(
+                "Panel opacity override. -1 = use preset. Range 0.0–1.0 when set.",
+                "Default: -1.0."
+            )
+            .defineInRange("panelOpacity", -1.0, -1.0, 1.0);
         common.pop();
         COMMON_SPEC = common.build();
 
         ModConfigSpec.Builder client = new ModConfigSpec.Builder();
-        client.push("player");
-        PLAYER_CUSTOM = client.define("customEnabled", false);
+
+        // ========== CLIENT: PLAYER COLOURS ==========
+        client.comment(
+                "============================================================",
+                "PLAYER COLOURS (CLIENT ONLY)",
+                "This machine only — never uploaded to the server.",
+                "Ignored when pack override + lockPlayers is on.",
+                "============================================================"
+            )
+            .push("player");
+        PLAYER_CUSTOM = client
+            .comment(
+                "----- START HERE: PERSONAL TINT -----",
+                "true: apply Border/Text/Accent prefs below. Default: false."
+            )
+            .define("customEnabled", false);
         PLAYER_APPLY_GLOBAL = client
             .comment(
-                "PERSONAL CLIENT PREF — never synced to the server.",
-                "When false (default / Apply to: ESH), Border/Text/Accent only tint Extra Special Hub.",
-                "When true (Apply to: ALL), those colours also tint every ESC window (Dead Air, Pantheon, etc.).",
-                "A pack/server theme with lockPlayers=true ignores both."
+                "When false (Apply to: ESH), colours only tint Extra Special Hub.",
+                "When true (Apply to: ALL), also tint every ESC window (Dead Air, Pantheon, …).",
+                "Default: false."
             )
             .define("applyPlayerToAllEsc", false);
-        PLAYER_BORDER = client.defineInRange("borderSwatch", 0, 0, 64);
-        PLAYER_TEXT = client.defineInRange("textSwatch", 0, 0, 64);
-        PLAYER_ACCENT = client.defineInRange("accentSwatch", 0, 0, 64);
+        PLAYER_BORDER = client
+            .comment("Border swatch index (0–64). Default: 0.")
+            .defineInRange("borderSwatch", 0, 0, 64);
+        PLAYER_TEXT = client
+            .comment("Text swatch index (0–64). Default: 0.")
+            .defineInRange("textSwatch", 0, 0, 64);
+        PLAYER_ACCENT = client
+            .comment("Accent swatch index (0–64). Default: 0.")
+            .defineInRange("accentSwatch", 0, 0, 64);
         PLAYER_BORDER_COLOR = client
             .comment("Custom border colour (#RRGGBB / #AARRGGBB). Blank = use borderSwatch.")
             .define("borderColor", "");
@@ -111,36 +176,54 @@ public final class EscThemeConfigs {
             .comment("Custom accent colour (#RRGGBB / #AARRGGBB). Blank = use accentSwatch.")
             .define("accentColor", "");
         RECENT_COLORS = client
-            .comment("Comma-separated recent colours from the ESC colour picker.")
+            .comment("Comma-separated recent colours from the ESC colour picker. Default: empty.")
             .define("recentColors", "");
         SAVED_COLORS = client
-            .comment("Comma-separated saved custom colours from the ESC colour picker.")
+            .comment("Comma-separated saved custom colours from the ESC colour picker. Default: empty.")
             .define("savedColors", "");
         client.pop();
-        client.push("visual");
+
+        // ========== CLIENT: VISUAL / MOTION ==========
+        client.comment(
+                "============================================================",
+                "VISUAL QUALITY AND MOTION (CLIENT ONLY)",
+                "Q / Motion / backdrop / UI scale and sounds on this machine.",
+                "============================================================"
+            )
+            .push("visual");
         QUALITY_MODE = client
             .comment(
+                "----- START HERE: QUALITY -----",
                 "OFF, LOW, MEDIUM, HIGH — visual budget for ESC effects.",
                 "OFF: none. LOW: light scale. MEDIUM: shadows/glow/CRT/border sweeps.",
                 "HIGH: also enables the animated backdrop (needs Motion ON).",
-                "Fresh install is HIGH so the default Growth backdrop actually draws."
+                "Default: HIGH (so Growth backdrop draws on fresh install)."
             )
             .define("quality", "HIGH");
         REDUCED_MOTION = client
-            .comment("When true (Motion OFF in hub), freezes backdrop/border animation; backdrop stays visible at Q=HIGH.")
+            .comment(
+                "true (Motion OFF in hub): freeze backdrop/border animation;",
+                "backdrop still visible at Q=HIGH. Default: false."
+            )
             .define("reducedMotion", false);
         BACKDROP_STYLE = client
-            .comment("Animated backdrop when Q=HIGH and Motion ON: GRID, SCAN, RAIN, PULSE, SPARKS, MATRIX, OCEAN, CLOUDS, AURORA, EMBER, STARFIELD, LIGHTNING, GROWTH")
+            .comment(
+                "Animated backdrop when Q=HIGH and Motion ON:",
+                "GRID, SCAN, RAIN, PULSE, SPARKS, MATRIX, OCEAN, CLOUDS,",
+                "AURORA, EMBER, STARFIELD, LIGHTNING, GROWTH. Default: GROWTH."
+            )
             .define("backdropStyle", "GROWTH");
-        UI_SCALE = client.defineInRange("uiScale", 1.0, 0.75, 1.5);
+        UI_SCALE = client
+            .comment("ESC UI scale multiplier. Default: 1.0.")
+            .defineInRange("uiScale", 1.0, 0.75, 1.5);
         UI_SOUNDS = client
-            .comment("Play ESC UI sound cues (hub nav, buttons, expand/collapse, etc.)")
+            .comment("Play ESC UI sound cues (hub nav, buttons, expand/collapse). Default: true.")
             .define("uiSounds", true);
         UI_SOUND_VOLUME = client
-            .comment("Master multiplier for ESC UI sounds (0–1)")
+            .comment("Master multiplier for ESC UI sounds (0–1). Default: 0.85.")
             .defineInRange("uiSoundVolume", 0.85, 0.0, 1.0);
         LAYOUT_DEBUG = client
-            .comment("Draw EscScreen content/footer bounds (dev aid). Off by default.")
+            .comment("Draw EscScreen content/footer bounds (dev aid). Default: false.")
             .define("layoutDebug", false);
         client.pop();
         CLIENT_SPEC = client.build();

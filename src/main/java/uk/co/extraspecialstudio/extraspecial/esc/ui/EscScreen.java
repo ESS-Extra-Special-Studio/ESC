@@ -57,9 +57,13 @@ public abstract class EscScreen extends Screen {
     }
 
     /**
-     * 1.21 {@link Screen#renderBackground} applies pause-menu blur. Subclasses draw chrome
-     * then call {@code super.render}, which would blur that chrome while widgets stay sharp.
-     * ESC screens paint their own backdrop; leave the world unblurred underneath.
+     * 1.21 {@link Screen#renderBackground} applies pause-menu blur + tiled menu chrome.
+     * Leave it empty: blur softens chrome drawn before {@code super.render}, and any dim
+     * painted here is applied <em>again</em> at the start of {@code super.render} — which
+     * darkens ESH / Pip-Boy / already-drawn panels.
+     * <p>
+     * Screens that need Forge-style world dimming should call {@link #renderWorldDim}
+     * once <em>before</em> painting EscPanel chrome (see Call Airdrop).
      */
     @Override
     public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
@@ -67,6 +71,16 @@ public abstract class EscScreen extends Screen {
 
     @Override
     protected void renderBlurredBackground(float partialTick) {
+    }
+
+    /**
+     * Classic Forge {@link #renderTransparentBackground} dim for in-world UIs.
+     * Call once before EscPanel / custom chrome — never from {@link #renderBackground}.
+     */
+    protected void renderWorldDim(GuiGraphics graphics) {
+        if (this.minecraft != null && this.minecraft.level != null) {
+            this.renderTransparentBackground(graphics);
+        }
     }
 
     /**
