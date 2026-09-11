@@ -4,16 +4,39 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
-import uk.co.extraspecialstudio.extraspecial.esc.config.EscConfig;
 
+/**
+ * Common config for Extra Special Core ({@code config/extraspecialcore-common.toml}).
+ * <p>
+ * Section banners and push/pop match the RadioTowers / Dead Letters style.
+ * Theme / UI prefs live in {@code EscThemeConfigs}.
+ */
 @Mod.EventBusSubscriber(modid = Extraspecialcore.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Config {
 
-    private static final ForgeConfigSpec.Builder BUILDER = EscConfig.begin("ExtraSpecialCore library settings.");
+    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-    private static final ForgeConfigSpec.BooleanValue DEBUG_LOGGING = BUILDER
-        .comment("When true, ESC may log extra diagnostics for troubleshooting.")
-        .define("debugLogging", false);
+    private static final ForgeConfigSpec.BooleanValue DEBUG_LOGGING;
+
+    static {
+        // ========== LIBRARY ==========
+        BUILDER.comment(
+                "============================================================",
+                "EXTRA SPECIAL CORE",
+                "Library diagnostics only. Theme / colour / motion settings",
+                "are in extraspecialcore-theme-common.toml and -theme-client.toml.",
+                "============================================================"
+        ).push("general");
+
+        DEBUG_LOGGING = BUILDER
+                .comment(
+                        "----- START HERE -----",
+                        "When true, ESC may log extra diagnostics for troubleshooting.",
+                        "Default: false."
+                )
+                .define("debugLogging", false);
+        BUILDER.pop();
+    }
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
