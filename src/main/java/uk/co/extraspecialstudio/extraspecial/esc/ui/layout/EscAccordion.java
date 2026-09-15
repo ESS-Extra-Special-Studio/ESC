@@ -106,12 +106,14 @@ public final class EscAccordion {
                         if (treeNav) {
                             drawTreeBranch(g, area.x() + 10, y, row, style, li, leaves.size());
                         } else if (leaf.icon() != null) {
-                            EscImage.drawAuto(g, leaf.icon(), area.x() + 12, y, 14, 14, 0xFFFFFFFF, 1f);
+                            int tint = leaf.enabled() ? 0xFFFFFFFF : 0x66FFFFFF;
+                            EscImage.drawAuto(g, leaf.icon(), area.x() + 12, y, 14, 14, tint, leaf.enabled() ? 1f : 0.45f);
                             leafTextX = area.x() + 30;
                         }
                         String label = rowLabelCache.getOrDefault(navIndex, leafRowLabel(leaf, leafFocus, treeNav));
-                        EscTypography.draw(g, font, label, leafTextX, y, style, EscTypeRole.BODY,
-                            area.width() - (leafTextX - area.x()) - 8, 1f);
+                        EscTypeRole role = leaf.enabled() ? EscTypeRole.BODY : EscTypeRole.META;
+                        EscTypography.draw(g, font, label, leafTextX, y, style, role,
+                            area.width() - (leafTextX - area.x()) - 8, leaf.enabled() ? 1f : 0.55f);
                         y += row;
                         navIndex++;
                     }
@@ -196,7 +198,12 @@ public final class EscAccordion {
         NavItem item = nav.get(cur);
         if (item instanceof NavItem.Group g) {
             if (g.group().singleton()) {
-                ctx.openLeaf(g.group().leaves().get(0));
+                EscHubLeaf only = g.group().leaves().get(0);
+                if (!only.enabled()) {
+                    ctx.openLeaf(only);
+                    return true;
+                }
+                ctx.openLeaf(only);
                 return true;
             }
             ctx.toggleGroup(g.group().id());
@@ -291,12 +298,13 @@ public final class EscAccordion {
     }
 
     private static String leafRowLabel(EscHubLeaf leaf, boolean focused, boolean treeNav) {
+        String mark = leaf.enabled() ? "" : " [install]";
         String sub = leaf.subtitle().isBlank() ? "" : "  — " + leaf.subtitle();
         if (treeNav) {
-            return leaf.title() + sub;
+            return leaf.title() + mark + sub;
         }
         String prefix = focused ? "> " : "  ";
-        return prefix + leaf.title() + sub;
+        return prefix + leaf.title() + mark + sub;
     }
 
     public static boolean mouseScrolled(EscHubLayoutContext ctx, EscRect area, String sectionId, double mx, double my, double delta) {
