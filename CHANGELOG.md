@@ -1,4 +1,10 @@
-﻿# ExtraSpecialCore — Changelog
+﻿ExtraSpecialCore 2.0.3
+Added:
+Hub leaf recommended-stub styling so grey badges can mark missing optional tools without looking installed.
+Changed:
+Accordion hub rows respect recommended leaf state for muted presentation.
+
+# ExtraSpecialCore — Changelog
 
 ## Version 2.0.2
 
@@ -116,5 +122,6 @@ Changed:
 
 - Initial shared UI layer: `EscUiStyle`, `EscPanel`, `EscButtons`, `EscSimpleScrollList`, bundled fonts (`EscFonts`), and text helpers used across Extra Special (ES) mods.
 - Pantheon API, Not Another Guide Book, RadioOS, Dead Air, Dead Letters, Calm The Leaks, and others integrated for fonts and buttons.
+
 
 
