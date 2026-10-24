@@ -3,14 +3,12 @@ package uk.co.extraspecialstudio.extraspecial.esc.net;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscFrameStyle;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscTheme;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscThemeConfigs;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscThemeManager;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscThemeValidator;
-
-import java.util.function.Supplier;
 
 /**
  * Server → client pack theme (protocol 2: colours + presentation tokens).
@@ -88,8 +86,7 @@ public final class EscThemeSyncPacket {
         return new EscThemeSyncPacket(override, lock, EscThemeValidator.clamp(theme));
     }
 
-    public static void handle(EscThemeSyncPacket msg, Supplier<NetworkEvent.Context> ctxSupplier) {
-        NetworkEvent.Context ctx = ctxSupplier.get();
+    public static void handle(EscThemeSyncPacket msg, CustomPayloadEvent.Context ctx) {
         ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             if (!msg.override) {
                 EscThemeManager.clearServerPackTheme();

@@ -2,19 +2,20 @@ package uk.co.extraspecialstudio.extraspecial.esc.net;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.Channel;
+import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.network.SimpleChannel;
 import uk.co.extraspecialstudio.extraspecial.Extraspecialcore;
 
 public final class EscNet {
-    private static final String PROTOCOL = "2";
-    private static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
+    private static final int PROTOCOL = 2;
+    private static final SimpleChannel CHANNEL = ChannelBuilder
         .named(new ResourceLocation(Extraspecialcore.MODID, "theme"))
-        .networkProtocolVersion(() -> PROTOCOL)
-        .clientAcceptedVersions(v -> PROTOCOL.equals(v) || "1".equals(v))
-        .serverAcceptedVersions(v -> PROTOCOL.equals(v) || "1".equals(v))
+        .networkProtocolVersion(PROTOCOL)
+        .clientAcceptedVersions(EscNet::acceptProtocol)
+        .serverAcceptedVersions(EscNet::acceptProtocol)
         .simpleChannel();
 
     private static int nextId;
@@ -31,6 +32,10 @@ public final class EscNet {
     }
 
     public static void sendThemeTo(ServerPlayer player) {
-        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), EscThemeSyncPacket.fromCommonConfig());
+        CHANNEL.send(EscThemeSyncPacket.fromCommonConfig(), PacketDistributor.PLAYER.with(player));
+    }
+
+    private static boolean acceptProtocol(Channel.VersionTest.Status status, int version) {
+        return status == Channel.VersionTest.Status.PRESENT && (version == PROTOCOL || version == 1);
     }
 }

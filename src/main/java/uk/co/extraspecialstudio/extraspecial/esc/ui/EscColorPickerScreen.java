@@ -361,7 +361,7 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        renderBackground(g);
+        renderBackground(g, mouseX, mouseY, partialTick);
         EscRect content = contentRect();
         EscBackground.render(g, content, style.theme());
         EscTypography.drawCentered(g, font, heading.toUpperCase(Locale.ROOT),

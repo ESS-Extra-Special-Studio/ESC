@@ -63,7 +63,7 @@ public final class EscGuiScreen extends EscScreen {
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        renderBackground(g);
+        renderBackground(g, mouseX, mouseY, partialTick);
         EscBackground.render(g, new EscRect(0, 0, width, height), style.theme());
         EscPanel.renderPanel(g, contentBounds, style);
         EscAssetRenderContext ctx = new EscAssetRenderContext(
