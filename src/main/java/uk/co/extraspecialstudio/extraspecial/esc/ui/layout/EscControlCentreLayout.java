@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscBackdropStyle;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscThemeConfigs;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscBackground;
@@ -60,7 +60,7 @@ public final class EscControlCentreLayout implements EscHubLayout {
     }
 
     @Override
-    public void render(GuiGraphics g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphicsExtractor g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick) {
         if (!ctx.hostDrawsChrome()) {
             EscBackground.render(g, bounds, ctx.style().theme());
         }
@@ -103,7 +103,7 @@ public final class EscControlCentreLayout implements EscHubLayout {
         }
     }
 
-    private void renderRail(GuiGraphics g, EscHubLayoutContext ctx, EscRect listArea, List<EscHubSection> sections, RailMode mode) {
+    private void renderRail(GuiGraphicsExtractor g, EscHubLayoutContext ctx, EscRect listArea, List<EscHubSection> sections, RailMode mode) {
         int rowH = Math.min(ROW_H, Math.max(22, listArea.height() / Math.max(1, sections.size())));
         for (int i = 0; i < sections.size(); i++) {
             EscHubSection s = sections.get(i);
@@ -130,20 +130,20 @@ public final class EscControlCentreLayout implements EscHubLayout {
             }
             if (mode == RailMode.FULL) {
                 String title = EscTypography.truncate(ctx.font(), s.title(), Math.max(8, row.right() - textX - 24));
-                g.drawString(ctx.font(), title, textX, row.y() + (row.height() - ctx.font().lineHeight) / 2,
+                g.text(ctx.font(), title, textX, row.y() + (row.height() - ctx.font().lineHeight) / 2,
                     sel ? ctx.style().textColorTitle() : ctx.style().textColorBody(), false);
                 if (s.badgeCount() > 0) {
                     String badge = String.valueOf(s.badgeCount());
                     int bw = ctx.font().width(badge) + 8;
                     EscRect chip = new EscRect(row.right() - bw - 4, row.y() + 4, bw, row.height() - 8);
                     EscPanel.border(g, chip, ctx.style().accentColor() | 0xFF000000, 1);
-                    g.drawString(ctx.font(), badge, chip.x() + 4, chip.y() + 2, ctx.style().accentColor() | 0xFF000000, false);
+                    g.text(ctx.font(), badge, chip.x() + 4, chip.y() + 2, ctx.style().accentColor() | 0xFF000000, false);
                 }
             }
         }
     }
 
-    private void renderStrip(GuiGraphics g, EscHubLayoutContext ctx, EscRect strip, List<EscHubSection> sections) {
+    private void renderStrip(GuiGraphicsExtractor g, EscHubLayoutContext ctx, EscRect strip, List<EscHubSection> sections) {
         EscPanel.renderPanel(g, strip, ctx.style());
         EscStripSlots.Plan plan = EscStripSlots.plan(strip, sections.size(), 4, 4);
         for (int i = 0; i < sections.size(); i++) {
@@ -160,16 +160,16 @@ public final class EscControlCentreLayout implements EscHubLayout {
             }
             String label = sel ? "[" + s.title() + "]" : s.title();
             label = EscTypography.truncate(ctx.font(), label, Math.max(8, slot.right() - textX - 4));
-            g.drawString(ctx.font(), label, textX, slot.y() + 9,
+            g.text(ctx.font(), label, textX, slot.y() + 9,
                 sel ? ctx.style().textColorTitle() : ctx.style().textColorBody(), false);
         }
     }
 
-    private static void drawChip(GuiGraphics g, EscHubLayoutContext ctx, EscRect chip, String label) {
+    private static void drawChip(GuiGraphicsExtractor g, EscHubLayoutContext ctx, EscRect chip, String label) {
         EscPanel.fill(g, chip, ctx.style().panelFillColor());
         EscPanel.border(g, chip, ctx.style().panelBorderColor(), 1);
         String text = EscTypography.truncate(ctx.font(), label, Math.max(8, chip.width() - 8));
-        g.drawString(ctx.font(), text, chip.x() + 4, chip.y() + (chip.height() - ctx.font().lineHeight) / 2,
+        g.text(ctx.font(), text, chip.x() + 4, chip.y() + (chip.height() - ctx.font().lineHeight) / 2,
             ctx.style().textColorBody(), false);
     }
 

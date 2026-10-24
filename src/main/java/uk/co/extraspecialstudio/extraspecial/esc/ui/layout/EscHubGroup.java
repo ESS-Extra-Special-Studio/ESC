@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,7 +12,7 @@ import java.util.Objects;
  * group represents an author, studio, or curated family — otherwise the badge will
  * silently follow whichever leaf sorts first.
  */
-public record EscHubGroup(String id, String title, List<EscHubLeaf> leaves, ResourceLocation icon) {
+public record EscHubGroup(String id, String title, List<EscHubLeaf> leaves, Identifier icon) {
     public EscHubGroup(String id, String title, List<EscHubLeaf> leaves) {
         this(id, title, leaves, firstLeafIcon(leaves));
     }
@@ -31,7 +31,7 @@ public record EscHubGroup(String id, String title, List<EscHubLeaf> leaves, Reso
         return leaves.size() == 1;
     }
 
-    private static ResourceLocation firstLeafIcon(List<EscHubLeaf> leaves) {
+    private static Identifier firstLeafIcon(List<EscHubLeaf> leaves) {
         if (leaves == null) {
             return null;
         }

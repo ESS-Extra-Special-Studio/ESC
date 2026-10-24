@@ -26,7 +26,7 @@ public final class EscSound {
     }
 
     public static void play(EscUiCue cue) {
-        if (cue == null || !FMLEnvironment.dist.isClient()) {
+        if (cue == null || !FMLEnvironment.getDist().isClient()) {
             return;
         }
         int menu = EscUiCueMap.menuIndex(cue);
@@ -41,7 +41,7 @@ public final class EscSound {
     }
 
     public static void play(EscUiCue cue, float volumeMul, float pitchMul) {
-        if (cue == null || !FMLEnvironment.dist.isClient()) {
+        if (cue == null || !FMLEnvironment.getDist().isClient()) {
             return;
         }
         int menu = EscUiCueMap.menuIndex(cue);
@@ -55,14 +55,14 @@ public final class EscSound {
 
     /** Play Menu Sound 1–{@link EscSounds#MENU_BANK_SIZE} (audition / direct use). */
     public static void playMenu(int index) {
-        if (!FMLEnvironment.dist.isClient()) {
+        if (!FMLEnvironment.getDist().isClient()) {
             return;
         }
         playMenuInternal(index, 0.7f, 1f);
     }
 
     public static void playMenu(int index, float volume, float pitch) {
-        if (!FMLEnvironment.dist.isClient()) {
+        if (!FMLEnvironment.getDist().isClient()) {
             return;
         }
         playMenuInternal(index, volume, pitch);
@@ -70,7 +70,7 @@ public final class EscSound {
 
     /** Alternates focus cues when bound; otherwise silent. */
     public static void playFocus() {
-        if (!FMLEnvironment.dist.isClient()) {
+        if (!FMLEnvironment.getDist().isClient()) {
             return;
         }
         focusAltToggle++;

@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.gui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import uk.co.extraspecialstudio.extraspecial.esc.gui.asset.EscAssetRenderContext;
@@ -62,7 +62,7 @@ public final class EscGuiScreen extends EscScreen {
     }
 
     @Override
-    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
         // EscBackground is the full-screen backdrop; do not dim here — Screen.render
         // would re-apply renderBackground on top of hub chrome via super.render.
         EscBackground.render(g, new EscRect(0, 0, width, height), style.theme());
@@ -71,7 +71,7 @@ public final class EscGuiScreen extends EscScreen {
             g, font, contentBounds, style, bindings, this, actions, this::invokeAction
         );
         EscGuiRuntime.renderProfile(ctx, profile, contentBounds);
-        super.render(g, mouseX, mouseY, partialTick);
+        super.extractRenderState(g, mouseX, mouseY, partialTick);
         EscCrtLayer.render(g, contentBounds, style.theme());
     }
 

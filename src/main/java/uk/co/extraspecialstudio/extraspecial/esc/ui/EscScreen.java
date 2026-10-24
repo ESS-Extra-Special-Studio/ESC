@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -49,8 +49,8 @@ public abstract class EscScreen extends Screen {
     protected abstract void buildLayout();
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        super.render(graphics, mouseX, mouseY, partialTick);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         if (EscThemeConfigs.layoutDebugEnabled()) {
             renderLayoutDebug(graphics);
         }
@@ -66,20 +66,20 @@ public abstract class EscScreen extends Screen {
      * once <em>before</em> painting EscPanel chrome (see Call Airdrop).
      */
     @Override
-    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
     }
 
     @Override
-    protected void renderBlurredBackground(float partialTick) {
+    protected void extractBlurredBackground(GuiGraphicsExtractor graphics) {
     }
 
     /**
      * Classic Forge {@link #renderTransparentBackground} dim for in-world UIs.
      * Call once before EscPanel / custom chrome — never from {@link #renderBackground}.
      */
-    protected void renderWorldDim(GuiGraphics graphics) {
+    protected void renderWorldDim(GuiGraphicsExtractor graphics) {
         if (this.minecraft != null && this.minecraft.level != null) {
-            this.renderTransparentBackground(graphics);
+            this.extractTransparentBackground(graphics);
         }
     }
 
@@ -87,7 +87,7 @@ public abstract class EscScreen extends Screen {
      * Draws content + default footer outlines. Subclasses that override {@link #render}
      * without calling {@code super.render} should call this when debugging layout.
      */
-    protected void renderLayoutDebug(GuiGraphics g) {
+    protected void renderLayoutDebug(GuiGraphicsExtractor g) {
         EscRect content = contentRect();
         EscRect footer = EscPanel.footer(content, style);
         EscPanel.border(g, content, 0xFF00FF88, 1);

@@ -1,8 +1,9 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import uk.co.extraspecialstudio.extraspecial.esc.sound.EscSound;
 import uk.co.extraspecialstudio.extraspecial.esc.sound.EscUiCue;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscColor;
@@ -360,7 +361,7 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
     }
 
     @Override
-    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
         renderWorldDim(g);
         EscRect content = contentRect();
         EscBackground.render(g, content, style.theme());
@@ -380,10 +381,10 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
 
         EscPanel.renderPanel(g, footerBounds, style);
         EscCrtLayer.render(g, content, style.theme());
-        super.render(g, mouseX, mouseY, partialTick);
+        super.extractRenderState(g, mouseX, mouseY, partialTick);
     }
 
-    private void drawHueWheel(GuiGraphics g) {
+    private void drawHueWheel(GuiGraphicsExtractor g) {
         int cx = wheelArea.x() + wheelArea.width() / 2;
         int cy = wheelArea.y() + wheelArea.height() / 2;
         for (int a = 0; a < 360; a += 2) {
@@ -406,7 +407,7 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
         EscPanel.border(g, swatch, style.panelBorderColor(), 1);
     }
 
-    private void drawSvSquare(GuiGraphics g) {
+    private void drawSvSquare(GuiGraphicsExtractor g) {
         for (int y = 0; y < svSize; y += 2) {
             float vv = 1f - y / (float) Math.max(1, svSize - 1);
             for (int x = 0; x < svSize; x += 2) {
@@ -422,18 +423,18 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
         EscPanel.border(g, new EscRect(px - 2, py - 2, 4, 4), 0xFF000000, 1);
     }
 
-    private void drawPreview(GuiGraphics g) {
+    private void drawPreview(GuiGraphicsExtractor g) {
         EscPanel.fill(g, previewArea, workingArgb);
         EscPanel.border(g, previewArea, style.panelBorderColor(), 1);
         String label = "#" + EscColor.toHexRgb(workingArgb)
             + "  RGB(" + EscColor.red(workingArgb) + "," + EscColor.green(workingArgb) + "," + EscColor.blue(workingArgb) + ")";
         int textColor = val > 0.55f ? 0xFF101010 : 0xFFE8E8E8;
-        g.drawString(font, label, previewArea.x() + 6, previewArea.y() + (previewArea.height() - font.lineHeight) / 2, textColor, false);
+        g.text(font, label, previewArea.x() + 6, previewArea.y() + (previewArea.height() - font.lineHeight) / 2, textColor, false);
     }
 
-    private void drawChipRow(GuiGraphics g, EscRect area, List<Integer> colors, String title) {
+    private void drawChipRow(GuiGraphicsExtractor g, EscRect area, List<Integer> colors, String title) {
         if (area == null) return;
-        g.drawString(font, title, area.x(), area.y() - font.lineHeight - 2, style.textColorBody() | 0xFF000000, false);
+        g.text(font, title, area.x(), area.y() - font.lineHeight - 2, style.textColorBody() | 0xFF000000, false);
         int x = area.x();
         for (int i = 0; i < colors.size() && i < 10; i++) {
             EscRect chip = new EscRect(x, area.y(), CHIP, CHIP);
@@ -443,9 +444,9 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
         }
     }
 
-    private void drawPresetRow(GuiGraphics g) {
+    private void drawPresetRow(GuiGraphicsExtractor g) {
         if (presetArea == null) return;
-        g.drawString(font, "Presets (RMB on hub = cycle)", presetArea.x(),
+        g.text(font, "Presets (RMB on hub = cycle)", presetArea.x(),
             presetArea.y() - font.lineHeight - 2, style.textColorBody() | 0xFF000000, false);
         int x = presetArea.x();
         for (EscThemeSwatch sw : EscThemeSwatch.values()) {
@@ -463,7 +464,10 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubled) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
         if (button == 0) {
             if (hitWheel(mouseX, mouseY)) {
                 draggingWheel = true;
@@ -479,7 +483,7 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
             if (pickChip(mouseX, mouseY, savedArea, EscThemeConfigs.savedColors())) return true;
             if (pickPreset(mouseX, mouseY)) return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubled);
     }
 
     private boolean pickChip(double mx, double my, EscRect area, List<Integer> colors) {
@@ -521,7 +525,10 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
         if (button == 0) {
             if (draggingWheel) {
                 applyWheel(mouseX, mouseY);
@@ -532,14 +539,14 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
                 return true;
             }
         }
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingWheel = false;
         draggingSv = false;
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     private boolean hitWheel(double mx, double my) {

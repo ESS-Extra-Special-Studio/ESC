@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscQualityMode;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscTheme;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscVisualBudget;
@@ -13,7 +13,7 @@ public final class EscCrtLayer {
     private EscCrtLayer() {
     }
 
-    public static void render(GuiGraphics g, EscRect area, EscTheme theme) {
+    public static void render(GuiGraphicsExtractor g, EscRect area, EscTheme theme) {
         float intensity = EscVisualBudget.crt(theme);
         if (intensity <= 0.01f || area.width() <= 0) {
             return;

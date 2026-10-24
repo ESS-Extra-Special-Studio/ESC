@@ -1,8 +1,8 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -14,7 +14,7 @@ public final class EscWidgetText {
 
     /** Label layout matches vanilla scrolling buttons, without the shadow pass (sharper TTF). */
     public static void renderScrollingStringNoShadow(
-        GuiGraphics guiGraphics,
+        GuiGraphicsExtractor guiGraphics,
         Font font,
         Component message,
         int leftX,
@@ -34,13 +34,13 @@ public final class EscWidgetText {
             double phase = Math.sin((Math.PI / 2) * Math.cos((Math.PI * 2) * t / period)) / 2.0 + 0.5;
             double scroll = Mth.lerp(phase, 0.0, (double) overflow);
             guiGraphics.enableScissor(leftX, topY, rightX, bottomY);
-            guiGraphics.drawString(font, message, leftX - (int) scroll, lineY, color, false);
+            guiGraphics.text(font, message, leftX - (int) scroll, lineY, color, false);
             guiGraphics.disableScissor();
         } else {
             int clampedCenterX = Mth.clamp(centerX, leftX + textWidth / 2, rightX - textWidth / 2);
             FormattedCharSequence visual = message.getVisualOrderText();
             int w = font.width(visual);
-            guiGraphics.drawString(font, visual, clampedCenterX - w / 2, lineY, color, false);
+            guiGraphics.text(font, visual, clampedCenterX - w / 2, lineY, color, false);
         }
     }
 }
