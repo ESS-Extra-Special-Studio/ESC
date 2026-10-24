@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -49,10 +49,10 @@ public abstract class EscScreen extends Screen {
     protected abstract void buildLayout();
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        super.render(graphics, mouseX, mouseY, partialTick);
+    public void render(PoseStack pose, int mouseX, int mouseY, float partialTick) {
+        super.render(pose, mouseX, mouseY, partialTick);
         if (EscThemeConfigs.layoutDebugEnabled()) {
-            renderLayoutDebug(graphics);
+            renderLayoutDebug(new EscGraphics(pose));
         }
     }
 
@@ -60,7 +60,7 @@ public abstract class EscScreen extends Screen {
      * Draws content + default footer outlines. Subclasses that override {@link #render}
      * without calling {@code super.render} should call this when debugging layout.
      */
-    protected void renderLayoutDebug(GuiGraphics g) {
+    protected void renderLayoutDebug(EscGraphics g) {
         EscRect content = contentRect();
         EscRect footer = EscPanel.footer(content, style);
         EscPanel.border(g, content, 0xFF00FF88, 1);
@@ -68,8 +68,8 @@ public abstract class EscScreen extends Screen {
     }
 
     protected void layoutWidget(AbstractWidget widget, EscRect bounds) {
-        widget.setX(bounds.x());
-        widget.setY(bounds.y());
+        widget.x = bounds.x();
+        widget.y = bounds.y();
         widget.setWidth(Math.max(MIN_WIDGET_WIDTH, bounds.width()));
         widget.setHeight(Math.max(MIN_WIDGET_HEIGHT, bounds.height()));
     }

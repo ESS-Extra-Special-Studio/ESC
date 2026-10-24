@@ -51,6 +51,6 @@ public final class EscFonts {
     );
 
     private static ResourceLocation ns(String path) {
-        return ResourceLocation.fromNamespaceAndPath(Extraspecialcore.MODID, path);
+        return new ResourceLocation(Extraspecialcore.MODID, path);
     }
 }

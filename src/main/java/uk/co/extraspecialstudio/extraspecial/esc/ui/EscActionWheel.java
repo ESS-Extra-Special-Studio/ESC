@@ -3,7 +3,6 @@ package uk.co.extraspecialstudio.extraspecial.esc.ui;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
@@ -249,7 +248,7 @@ public final class EscActionWheel {
     }
 
     /** Called by ESC overlay registration — do not call from feature mods. */
-    static void renderAll(GuiGraphics g, int screenWidth, int screenHeight) {
+    static void renderAll(EscGraphics g, int screenWidth, int screenHeight) {
         if (openWheel != null && openWheel.open) {
             openWheel.renderInstance(g, screenWidth, screenHeight);
         }
@@ -463,7 +462,7 @@ public final class EscActionWheel {
         }
     }
 
-    private void renderInstance(GuiGraphics g, int screenWidth, int screenHeight) {
+    private void renderInstance(EscGraphics g, int screenWidth, int screenHeight) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.options.hideGui) return;
         List<EscActionWheelOption> opts = cachedOptions;
@@ -567,7 +566,7 @@ public final class EscActionWheel {
         }
     }
 
-    private static void drawWedgeFan(GuiGraphics g, int cx, int cy, int inner, int outer,
+    private static void drawWedgeFan(EscGraphics g, int cx, int cy, int inner, int outer,
                                      int index, int count, int argb) {
         double step = (Math.PI * 2.0) / count;
         double a0 = step * index;
@@ -582,7 +581,7 @@ public final class EscActionWheel {
         }
     }
 
-    private static void drawLine(GuiGraphics g, int x0, int y0, int x1, int y1, int argb) {
+    private static void drawLine(EscGraphics g, int x0, int y0, int x1, int y1, int argb) {
         int steps = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
         if (steps <= 0) {
             EscPanel.fill(g, new EscRect(x0, y0, 1, 1), argb);

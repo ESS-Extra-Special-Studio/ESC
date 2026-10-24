@@ -2,7 +2,6 @@ package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -14,7 +13,7 @@ public final class EscWidgetText {
 
     /** Label layout matches vanilla scrolling buttons, without the shadow pass (sharper TTF). */
     public static void renderScrollingStringNoShadow(
-        GuiGraphics guiGraphics,
+        EscGraphics guiGraphics,
         Font font,
         Component message,
         int leftX,

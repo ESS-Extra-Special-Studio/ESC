@@ -86,8 +86,8 @@ public final class EscActionWheelClient {
         @SubscribeEvent
         public static void onRegisterOverlays(RegisterGuiOverlaysEvent event) {
             event.registerAboveAll("esc_action_wheel",
-                (gui, guiGraphics, partialTick, screenWidth, screenHeight) ->
-                    EscActionWheel.renderAll(guiGraphics, screenWidth, screenHeight));
+                (gui, pose, partialTick, screenWidth, screenHeight) ->
+                    EscActionWheel.renderAll(new EscGraphics(pose), screenWidth, screenHeight));
         }
     }
 }

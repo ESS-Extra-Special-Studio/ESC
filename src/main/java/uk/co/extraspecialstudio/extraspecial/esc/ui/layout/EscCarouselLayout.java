@@ -1,6 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import net.minecraft.client.gui.GuiGraphics;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
+
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscBackground;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscCard;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscCrtLayer;
@@ -52,7 +53,7 @@ public final class EscCarouselLayout implements EscHubLayout {
     }
 
     @Override
-    public void render(GuiGraphics g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick) {
+    public void render(EscGraphics g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick) {
         List<EscHubSection> sections = ctx.sections();
         if (sections.isEmpty()) {
             return;
@@ -79,7 +80,7 @@ public final class EscCarouselLayout implements EscHubLayout {
         }
     }
 
-    private void renderStripFallback(GuiGraphics g, EscHubLayoutContext ctx, EscRect strip, List<EscHubSection> sections) {
+    private void renderStripFallback(EscGraphics g, EscHubLayoutContext ctx, EscRect strip, List<EscHubSection> sections) {
         EscPanel.renderPanel(g, strip, ctx.style());
         EscStripSlots.Plan plan = EscStripSlots.plan(strip, sections.size(), 4, 4);
         for (int i = 0; i < sections.size(); i++) {
@@ -98,7 +99,7 @@ public final class EscCarouselLayout implements EscHubLayout {
         }
     }
 
-    private void renderCarousel(GuiGraphics g, EscHubLayoutContext ctx, EscRect carousel, List<EscHubSection> sections) {
+    private void renderCarousel(EscGraphics g, EscHubLayoutContext ctx, EscRect carousel, List<EscHubSection> sections) {
         int focus = ctx.sectionIndex();
         EscResponsive.CardPlan plan = EscResponsive.carouselCards(carousel, sections.size());
         int centreX = carousel.x() + carousel.width() / 2;
@@ -137,7 +138,7 @@ public final class EscCarouselLayout implements EscHubLayout {
         }
     }
 
-    private static void drawChevron(GuiGraphics g, EscHubLayoutContext ctx, int x, int y, boolean left) {
+    private static void drawChevron(EscGraphics g, EscHubLayoutContext ctx, int x, int y, boolean left) {
         int color = ctx.style().accentColor() | 0xFF000000;
         String ch = left ? "\u25C0" : "\u25B6";
         g.drawString(ctx.font(), ch, x, y - ctx.font().lineHeight / 2, color, false);
