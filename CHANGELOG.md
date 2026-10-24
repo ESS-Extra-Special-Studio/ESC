@@ -1,4 +1,10 @@
-﻿ExtraSpecialCore 2.0.3
+﻿Extra Special Core 2.1.0
+Added:
+Hold-to-aim action wheel (`EscActionWheel`). A consumer mod registers a key, options, and a confirm callback. ESC draws the wheel, plays the menu cue, and keeps hotbar keys from changing slots while it is open.
+Changed:
+Still requires ES Library `[1.0.0,2.0)`.
+
+ExtraSpecialCore 2.0.3
 Added:
 Hub leaf recommended-stub styling so grey badges can mark missing optional tools without looking installed.
 Changed:
