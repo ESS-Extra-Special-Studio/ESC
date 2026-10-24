@@ -1,11 +1,11 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Objects;
 
 /** Top-level hub section (e.g. ESS / MODS / UTILITY). */
-public record EscHubSection(String id, String title, String subtitle, int badgeCount, ResourceLocation icon) {
+public record EscHubSection(String id, String title, String subtitle, int badgeCount, Identifier icon) {
     public EscHubSection(String id, String title, String subtitle, int badgeCount) {
         this(id, title, subtitle, badgeCount, null);
     }

@@ -1,7 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
 import net.minecraft.client.gui.screens.PauseScreen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -10,7 +10,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 import uk.co.extraspecialstudio.extraspecial.Extraspecialcore;
 
 /**
@@ -42,7 +42,7 @@ public final class EscActionWheelClient {
 
         /**
          * Esc must not cancel the wheel — release hold-key / deadzone / RMB do.
-         * Opening pause would set {@code mc.screen} and force-reset the wheel; block that.
+         * Opening pause would set {@code mc.gui.screen()} and force-reset the wheel; block that.
          */
         @SubscribeEvent
         public static void onScreenOpening(ScreenEvent.Opening event) {
@@ -60,7 +60,7 @@ public final class EscActionWheelClient {
         @SubscribeEvent
         public static void onMouseButton(InputEvent.MouseButton.Pre event) {
             if (!EscActionWheel.anyOpen()) return;
-            if (event.getAction() == GLFW.GLFW_PRESS) {
+            if (event.getAction() == InputConstants.PRESS) {
                 event.setCanceled(true);
             }
         }
@@ -80,14 +80,14 @@ public final class EscActionWheelClient {
         }
     }
 
-    @EventBusSubscriber(modid = Extraspecialcore.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = Extraspecialcore.MODID, value = Dist.CLIENT)
     public static final class ModBus {
         private ModBus() {}
 
         @SubscribeEvent
         public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
             event.registerAboveAll(
-                ResourceLocation.fromNamespaceAndPath(Extraspecialcore.MODID, "esc_action_wheel"),
+                Identifier.fromNamespaceAndPath(Extraspecialcore.MODID, "esc_action_wheel"),
                 (guiGraphics, deltaTracker) ->
                     EscActionWheel.renderAll(guiGraphics, guiGraphics.guiWidth(), guiGraphics.guiHeight()));
         }

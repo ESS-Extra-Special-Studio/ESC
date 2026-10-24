@@ -11,7 +11,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
  * Section banners and push/pop match the RadioTowers / Dead Letters style.
  * Theme / UI prefs live in {@code EscThemeConfigs}.
  */
-@EventBusSubscriber(modid = Extraspecialcore.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = Extraspecialcore.MODID)
 public class Config {
 
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();

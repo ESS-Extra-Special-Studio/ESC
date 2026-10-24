@@ -1,7 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscImage;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscPanel;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscRect;
@@ -36,7 +36,7 @@ public final class EscAccordion {
         }
     }
 
-    public static void render(GuiGraphics g, EscHubLayoutContext ctx, EscRect area, String sectionId) {
+    public static void render(GuiGraphicsExtractor g, EscHubLayoutContext ctx, EscRect area, String sectionId) {
         EscUiStyle style = ctx.style();
         Font font = ctx.font();
         EscPanel.renderPanel(g, area, style);
@@ -132,7 +132,7 @@ public final class EscAccordion {
         }
     }
 
-    private static void drawFocusRow(GuiGraphics g, EscRect area, int y, int row, EscUiStyle style) {
+    private static void drawFocusRow(GuiGraphicsExtractor g, EscRect area, int y, int row, EscUiStyle style) {
         int fill = EscFocusVisual.applyAlpha(style.accentColor() | 0xFF000000, 0.22f);
         EscPanel.fill(g, new EscRect(area.x() + 2, y - 1, area.width() - 6, row), fill);
         EscPanel.border(g, new EscRect(area.x() + 2, y - 1, area.width() - 6, row),
@@ -141,7 +141,7 @@ public final class EscAccordion {
 
     /** L-shaped branch: down from the spine, then right toward the leaf label. */
     private static void drawTreeBranch(
-        GuiGraphics g, int baseX, int y, int rowH, EscUiStyle style, int index, int count
+        GuiGraphicsExtractor g, int baseX, int y, int rowH, EscUiStyle style, int index, int count
     ) {
         int color = (style.textColorBody() & 0xFFFFFF) | 0xCC000000;
         int spineX = baseX + 4;

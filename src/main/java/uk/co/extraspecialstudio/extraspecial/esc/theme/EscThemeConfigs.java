@@ -531,7 +531,7 @@ public final class EscThemeConfigs {
         return null;
     }
 
-    @EventBusSubscriber(modid = Extraspecialcore.MODID, bus = EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(modid = Extraspecialcore.MODID)
     public static final class Events {
         private Events() {
         }

@@ -1,7 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -194,7 +194,7 @@ public final class EscTabBar {
         return EscPanel.bodyBelowTabs(parent, style.tabHeight(), gapBelowTabs);
     }
 
-    public void render(GuiGraphics graphics, Font font, int mouseX, int mouseY) {
+    public void render(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
         EscRect selectedCell = null;
         for (int i = 0; i < tabs.size(); i++) {
             Tab tab = tabs.get(i);
@@ -232,7 +232,7 @@ public final class EscTabBar {
             if (tx + tw > cell.right()) {
                 tx = Math.max(cell.x(), cell.right() - tw);
             }
-            graphics.drawString(font, label,
+            graphics.text(font, label,
                 tx,
                 cell.y() + Math.max(1, (cell.height() - 8) / 2),
                 fg, false);

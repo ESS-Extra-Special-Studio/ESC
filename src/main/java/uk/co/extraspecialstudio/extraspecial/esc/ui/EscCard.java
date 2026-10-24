@@ -1,8 +1,8 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscTheme;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscVisualBudget;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.anim.EscAnim;
@@ -19,7 +19,7 @@ public final class EscCard {
     }
 
     public static void render(
-        GuiGraphics g,
+        GuiGraphicsExtractor g,
         Font font,
         EscRect area,
         EscUiStyle style,
@@ -32,7 +32,7 @@ public final class EscCard {
     }
 
     public static void render(
-        GuiGraphics g,
+        GuiGraphicsExtractor g,
         Font font,
         EscRect area,
         EscUiStyle style,
@@ -40,7 +40,7 @@ public final class EscCard {
         String subtitle,
         String badge,
         float focus01,
-        ResourceLocation icon
+        Identifier icon
     ) {
         // Tall slots with icons get the showcase identity layout.
         if (icon != null && area.height() >= 64) {
@@ -54,7 +54,7 @@ public final class EscCard {
      * Hub section showcase card — large icon, accent rule, badge chip.
      */
     public static void renderIdentity(
-        GuiGraphics g,
+        GuiGraphicsExtractor g,
         Font font,
         EscRect area,
         EscUiStyle style,
@@ -62,7 +62,7 @@ public final class EscCard {
         String subtitle,
         String badge,
         float focus01,
-        ResourceLocation icon
+        Identifier icon
     ) {
         float f = EscAnim.clamp01(focus01);
         EscFocusPhase phase = EscFocusPhase.fromFocus01(f);
@@ -151,7 +151,7 @@ public final class EscCard {
     }
 
     private static void renderCompact(
-        GuiGraphics g,
+        GuiGraphicsExtractor g,
         Font font,
         EscRect area,
         EscUiStyle style,
@@ -159,7 +159,7 @@ public final class EscCard {
         String subtitle,
         String badge,
         float focus01,
-        ResourceLocation icon
+        Identifier icon
     ) {
         float f = EscAnim.clamp01(focus01);
         EscFocusPhase phase = EscFocusPhase.fromFocus01(f);
@@ -244,7 +244,7 @@ public final class EscCard {
     }
 
     private static void drawBadgeChip(
-        GuiGraphics g,
+        GuiGraphicsExtractor g,
         Font font,
         EscRect box,
         String badge,

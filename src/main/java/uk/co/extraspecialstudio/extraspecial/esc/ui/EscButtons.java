@@ -1,7 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscFrameStyle;
@@ -72,7 +72,7 @@ public final class EscButtons {
         }
 
         @Override
-        protected void renderWidget(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+        protected void extractContents(GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
             EscUiStyle style = styleOverride != null ? styleOverride : EscUiStyle.active();
             EscRect box = new EscRect(getX(), getY(), getWidth(), getHeight());
             boolean hot = isHoveredOrFocused();
@@ -82,20 +82,15 @@ public final class EscButtons {
             // Buttons stay rectangular so themed cut-corners / brackets cannot clip labels.
             EscPanel.renderFrame(g, box, border, Math.max(1, style.panelBorderWidth()), EscFrameStyle.SQUARE);
             int textColor = hot ? (style.textColorTitle() | 0xFF000000) : (style.textColorBody() | 0xFF000000);
-            renderString(g, net.minecraft.client.Minecraft.getInstance().font, textColor);
-        }
-
-        @Override
-        public void renderString(GuiGraphics guiGraphics, Font font, int color) {
             EscWidgetText.renderScrollingStringNoShadow(
-                guiGraphics,
-                font,
+                g,
+                net.minecraft.client.Minecraft.getInstance().font,
                 getMessage(),
                 getX() + TEXT_MARGIN,
                 getY(),
                 getX() + getWidth() - TEXT_MARGIN,
                 getY() + getHeight(),
-                color
+                textColor
             );
         }
     }

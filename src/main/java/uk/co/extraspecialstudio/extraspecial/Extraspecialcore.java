@@ -22,8 +22,8 @@ public class Extraspecialcore {
     public Extraspecialcore(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
         NeoForge.EVENT_BUS.register(this);
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-        modContainer.registerConfig(ModConfig.Type.COMMON, EscThemeConfigs.COMMON_SPEC, "extraspecialcore-theme-common.toml");
+        modContainer.registerConfig(ModConfig.Type.SYNCED, Config.SPEC, "extraspecialcore-common.toml");
+        modContainer.registerConfig(ModConfig.Type.SYNCED, EscThemeConfigs.COMMON_SPEC, "extraspecialcore-theme-common.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, EscThemeConfigs.CLIENT_SPEC, "extraspecialcore-theme-client.toml");
         EscSounds.REGISTER.register(modEventBus);
     }

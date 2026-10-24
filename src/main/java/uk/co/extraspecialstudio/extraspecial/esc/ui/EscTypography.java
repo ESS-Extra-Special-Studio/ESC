@@ -1,7 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.anim.EscFocusVisual;
@@ -15,7 +15,7 @@ public final class EscTypography {
     }
 
     public static void draw(
-        GuiGraphics g,
+        GuiGraphicsExtractor g,
         Font font,
         String text,
         int x,
@@ -32,7 +32,7 @@ public final class EscTypography {
             drawn = truncate(font, drawn, maxWidth);
         }
         int color = EscFocusVisual.applyAlpha(r.color(style) | 0xFF000000, alpha);
-        g.drawString(font, drawn, x, y, color, false);
+        g.text(font, drawn, x, y, color, false);
     }
 
     /**
@@ -41,7 +41,7 @@ public final class EscTypography {
      * text that already fits is drawn static, so this is safe as a default for such lines.
      */
     public static void drawScrolling(
-        GuiGraphics g,
+        GuiGraphicsExtractor g,
         Font font,
         String text,
         int x,
@@ -56,14 +56,14 @@ public final class EscTypography {
         String drawn = r.uppercase() ? text.toUpperCase() : text;
         int color = EscFocusVisual.applyAlpha(r.color(style) | 0xFF000000, alpha);
         if (maxWidth <= 0) {
-            g.drawString(font, drawn, x, y, color, false);
+            g.text(font, drawn, x, y, color, false);
             return;
         }
         EscText.drawScrollingString(g, font, drawn, x, y, maxWidth, color);
     }
 
     public static void drawCentered(
-        GuiGraphics g,
+        GuiGraphicsExtractor g,
         Font font,
         String text,
         int centerX,
@@ -77,7 +77,7 @@ public final class EscTypography {
         String drawn = r.uppercase() ? text.toUpperCase() : text;
         int w = font.width(drawn);
         int color = EscFocusVisual.applyAlpha(r.color(style) | 0xFF000000, alpha);
-        g.drawString(font, drawn, centerX - w / 2, y, color, false);
+        g.text(font, drawn, centerX - w / 2, y, color, false);
     }
 
     public static String truncate(Font font, String text, int maxWidth) {
@@ -105,7 +105,7 @@ public final class EscTypography {
         if (role != null && role.uppercase()) {
             t = t.toUpperCase();
         }
-        return Component.literal(t).withStyle(Style.EMPTY.withFont(EscFonts.DEFAULT));
+        return Component.literal(t).withStyle(Style.EMPTY.withFont(EscFonts.description(EscFonts.DEFAULT)));
     }
 
     /** Word-wrap {@code text} to {@code maxWidth}; blank input yields one empty line. */
@@ -149,7 +149,7 @@ public final class EscTypography {
      * Empty strings in {@code lines} render as a half-line spacer.
      */
     public static int drawParagraph(
-        GuiGraphics g,
+        GuiGraphicsExtractor g,
         Font font,
         java.util.List<String> lines,
         int x,

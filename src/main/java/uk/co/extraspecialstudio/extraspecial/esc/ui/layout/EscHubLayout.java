@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscRect;
 
 /**
@@ -16,7 +16,7 @@ public interface EscHubLayout {
     /** Advance animations (client tick). */
     void tick(EscHubLayoutContext ctx);
 
-    void render(GuiGraphics g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick);
+    void render(GuiGraphicsExtractor g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick);
 
     boolean mouseClicked(EscHubLayoutContext ctx, EscRect bounds, double mouseX, double mouseY, int button);
 

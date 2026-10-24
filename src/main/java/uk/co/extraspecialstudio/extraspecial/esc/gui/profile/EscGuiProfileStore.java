@@ -2,7 +2,7 @@ package uk.co.extraspecialstudio.extraspecial.esc.gui.profile;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.neoforged.fml.loading.FMLPaths;
 import org.slf4j.Logger;
@@ -67,7 +67,7 @@ public final class EscGuiProfileStore {
         }
         String namespace = profileId.substring(0, colon);
         String local = profileId.substring(colon + 1);
-        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(namespace, "esc/gui/" + local + ".json");
+        Identifier loc = Identifier.fromNamespaceAndPath(namespace, "esc/gui/" + local + ".json");
         Minecraft mc = Minecraft.getInstance();
         if (mc == null || mc.getResourceManager() == null) {
             return Optional.empty();
@@ -146,7 +146,7 @@ public final class EscGuiProfileStore {
         if (mc == null || mc.getResourceManager() == null) {
             return ids;
         }
-        for (ResourceLocation loc : mc.getResourceManager().listResources("esc/gui", rl -> rl.getPath().endsWith(".json")).keySet()) {
+        for (Identifier loc : mc.getResourceManager().listResources("esc/gui", rl -> rl.getPath().endsWith(".json")).keySet()) {
             String path = loc.getPath();
             String local = path.substring("esc/gui/".length());
             if (local.endsWith(".json")) {

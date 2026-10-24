@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Objects;
 
@@ -9,11 +9,11 @@ public record EscHubLeaf(
     String id,
     String title,
     String subtitle,
-    ResourceLocation icon,
+    Identifier icon,
     boolean enabled,
     String recommendHint
 ) {
-    public EscHubLeaf(String id, String title, String subtitle, ResourceLocation icon) {
+    public EscHubLeaf(String id, String title, String subtitle, Identifier icon) {
         this(id, title, subtitle, icon, true, "");
     }
 

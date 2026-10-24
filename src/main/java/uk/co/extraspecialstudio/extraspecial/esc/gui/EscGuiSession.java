@@ -61,7 +61,7 @@ public final class EscGuiSession {
 
     public void open() {
         EscGuiProfile profile = resolveProfile();
-        Minecraft.getInstance().setScreen(new EscGuiScreen(parent, profile, bindings, actions, applicationId));
+        Minecraft.getInstance().gui.setScreen(new EscGuiScreen(parent, profile, bindings, actions, applicationId));
     }
 
     public EscGuiScreen createScreen() {
