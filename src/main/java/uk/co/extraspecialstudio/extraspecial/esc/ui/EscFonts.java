@@ -1,12 +1,13 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.resources.ResourceLocation;
 import uk.co.extraspecialstudio.extraspecial.Extraspecialcore;
 
 import java.util.List;
 
 /**
- * Built-in ESC font identifiers for {@link net.minecraft.network.chat.Style#withFont(ResourceLocation)}.
+ * Built-in ESC font identifiers for {@link net.minecraft.network.chat.Style#withFont(FontDescription)}.
  * Each id maps to assets under {@code extraspecialcore:font/&lt;id&gt;.json}. See {@code FONT_LICENSES.txt}.
  */
 public final class EscFonts {
@@ -52,5 +53,10 @@ public final class EscFonts {
 
     private static ResourceLocation ns(String path) {
         return ResourceLocation.fromNamespaceAndPath(Extraspecialcore.MODID, path);
+    }
+
+    /** Font id as a style description. Minecraft 1.21.6+ takes {@link FontDescription}, not a raw location. */
+    public static FontDescription description(ResourceLocation id) {
+        return new FontDescription.Resource(id);
     }
 }

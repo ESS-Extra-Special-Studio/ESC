@@ -1,7 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.anim.EscFocusVisual;
 
@@ -43,15 +43,7 @@ public final class EscImage {
             return;
         }
         int color = EscFocusVisual.applyAlpha(tintArgb | 0xFF000000, alpha);
-        int a = (color >>> 24) & 0xFF;
-        int r = (color >>> 16) & 0xFF;
-        int gr = (color >>> 8) & 0xFF;
-        int b = color & 0xFF;
-        RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(r / 255f, gr / 255f, b / 255f, a / 255f);
-        g.blit(texture, x, y, 0, 0, w, h, texW, texH);
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        RenderSystem.disableBlend();
+        g.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, 0f, 0f, w, h, texW, texH, color);
     }
 
     /** Fit texture into a box preserving aspect (letterbox). */
@@ -104,15 +96,7 @@ public final class EscImage {
         } else {
             // UV space = dest size → maps entire GL texture into the box regardless of PNG pixels.
             int color = EscFocusVisual.applyAlpha(tintArgb | 0xFF000000, alpha);
-            int a = (color >>> 24) & 0xFF;
-            int r = (color >>> 16) & 0xFF;
-            int gr = (color >>> 8) & 0xFF;
-            int b = color & 0xFF;
-            RenderSystem.enableBlend();
-            RenderSystem.setShaderColor(r / 255f, gr / 255f, b / 255f, a / 255f);
-            g.blit(texture, x, y, w, h, 0f, 0f, w, h, w, h);
-            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-            RenderSystem.disableBlend();
+            g.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, 0f, 0f, w, h, w, h, w, h, color);
         }
     }
 }

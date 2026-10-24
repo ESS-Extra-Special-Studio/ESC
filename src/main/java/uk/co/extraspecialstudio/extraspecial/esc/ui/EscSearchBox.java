@@ -4,6 +4,7 @@ import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
@@ -46,7 +47,7 @@ public class EscSearchBox extends EditBox {
         setBordered(false);
         setTextColor(this.textColorRgb);
         setTextColorUneditable(this.hintColorRgb);
-        this.setFormatter((text, cursorPos) -> FormattedCharSequence.forward(text, Style.EMPTY.withFont(EscFonts.DEFAULT)));
+        this.addFormatter((text, cursorPos) -> FormattedCharSequence.forward(text, Style.EMPTY.withFont(EscFonts.description(EscFonts.DEFAULT))));
     }
 
     /** Single-line height for anchor layout — matches rendered chrome and centered text. */
@@ -94,12 +95,12 @@ public class EscSearchBox extends EditBox {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.active && this.visible && this.isMouseOver(mouseX, mouseY)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubled) {
+        if (this.active && this.visible && this.isMouseOver(event.x(), event.y())) {
             this.setFocused(true);
-            return super.mouseClicked(mouseX, mouseY, button) || true;
+            return super.mouseClicked(event, doubled) || true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubled);
     }
 
     @Override

@@ -80,7 +80,7 @@ public final class EscActionWheelClient {
         }
     }
 
-    @EventBusSubscriber(modid = Extraspecialcore.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = Extraspecialcore.MODID, value = Dist.CLIENT)
     public static final class ModBus {
         private ModBus() {}
 
