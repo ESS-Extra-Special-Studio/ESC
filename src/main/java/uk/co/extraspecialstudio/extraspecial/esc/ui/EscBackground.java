@@ -391,7 +391,7 @@ public final class EscBackground {
     }
 
     private static ResourceLocation vanillaBlock(String name) {
-        return ResourceLocation.fromNamespaceAndPath("minecraft", "textures/block/" + name + ".png");
+        return new ResourceLocation("minecraft", "textures/block/" + name + ".png");
     }
 
     private record GrowthTreeStyle(

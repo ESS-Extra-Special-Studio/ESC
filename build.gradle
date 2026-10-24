@@ -50,7 +50,7 @@ neoForge {
 }
 
 dependencies {
-    implementation "uk.co.extraspecialstudio:extraspeciallib:${esl_version}"
+    implementation files('C:/Users/Ksivi/IdeaProjects/ESL - 1.20.6 NeoForge/build/libs/extraspeciallib-1.2.0+1.20.6-neoforge.jar')
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
@@ -97,8 +97,6 @@ tasks.register('copyToNeoForgeTestPack') {
         }
     }
 }
-
-tasks.named('build').configure { finalizedBy 'copyToNeoForgeTestPack' }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'

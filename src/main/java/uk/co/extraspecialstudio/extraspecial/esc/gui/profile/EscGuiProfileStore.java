@@ -67,7 +67,7 @@ public final class EscGuiProfileStore {
         }
         String namespace = profileId.substring(0, colon);
         String local = profileId.substring(colon + 1);
-        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(namespace, "esc/gui/" + local + ".json");
+        ResourceLocation loc = new ResourceLocation(namespace, "esc/gui/" + local + ".json");
         Minecraft mc = Minecraft.getInstance();
         if (mc == null || mc.getResourceManager() == null) {
             return Optional.empty();

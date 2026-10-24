@@ -87,7 +87,7 @@ public final class EscActionWheelClient {
         @SubscribeEvent
         public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
             event.registerAboveAll(
-                ResourceLocation.fromNamespaceAndPath(Extraspecialcore.MODID, "esc_action_wheel"),
+                new ResourceLocation(Extraspecialcore.MODID, "esc_action_wheel"),
                 (guiGraphics, deltaTracker) ->
                     EscActionWheel.renderAll(guiGraphics, guiGraphics.guiWidth(), guiGraphics.guiHeight()));
         }
