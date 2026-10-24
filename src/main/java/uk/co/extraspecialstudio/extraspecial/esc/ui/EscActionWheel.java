@@ -3,7 +3,7 @@ package uk.co.extraspecialstudio.extraspecial.esc.ui;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
@@ -183,13 +183,13 @@ public final class EscActionWheel {
     static void tickAll() {
         Minecraft mc = Minecraft.getInstance();
         // Reclaim cursor after a forced close that happened while a screen was open
-        // (restoreMouse no-ops when mc.screen != null, leaving mouseReleased stuck).
+        // (restoreMouse no-ops when mc.gui.screen() != null, leaving mouseReleased stuck).
         for (EscActionWheel w : REGISTRY.values()) {
-            if (w.mouseReleased && !w.open && mc.screen == null) {
+            if (w.mouseReleased && !w.open && mc.gui.screen() == null) {
                 w.restoreMouse(mc);
             }
         }
-        if (mc.player == null || mc.level == null || mc.screen != null || mc.options.hideGui) {
+        if (mc.player == null || mc.level == null || mc.gui.screen() != null || mc.gui.hud.isHidden()) {
             if (openWheel != null) openWheel.forceReset();
             for (EscActionWheel w : REGISTRY.values()) {
                 w.wasDown = false;
@@ -242,14 +242,14 @@ public final class EscActionWheel {
             return;
         }
         if (lockedHotbarSlot < 0) {
-            lockedHotbarSlot = mc.player.getInventory().selected;
-        } else if (mc.player.getInventory().selected != lockedHotbarSlot) {
-            mc.player.getInventory().selected = lockedHotbarSlot;
+            lockedHotbarSlot = mc.player.getInventory().getSelectedSlot();
+        } else if (mc.player.getInventory().getSelectedSlot() != lockedHotbarSlot) {
+            mc.player.getInventory().setSelectedSlot(lockedHotbarSlot);
         }
     }
 
     /** Called by ESC overlay registration — do not call from feature mods. */
-    static void renderAll(GuiGraphics g, int screenWidth, int screenHeight) {
+    static void renderAll(GuiGraphicsExtractor g, int screenWidth, int screenHeight) {
         if (openWheel != null && openWheel.open) {
             openWheel.renderInstance(g, screenWidth, screenHeight);
         }
@@ -295,7 +295,7 @@ public final class EscActionWheel {
             }
         } else if (open && down) {
             if (openAnim > 0) openAnim--;
-            long window = mc.getWindow().getWindow();
+            long window = mc.getWindow().handle();
             // Cancel without confirming: RMB while held. Primary cancel is releasing
             // the wheel key in the deadzone (handled on key-up via confirmOrCancel).
             if (GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
@@ -355,12 +355,12 @@ public final class EscActionWheel {
         // Seed from current key state so a digit already held (hotbar) does not
         // instantly confirm on the first open tick.
         Minecraft mc = Minecraft.getInstance();
-        long window = mc.getWindow().getWindow();
+        var window = mc.getWindow();
         for (int i = 0; i < hotWasDown.length; i++) {
             hotWasDown[i] = InputConstants.isKeyDown(window, DIGIT_KEYS[i]);
         }
         if (mc.player != null) {
-            lockedHotbarSlot = mc.player.getInventory().selected;
+            lockedHotbarSlot = mc.player.getInventory().getSelectedSlot();
         }
         EscSound.play(EscUiCue.EXPAND);
         if (releaseMouse && !mouseReleased) {
@@ -370,14 +370,14 @@ public final class EscActionWheel {
     }
 
     private void restoreMouse(Minecraft mc) {
-        if (mouseReleased && mc.screen == null) {
+        if (mouseReleased && mc.gui.screen() == null) {
             mc.mouseHandler.grabMouse();
             mouseReleased = false;
         }
     }
 
     private int pollHotkeyEdge(Minecraft mc) {
-        long window = mc.getWindow().getWindow();
+        var window = mc.getWindow();
         int pressed = -1;
         for (int i = 0; i < hotWasDown.length; i++) {
             boolean d = InputConstants.isKeyDown(window, DIGIT_KEYS[i]);
@@ -440,7 +440,7 @@ public final class EscActionWheel {
         if (actionBarOnConfirm) {
             Minecraft mc = Minecraft.getInstance();
             if (mc.player != null) {
-                mc.player.displayClientMessage(cachedOptions.get(selected).label(), true);
+                mc.player.sendOverlayMessage(cachedOptions.get(selected).label());
             }
         }
     }
@@ -462,9 +462,9 @@ public final class EscActionWheel {
         }
     }
 
-    private void renderInstance(GuiGraphics g, int screenWidth, int screenHeight) {
+    private void renderInstance(GuiGraphicsExtractor g, int screenWidth, int screenHeight) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.options.hideGui) return;
+        if (mc.player == null || mc.gui.hud.isHidden()) return;
         List<EscActionWheelOption> opts = cachedOptions;
         int count = opts.size();
         if (count <= 0) return;
@@ -566,7 +566,7 @@ public final class EscActionWheel {
         }
     }
 
-    private static void drawWedgeFan(GuiGraphics g, int cx, int cy, int inner, int outer,
+    private static void drawWedgeFan(GuiGraphicsExtractor g, int cx, int cy, int inner, int outer,
                                      int index, int count, int argb) {
         double step = (Math.PI * 2.0) / count;
         double a0 = step * index;
@@ -581,7 +581,7 @@ public final class EscActionWheel {
         }
     }
 
-    private static void drawLine(GuiGraphics g, int x0, int y0, int x1, int y1, int argb) {
+    private static void drawLine(GuiGraphicsExtractor g, int x0, int y0, int x1, int y1, int argb) {
         int steps = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
         if (steps <= 0) {
             EscPanel.fill(g, new EscRect(x0, y0, 1, 1), argb);

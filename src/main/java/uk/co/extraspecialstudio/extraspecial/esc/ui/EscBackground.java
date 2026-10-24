@@ -2,8 +2,8 @@ package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscColor;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscTheme;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscThemeConfigs;
@@ -14,7 +14,7 @@ import uk.co.extraspecialstudio.extraspecial.esc.theme.EscVisualBudget;
  * Draws when Quality is HIGH ({@link EscVisualBudget#showDynamicBackground()}).
  * Motion OFF freezes the current frame; it does not hide the backdrop.
  * <p>
- * Particles are clipped by coordinate clamping only — no {@link GuiGraphics#enableScissor}.
+ * Particles are clipped by coordinate clamping only — no {@link GuiGraphicsExtractor#enableScissor}.
  * Nested/leftover scissor state previously corrupted later screens (seen when cycling animations).
  */
 public final class EscBackground {
@@ -33,7 +33,7 @@ public final class EscBackground {
     private EscBackground() {
     }
 
-    public static void render(GuiGraphics g, EscRect area, EscTheme theme) {
+    public static void render(GuiGraphicsExtractor g, EscRect area, EscTheme theme) {
         if (theme == null || area.width() <= 0 || area.height() <= 0) {
             return;
         }
@@ -142,7 +142,7 @@ public final class EscBackground {
     }
 
     /** Fill only the intersection of a rect with {@code area} (no GL scissor). */
-    private static void fillClipped(GuiGraphics g, EscRect area, int x0, int y0, int x1, int y1, int color) {
+    private static void fillClipped(GuiGraphicsExtractor g, EscRect area, int x0, int y0, int x1, int y1, int color) {
         int cx0 = Math.max(area.x(), x0);
         int cy0 = Math.max(area.y(), y0);
         int cx1 = Math.min(area.right(), x1);
@@ -152,7 +152,7 @@ public final class EscBackground {
         }
     }
 
-    private static void drawGrid(GuiGraphics g, EscRect area, int accent, long ms) {
+    private static void drawGrid(GuiGraphicsExtractor g, EscRect area, int accent, long ms) {
         int grid = EscColor.withAlpha(accent, 0x66);
         int step = 28;
         int drift = (int) ((ms / 40) % step);
@@ -165,7 +165,7 @@ public final class EscBackground {
         }
     }
 
-    private static void drawScan(GuiGraphics g, EscRect area, int accent, long ms) {
+    private static void drawScan(GuiGraphicsExtractor g, EscRect area, int accent, long ms) {
         int line = EscColor.withAlpha(accent, 0x44);
         int bright = EscColor.withAlpha(accent, 0x99);
         int spacing = 10;
@@ -179,7 +179,7 @@ public final class EscBackground {
         fillClipped(g, area, area.x(), band, area.right(), band + h, bright);
     }
 
-    private static void drawRain(GuiGraphics g, EscRect area, int accent, long ms) {
+    private static void drawRain(GuiGraphicsExtractor g, EscRect area, int accent, long ms) {
         int drop = EscColor.withAlpha(accent, 0x88);
         int cols = Math.max(8, area.width() / 14);
         int gap = Math.max(8, area.width() / cols);
@@ -192,7 +192,7 @@ public final class EscBackground {
         }
     }
 
-    private static void drawPulse(GuiGraphics g, EscRect area, int accent, long ms) {
+    private static void drawPulse(GuiGraphicsExtractor g, EscRect area, int accent, long ms) {
         double phase = (ms % 2400) / 2400.0;
         float wave = (float) (0.5 + 0.5 * Math.sin(phase * Math.PI * 2.0));
         int rings = 5;
@@ -215,7 +215,7 @@ public final class EscBackground {
         }
     }
 
-    private static void drawSparks(GuiGraphics g, EscRect area, int accent, long ms) {
+    private static void drawSparks(GuiGraphicsExtractor g, EscRect area, int accent, long ms) {
         int count = Math.min(48, Math.max(16, (area.width() * area.height()) / 2800));
         long seed = (ms / 80);
         for (int i = 0; i < count; i++) {
@@ -230,7 +230,7 @@ public final class EscBackground {
     }
 
     /** Cascading binary rain (0 / 1 only). */
-    private static void drawMatrix(GuiGraphics g, EscRect area, long ms) {
+    private static void drawMatrix(GuiGraphicsExtractor g, EscRect area, long ms) {
         Minecraft mc = Minecraft.getInstance();
         if (mc == null) {
             return;
@@ -266,13 +266,13 @@ public final class EscBackground {
                     int fade = Math.max(0x22, 0x88 - t * 8);
                     rgb = (Math.min(0xAA, fade + 0x33) << 8) | 0x001100;
                 }
-                g.drawString(font, String.valueOf(ch), x, y, rgb, false);
+                g.text(font, String.valueOf(ch), x, y, rgb, false);
             }
         }
     }
 
     /** Scrolling wave crests — thin ribbons so motion stays obvious. */
-    private static void drawOcean(GuiGraphics g, EscRect area, long ms) {
+    private static void drawOcean(GuiGraphicsExtractor g, EscRect area, long ms) {
         double wash = (ms % 8000) / 8000.0;
         int washY = area.y() + (int) (area.height() * (0.35 + 0.1 * Math.sin(wash * Math.PI * 2)));
         fillClipped(g, area, area.x(), washY, area.right(), area.bottom(), 0x33062858);
@@ -304,7 +304,7 @@ public final class EscBackground {
      * Vanilla saplings grow into block-built vanilla trees along the bottom edge.
      * Each tree is staggered so the backdrop always contains several growth stages.
      */
-    private static void drawGrowth(GuiGraphics g, EscRect area, long ms) {
+    private static void drawGrowth(GuiGraphicsExtractor g, EscRect area, long ms) {
         int groundY = area.bottom() - 3;
         fillClipped(g, area, area.x(), groundY, area.right(), area.bottom(), 0xAA163A12);
 
@@ -321,7 +321,7 @@ public final class EscBackground {
     }
 
     private static void drawGrowingTree(
-        GuiGraphics g,
+        GuiGraphicsExtractor g,
         EscRect area,
         GrowthTreeStyle style,
         int centerX,
@@ -368,9 +368,9 @@ public final class EscBackground {
 
     /** Draw only complete vanilla texture tiles; no GL scissor state is introduced. */
     private static void drawTextureInside(
-        GuiGraphics g,
+        GuiGraphicsExtractor g,
         EscRect area,
-        ResourceLocation texture,
+        Identifier texture,
         int x,
         int y,
         int size
@@ -390,20 +390,20 @@ public final class EscBackground {
         );
     }
 
-    private static ResourceLocation vanillaBlock(String name) {
-        return ResourceLocation.fromNamespaceAndPath("minecraft", "textures/block/" + name + ".png");
+    private static Identifier vanillaBlock(String name) {
+        return Identifier.fromNamespaceAndPath("minecraft", "textures/block/" + name + ".png");
     }
 
     private record GrowthTreeStyle(
-        ResourceLocation sapling,
-        ResourceLocation log,
-        ResourceLocation leaves,
+        Identifier sapling,
+        Identifier log,
+        Identifier leaves,
         boolean tall
     ) {
     }
 
     /** Blue sky with white clouds drifting L/R (clipped to panel). */
-    private static void drawClouds(GuiGraphics g, EscRect area, long ms) {
+    private static void drawClouds(GuiGraphicsExtractor g, EscRect area, long ms) {
         int mid = area.y() + area.height() * 2 / 3;
         fillClipped(g, area, area.x(), mid, area.right(), area.bottom(), 0x330E4A8C);
         int clouds = Math.max(6, area.width() / 60);
@@ -423,7 +423,7 @@ public final class EscBackground {
         }
     }
 
-    private static void drawCloudBlob(GuiGraphics g, EscRect area, int x, int y, int w, int h) {
+    private static void drawCloudBlob(GuiGraphicsExtractor g, EscRect area, int x, int y, int w, int h) {
         int body = 0xBBFFFFFF;
         int soft = 0x66E8F4FF;
         fillClipped(g, area, x + w / 6, y + h / 3, x + w - w / 6, y + h, body);
@@ -433,7 +433,7 @@ public final class EscBackground {
     }
 
     /** Flowing aurora curtains with clear lateral drift. */
-    private static void drawAurora(GuiGraphics g, EscRect area, long ms) {
+    private static void drawAurora(GuiGraphicsExtractor g, EscRect area, long ms) {
         double drift = ms / 900.0;
         int bands = 5;
         for (int b = 0; b < bands; b++) {
@@ -459,7 +459,7 @@ public final class EscBackground {
     }
 
     /** Embers rise inside the panel and wrap — never escape the top edge. */
-    private static void drawEmber(GuiGraphics g, EscRect area, long ms) {
+    private static void drawEmber(GuiGraphicsExtractor g, EscRect area, long ms) {
         int count = Math.min(42, Math.max(14, area.width() / 12));
         int travel = Math.max(8, area.height() - 6);
         for (int i = 0; i < count; i++) {
@@ -478,7 +478,7 @@ public final class EscBackground {
     }
 
     /** Night sky twinkle + occasional streaks. */
-    private static void drawStarfield(GuiGraphics g, EscRect area, long ms) {
+    private static void drawStarfield(GuiGraphicsExtractor g, EscRect area, long ms) {
         int count = Math.min(64, Math.max(24, (area.width() * area.height()) / 2200));
         long bucket = ms / 90;
         for (int i = 0; i < count; i++) {
@@ -502,7 +502,7 @@ public final class EscBackground {
     }
 
     /** Storm sky with soft flash + forked bolts (flash kept gentle). */
-    private static void drawLightning(GuiGraphics g, EscRect area, long ms) {
+    private static void drawLightning(GuiGraphicsExtractor g, EscRect area, long ms) {
         int drops = Math.max(10, area.width() / 18);
         for (int i = 0; i < drops; i++) {
             int n = hash(i * 4219 + 5);

@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.sound;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.minecraft.core.registries.Registries;
@@ -69,7 +69,7 @@ public final class EscSounds {
     }
 
     private static DeferredHolder<SoundEvent, SoundEvent> register(String path) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(Extraspecialcore.MODID, path);
+        Identifier id = Identifier.fromNamespaceAndPath(Extraspecialcore.MODID, path);
         return REGISTER.register(path.replace('.', '_'), () -> SoundEvent.createVariableRangeEvent(id));
     }
 }

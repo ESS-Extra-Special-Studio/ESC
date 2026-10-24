@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscBackground;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscCard;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscCrtLayer;
@@ -52,7 +52,7 @@ public final class EscCarouselLayout implements EscHubLayout {
     }
 
     @Override
-    public void render(GuiGraphics g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphicsExtractor g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick) {
         List<EscHubSection> sections = ctx.sections();
         if (sections.isEmpty()) {
             return;
@@ -79,7 +79,7 @@ public final class EscCarouselLayout implements EscHubLayout {
         }
     }
 
-    private void renderStripFallback(GuiGraphics g, EscHubLayoutContext ctx, EscRect strip, List<EscHubSection> sections) {
+    private void renderStripFallback(GuiGraphicsExtractor g, EscHubLayoutContext ctx, EscRect strip, List<EscHubSection> sections) {
         EscPanel.renderPanel(g, strip, ctx.style());
         EscStripSlots.Plan plan = EscStripSlots.plan(strip, sections.size(), 4, 4);
         for (int i = 0; i < sections.size(); i++) {
@@ -93,12 +93,12 @@ public final class EscCarouselLayout implements EscHubLayout {
                 textX = t.x() + 20;
             }
             String title = EscTypography.truncate(ctx.font(), s.title(), Math.max(8, t.right() - textX - 4));
-            g.drawString(ctx.font(), title, textX, t.y() + 9,
+            g.text(ctx.font(), title, textX, t.y() + 9,
                 sel ? ctx.style().textColorTitle() : ctx.style().textColorBody(), false);
         }
     }
 
-    private void renderCarousel(GuiGraphics g, EscHubLayoutContext ctx, EscRect carousel, List<EscHubSection> sections) {
+    private void renderCarousel(GuiGraphicsExtractor g, EscHubLayoutContext ctx, EscRect carousel, List<EscHubSection> sections) {
         int focus = ctx.sectionIndex();
         EscResponsive.CardPlan plan = EscResponsive.carouselCards(carousel, sections.size());
         int centreX = carousel.x() + carousel.width() / 2;
@@ -125,7 +125,7 @@ public final class EscCarouselLayout implements EscHubLayout {
         if (sections.size() > 1) {
             String counter = (focus + 1) + " / " + sections.size();
             int cx = carousel.x() + carousel.width() / 2 - ctx.font().width(counter) / 2;
-            g.drawString(ctx.font(), counter, cx, carousel.bottom() - ctx.font().lineHeight - 2,
+            g.text(ctx.font(), counter, cx, carousel.bottom() - ctx.font().lineHeight - 2,
                 ctx.style().textColorBody(), false);
         }
 
@@ -137,10 +137,10 @@ public final class EscCarouselLayout implements EscHubLayout {
         }
     }
 
-    private static void drawChevron(GuiGraphics g, EscHubLayoutContext ctx, int x, int y, boolean left) {
+    private static void drawChevron(GuiGraphicsExtractor g, EscHubLayoutContext ctx, int x, int y, boolean left) {
         int color = ctx.style().accentColor() | 0xFF000000;
         String ch = left ? "\u25C0" : "\u25B6";
-        g.drawString(ctx.font(), ch, x, y - ctx.font().lineHeight / 2, color, false);
+        g.text(ctx.font(), ch, x, y - ctx.font().lineHeight / 2, color, false);
     }
 
     @Override

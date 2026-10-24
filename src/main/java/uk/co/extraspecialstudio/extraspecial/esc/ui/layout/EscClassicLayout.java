@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscBackground;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscCrtLayer;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscImage;
@@ -32,7 +32,7 @@ public final class EscClassicLayout implements EscHubLayout {
     }
 
     @Override
-    public void render(GuiGraphics g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphicsExtractor g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick) {
         if (!ctx.hostDrawsChrome()) {
             EscBackground.render(g, bounds, ctx.style().theme());
         }
@@ -56,7 +56,7 @@ public final class EscClassicLayout implements EscHubLayout {
                 }
                 int maxTw = Math.max(8, t.right() - textX - 4);
                 String title = EscTypography.truncate(ctx.font(), s.title(), maxTw);
-                g.drawString(ctx.font(), title, textX, t.y() + 9,
+                g.text(ctx.font(), title, textX, t.y() + 9,
                     sel ? ctx.style().textColorTitle() : ctx.style().textColorBody(), false);
             }
         }

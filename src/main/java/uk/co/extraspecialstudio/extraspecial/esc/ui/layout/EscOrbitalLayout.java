@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscVisualBudget;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscBackground;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscCrtLayer;
@@ -104,7 +104,7 @@ public final class EscOrbitalLayout implements EscHubLayout {
     }
 
     @Override
-    public void render(GuiGraphics g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphicsExtractor g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick) {
         if (!ctx.hostDrawsChrome()) {
             EscBackground.render(g, bounds, ctx.style().theme());
         }
@@ -143,13 +143,13 @@ public final class EscOrbitalLayout implements EscHubLayout {
                 textX = node.x() + 22;
             }
             String t = EscTypography.truncate(ctx.font(), section.title(), Math.max(8, node.right() - textX - 4));
-            g.drawString(ctx.font(), t, textX, node.y() + (node.height() - ctx.font().lineHeight) / 2,
+            g.text(ctx.font(), t, textX, node.y() + (node.height() - ctx.font().lineHeight) / 2,
                 sel ? ctx.style().textColorTitle() : ctx.style().textColorBody(), false);
         }
 
         EscPanel.renderPanel(g, geom.hub(), ctx.style());
         String hubLabel = "ESH";
-        g.drawString(ctx.font(), hubLabel,
+        g.text(ctx.font(), hubLabel,
             geom.hub().x() + geom.hub().width() / 2 - ctx.font().width(hubLabel) / 2,
             geom.hub().y() + (geom.hub().height() - ctx.font().lineHeight) / 2,
             ctx.style().textColorTitle(), false);
