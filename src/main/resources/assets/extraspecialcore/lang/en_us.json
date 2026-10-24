@@ -18,5 +18,7 @@
   "esc.subtitle.menu.sound_17": "Menu Sound 17",
   "esc.subtitle.menu.sound_18": "Menu Sound 18",
   "esc.subtitle.menu.sound_19": "Menu Sound 19",
-  "esc.subtitle.menu.sound_20": "Menu Sound 20"
+  "esc.subtitle.menu.sound_20": "Menu Sound 20",
+  "esc.action_wheel.cancel": "Cancel",
+  "esc.action_wheel.hint": "Aim · 1-9 · release center to cancel"
 }
