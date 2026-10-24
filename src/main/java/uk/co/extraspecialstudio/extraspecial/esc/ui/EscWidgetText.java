@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;

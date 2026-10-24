@@ -3,7 +3,7 @@ package uk.co.extraspecialstudio.extraspecial.esc.ui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscColor;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscTheme;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscThemeConfigs;
@@ -370,7 +370,7 @@ public final class EscBackground {
     private static void drawTextureInside(
         GuiGraphics g,
         EscRect area,
-        ResourceLocation texture,
+        Identifier texture,
         int x,
         int y,
         int size
@@ -390,14 +390,14 @@ public final class EscBackground {
         );
     }
 
-    private static ResourceLocation vanillaBlock(String name) {
-        return ResourceLocation.fromNamespaceAndPath("minecraft", "textures/block/" + name + ".png");
+    private static Identifier vanillaBlock(String name) {
+        return Identifier.fromNamespaceAndPath("minecraft", "textures/block/" + name + ".png");
     }
 
     private record GrowthTreeStyle(
-        ResourceLocation sapling,
-        ResourceLocation log,
-        ResourceLocation leaves,
+        Identifier sapling,
+        Identifier log,
+        Identifier leaves,
         boolean tall
     ) {
     }

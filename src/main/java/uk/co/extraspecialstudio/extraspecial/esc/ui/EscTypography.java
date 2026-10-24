@@ -105,7 +105,7 @@ public final class EscTypography {
         if (role != null && role.uppercase()) {
             t = t.toUpperCase();
         }
-        return Component.literal(t).withStyle(Style.EMPTY.withFont(EscFonts.DEFAULT));
+        return Component.literal(t).withStyle(Style.EMPTY.withFont(EscFonts.description(EscFonts.DEFAULT)));
     }
 
     /** Word-wrap {@code text} to {@code maxWidth}; blank input yields one empty line. */

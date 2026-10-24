@@ -9,7 +9,7 @@ import uk.co.extraspecialstudio.extraspecial.Extraspecialcore;
 /**
  * Client bootstrap for ESC GUI runtime assets and demo profiles.
  */
-@EventBusSubscriber(modid = Extraspecialcore.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = Extraspecialcore.MODID, value = Dist.CLIENT)
 public final class EscGuiClient {
     private EscGuiClient() {
     }

@@ -242,9 +242,9 @@ public final class EscActionWheel {
             return;
         }
         if (lockedHotbarSlot < 0) {
-            lockedHotbarSlot = mc.player.getInventory().selected;
-        } else if (mc.player.getInventory().selected != lockedHotbarSlot) {
-            mc.player.getInventory().selected = lockedHotbarSlot;
+            lockedHotbarSlot = mc.player.getInventory().getSelectedSlot();
+        } else if (mc.player.getInventory().getSelectedSlot() != lockedHotbarSlot) {
+            mc.player.getInventory().setSelectedSlot(lockedHotbarSlot);
         }
     }
 
@@ -295,7 +295,7 @@ public final class EscActionWheel {
             }
         } else if (open && down) {
             if (openAnim > 0) openAnim--;
-            long window = mc.getWindow().getWindow();
+            long window = mc.getWindow().handle();
             // Cancel without confirming: RMB while held. Primary cancel is releasing
             // the wheel key in the deadzone (handled on key-up via confirmOrCancel).
             if (GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
@@ -355,12 +355,12 @@ public final class EscActionWheel {
         // Seed from current key state so a digit already held (hotbar) does not
         // instantly confirm on the first open tick.
         Minecraft mc = Minecraft.getInstance();
-        long window = mc.getWindow().getWindow();
+        var window = mc.getWindow();
         for (int i = 0; i < hotWasDown.length; i++) {
             hotWasDown[i] = InputConstants.isKeyDown(window, DIGIT_KEYS[i]);
         }
         if (mc.player != null) {
-            lockedHotbarSlot = mc.player.getInventory().selected;
+            lockedHotbarSlot = mc.player.getInventory().getSelectedSlot();
         }
         EscSound.play(EscUiCue.EXPAND);
         if (releaseMouse && !mouseReleased) {
@@ -377,7 +377,7 @@ public final class EscActionWheel {
     }
 
     private int pollHotkeyEdge(Minecraft mc) {
-        long window = mc.getWindow().getWindow();
+        var window = mc.getWindow();
         int pressed = -1;
         for (int i = 0; i < hotWasDown.length; i++) {
             boolean d = InputConstants.isKeyDown(window, DIGIT_KEYS[i]);

@@ -3,6 +3,7 @@ package uk.co.extraspecialstudio.extraspecial.esc.ui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import uk.co.extraspecialstudio.extraspecial.esc.sound.EscSound;
 import uk.co.extraspecialstudio.extraspecial.esc.sound.EscUiCue;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscColor;
@@ -463,7 +464,10 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubled) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
         if (button == 0) {
             if (hitWheel(mouseX, mouseY)) {
                 draggingWheel = true;
@@ -479,7 +483,7 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
             if (pickChip(mouseX, mouseY, savedArea, EscThemeConfigs.savedColors())) return true;
             if (pickPreset(mouseX, mouseY)) return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubled);
     }
 
     private boolean pickChip(double mx, double my, EscRect area, List<Integer> colors) {
@@ -521,7 +525,10 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
         if (button == 0) {
             if (draggingWheel) {
                 applyWheel(mouseX, mouseY);
@@ -532,14 +539,14 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
                 return true;
             }
         }
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingWheel = false;
         draggingSv = false;
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     private boolean hitWheel(double mx, double my) {

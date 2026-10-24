@@ -72,7 +72,7 @@ public final class EscButtons {
         }
 
         @Override
-        protected void renderWidget(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+        protected void renderContents(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
             EscUiStyle style = styleOverride != null ? styleOverride : EscUiStyle.active();
             EscRect box = new EscRect(getX(), getY(), getWidth(), getHeight());
             boolean hot = isHoveredOrFocused();
@@ -85,7 +85,6 @@ public final class EscButtons {
             renderString(g, net.minecraft.client.Minecraft.getInstance().font, textColor);
         }
 
-        @Override
         public void renderString(GuiGraphics guiGraphics, Font font, int color) {
             EscWidgetText.renderScrollingStringNoShadow(
                 guiGraphics,
