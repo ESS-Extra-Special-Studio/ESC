@@ -1,9 +1,9 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
+import net.minecraft.client.gui.FontRenderer;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.anim.EscFocusVisual;
 
 /**
@@ -15,8 +15,8 @@ public final class EscTypography {
     }
 
     public static void draw(
-        GuiGraphics g,
-        Font font,
+        EscGraphics g,
+        FontRenderer font,
         String text,
         int x,
         int y,
@@ -41,8 +41,8 @@ public final class EscTypography {
      * text that already fits is drawn static, so this is safe as a default for such lines.
      */
     public static void drawScrolling(
-        GuiGraphics g,
-        Font font,
+        EscGraphics g,
+        FontRenderer font,
         String text,
         int x,
         int y,
@@ -63,8 +63,8 @@ public final class EscTypography {
     }
 
     public static void drawCentered(
-        GuiGraphics g,
-        Font font,
+        EscGraphics g,
+        FontRenderer font,
         String text,
         int centerX,
         int y,
@@ -80,7 +80,7 @@ public final class EscTypography {
         g.drawString(font, drawn, centerX - w / 2, y, color, false);
     }
 
-    public static String truncate(Font font, String text, int maxWidth) {
+    public static String truncate(FontRenderer font, String text, int maxWidth) {
         if (font.width(text) <= maxWidth) {
             return text;
         }
@@ -100,16 +100,16 @@ public final class EscTypography {
         return sb + ellipsis;
     }
 
-    public static Component styled(String text, EscTypeRole role) {
+    public static ITextComponent styled(String text, EscTypeRole role) {
         String t = text == null ? "" : text;
         if (role != null && role.uppercase()) {
             t = t.toUpperCase();
         }
-        return Component.literal(t).withStyle(Style.EMPTY.withFont(EscFonts.DEFAULT));
+        return new net.minecraft.util.text.StringTextComponent(t).withStyle(Style.EMPTY.withFont(EscFonts.DEFAULT));
     }
 
     /** Word-wrap {@code text} to {@code maxWidth}; blank input yields one empty line. */
-    public static java.util.List<String> wrap(Font font, String text, int maxWidth) {
+    public static java.util.List<String> wrap(FontRenderer font, String text, int maxWidth) {
         java.util.List<String> out = new java.util.ArrayList<>();
         if (text == null || text.isEmpty()) {
             out.add("");
@@ -122,12 +122,12 @@ public final class EscTypography {
         String[] words = text.split(" ", -1);
         StringBuilder line = new StringBuilder();
         for (String word : words) {
-            String candidate = line.isEmpty() ? word : line + " " + word;
+            String candidate = line.length() == 0 ? word : line + " " + word;
             if (font.width(candidate) <= maxWidth) {
                 line.setLength(0);
                 line.append(candidate);
             } else {
-                if (!line.isEmpty()) {
+                if (line.length() != 0) {
                     out.add(line.toString());
                     line.setLength(0);
                 }
@@ -138,7 +138,7 @@ public final class EscTypography {
                 }
             }
         }
-        if (!line.isEmpty() || out.isEmpty()) {
+        if (line.length() != 0 || out.isEmpty()) {
             out.add(line.toString());
         }
         return out;
@@ -149,8 +149,8 @@ public final class EscTypography {
      * Empty strings in {@code lines} render as a half-line spacer.
      */
     public static int drawParagraph(
-        GuiGraphics g,
-        Font font,
+        EscGraphics g,
+        FontRenderer font,
         java.util.List<String> lines,
         int x,
         int y,
@@ -163,7 +163,7 @@ public final class EscTypography {
         int cursor = y - Math.max(0, scrollPx);
         int lineH = font.lineHeight + 2;
         for (String raw : lines) {
-            if (raw == null || raw.isBlank()) {
+            if (raw == null || raw.trim().isEmpty()) {
                 cursor += lineH / 2;
                 continue;
             }

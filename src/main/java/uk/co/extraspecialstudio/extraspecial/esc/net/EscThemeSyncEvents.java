@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.net;
 
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -16,7 +16,8 @@ public final class EscThemeSyncEvents {
 
     @SubscribeEvent
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
+        if (event.getPlayer() instanceof ServerPlayerEntity) {
+            ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
             EscNet.sendThemeTo(player);
         }
     }
@@ -27,7 +28,7 @@ public final class EscThemeSyncEvents {
         }
 
         @SubscribeEvent
-        public static void onLogout(ClientPlayerNetworkEvent.LoggingOut event) {
+        public static void onLogout(ClientPlayerNetworkEvent.LoggedOutEvent event) {
             EscThemeManager.clearServerPackTheme();
         }
     }

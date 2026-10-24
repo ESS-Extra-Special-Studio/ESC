@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import net.minecraft.client.gui.GuiGraphics;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscBackdropStyle;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscThemeConfigs;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscBackground;
@@ -52,15 +52,25 @@ public final class EscControlCentreLayout implements EscHubLayout {
     }
 
     private static EscRect[] panes(EscRect bounds, RailMode mode) {
-        return switch (mode) {
-            case STRIP -> new EscRect[]{bounds, new EscRect(bounds.x(), bounds.bottom(), 0, 0)};
-            case ICON_ONLY -> bounds.splitColumns(new float[]{0.14f, 0.86f}, 8);
-            case FULL -> bounds.splitColumns(new float[]{0.30f, 0.70f}, 8);
-        };
+                switch (mode) {
+            case STRIP:
+                {
+                    return new EscRect[]{bounds, new EscRect(bounds.x(), bounds.bottom(), 0, 0)};
+                }
+            case ICON_ONLY:
+                {
+                    return bounds.splitColumns(new float[]{0.14f, 0.86f}, 8);
+                }
+            case FULL:
+                {
+                    return bounds.splitColumns(new float[]{0.30f, 0.70f}, 8);
+                }
+        }
+        throw new IllegalStateException();
     }
 
     @Override
-    public void render(GuiGraphics g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick) {
+    public void render(EscGraphics g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick) {
         if (!ctx.hostDrawsChrome()) {
             EscBackground.render(g, bounds, ctx.style().theme());
         }
@@ -103,7 +113,7 @@ public final class EscControlCentreLayout implements EscHubLayout {
         }
     }
 
-    private void renderRail(GuiGraphics g, EscHubLayoutContext ctx, EscRect listArea, List<EscHubSection> sections, RailMode mode) {
+    private void renderRail(EscGraphics g, EscHubLayoutContext ctx, EscRect listArea, List<EscHubSection> sections, RailMode mode) {
         int rowH = Math.min(ROW_H, Math.max(22, listArea.height() / Math.max(1, sections.size())));
         for (int i = 0; i < sections.size(); i++) {
             EscHubSection s = sections.get(i);
@@ -143,7 +153,7 @@ public final class EscControlCentreLayout implements EscHubLayout {
         }
     }
 
-    private void renderStrip(GuiGraphics g, EscHubLayoutContext ctx, EscRect strip, List<EscHubSection> sections) {
+    private void renderStrip(EscGraphics g, EscHubLayoutContext ctx, EscRect strip, List<EscHubSection> sections) {
         EscPanel.renderPanel(g, strip, ctx.style());
         EscStripSlots.Plan plan = EscStripSlots.plan(strip, sections.size(), 4, 4);
         for (int i = 0; i < sections.size(); i++) {
@@ -165,7 +175,7 @@ public final class EscControlCentreLayout implements EscHubLayout {
         }
     }
 
-    private static void drawChip(GuiGraphics g, EscHubLayoutContext ctx, EscRect chip, String label) {
+    private static void drawChip(EscGraphics g, EscHubLayoutContext ctx, EscRect chip, String label) {
         EscPanel.fill(g, chip, ctx.style().panelFillColor());
         EscPanel.border(g, chip, ctx.style().panelBorderColor(), 1);
         String text = EscTypography.truncate(ctx.font(), label, Math.max(8, chip.width() - 8));

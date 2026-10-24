@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ResourceLocation;
 import uk.co.extraspecialstudio.extraspecial.Extraspecialcore;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public final class EscFonts {
     public static final ResourceLocation VT323 = ns("vt323");
 
     /** All built-in ESC faces (excluding vanilla default). Useful for previews or settings enums. */
-    public static final List<ResourceLocation> BUNDLED_IDS = List.of(
+    public static final List<ResourceLocation> BUNDLED_IDS = java.util.Arrays.asList(
         FIRA_CODE,
         MONOCRAFT,
         GNU_UNIFONT,
@@ -51,6 +51,6 @@ public final class EscFonts {
     );
 
     private static ResourceLocation ns(String path) {
-        return ResourceLocation.fromNamespaceAndPath(Extraspecialcore.MODID, path);
+        return new ResourceLocation(Extraspecialcore.MODID, path);
     }
 }

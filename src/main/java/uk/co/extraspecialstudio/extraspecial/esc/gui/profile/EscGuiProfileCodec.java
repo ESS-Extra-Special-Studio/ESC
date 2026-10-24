@@ -49,7 +49,7 @@ public final class EscGuiProfileCodec {
     }
 
     public static EscGuiProfile fromJson(String json) {
-        JsonObject root = JsonParser.parseString(json).getAsJsonObject();
+        JsonObject root = new com.google.gson.JsonParser().parse(json).getAsJsonObject();
         EscGuiProfile profile = new EscGuiProfile();
         if (root.has("id")) {
             profile.setId(root.get("id").getAsString());

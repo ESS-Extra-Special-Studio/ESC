@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.FontRenderer;
 import uk.co.extraspecialstudio.extraspecial.esc.sound.EscSound;
 import uk.co.extraspecialstudio.extraspecial.esc.sound.EscUiCue;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscUiStyle;
@@ -18,11 +18,11 @@ public final class EscHubLayoutContext {
     private final Function<String, List<EscHubGroup>> groupsForSection;
     private final Consumer<EscHubLeaf> openLeaf;
     private final EscUiStyle style;
-    private final Font font;
+    private final FontRenderer font;
     private int sectionIndex;
     private String expandedGroupId = "";
     private EscHubLayoutId layoutId = EscHubLayoutId.CAROUSEL;
-    private List<String> headerTips = List.of();
+    private List<String> headerTips = java.util.Collections.emptyList();
     /** Flat accordion focus index within the selected section (-1 = none). */
     private int detailCursor = -1;
     /** Extra top padding inside the detail accordion (e.g. MODS search/filter bar). */
@@ -42,9 +42,9 @@ public final class EscHubLayoutContext {
         Function<String, List<EscHubGroup>> groupsForSection,
         Consumer<EscHubLeaf> openLeaf,
         EscUiStyle style,
-        Font font
+        FontRenderer font
     ) {
-        this.sections = List.copyOf(Objects.requireNonNull(sections, "sections"));
+        this.sections = java.util.Collections.unmodifiableList(new java.util.ArrayList<>(Objects.requireNonNull(sections, "sections")));
         this.groupsForSection = Objects.requireNonNull(groupsForSection, "groupsForSection");
         this.openLeaf = Objects.requireNonNull(openLeaf, "openLeaf");
         this.style = Objects.requireNonNull(style, "style");
@@ -61,7 +61,7 @@ public final class EscHubLayoutContext {
             return cachedGroups;
         }
         List<EscHubGroup> g = groupsForSection.apply(sectionId);
-        List<EscHubGroup> out = g == null ? List.of() : g;
+        List<EscHubGroup> out = g == null ? java.util.Collections.emptyList() : g;
         cachedGroupsSectionId = sectionId;
         cachedGroups = out;
         return out;
@@ -84,7 +84,7 @@ public final class EscHubLayoutContext {
         return style;
     }
 
-    public Font font() {
+    public FontRenderer font() {
         return font;
     }
 
@@ -144,7 +144,7 @@ public final class EscHubLayoutContext {
     }
 
     public void toggleGroup(String groupId) {
-        if (groupId == null || groupId.isBlank()) {
+        if (groupId == null || groupId.trim().isEmpty()) {
             return;
         }
         boolean collapsing = groupId.equals(expandedGroupId);
@@ -169,7 +169,7 @@ public final class EscHubLayoutContext {
     }
 
     public void setHeaderTips(List<String> headerTips) {
-        this.headerTips = headerTips == null ? List.of() : List.copyOf(headerTips);
+        this.headerTips = headerTips == null ? java.util.Collections.emptyList() : java.util.Collections.unmodifiableList(new java.util.ArrayList<>(headerTips));
     }
 
     /** Pixels reserved at the top of the detail accordion for host chrome (search/filter). */

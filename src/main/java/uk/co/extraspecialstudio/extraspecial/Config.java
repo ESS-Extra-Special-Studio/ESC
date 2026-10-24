@@ -3,7 +3,7 @@ package uk.co.extraspecialstudio.extraspecial;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.fml.config.ModConfig;
 
 /**
  * Common config for Extra Special Core ({@code config/extraspecialcore-common.toml}).
@@ -43,7 +43,7 @@ public class Config {
     public static boolean debugLogging;
 
     @SubscribeEvent
-    static void onLoad(final ModConfigEvent event) {
+    static void onLoad(final ModConfig.ModConfigEvent event) {
         if (event.getConfig().getSpec() != SPEC) {
             return;
         }

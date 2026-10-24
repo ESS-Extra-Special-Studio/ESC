@@ -1,8 +1,8 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screen.Screen;
 import uk.co.extraspecialstudio.extraspecial.esc.sound.EscSound;
 import uk.co.extraspecialstudio.extraspecial.esc.sound.EscUiCue;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscColor;
@@ -125,11 +125,21 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
     }
 
     private static int defaultForRole(EscTheme base, EscColorRole role) {
-        return switch (role) {
-            case BORDER -> base.borderArgb();
-            case TEXT -> EscColor.opaque(base.textTitleRgb());
-            case ACCENT -> base.accentArgb();
-        };
+                switch (role) {
+            case BORDER:
+                {
+                    return base.borderArgb();
+                }
+            case TEXT:
+                {
+                    return EscColor.opaque(base.textTitleRgb());
+                }
+            case ACCENT:
+                {
+                    return base.accentArgb();
+                }
+        }
+        throw new IllegalStateException();
     }
 
     private void setFromArgb(int argb) {
@@ -360,8 +370,9 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
     }
 
     @Override
-    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        renderBackground(g);
+    public void render(MatrixStack pose, int mouseX, int mouseY, float partialTick) {
+        EscGraphics g = new EscGraphics(pose);
+        renderBackground(pose);
         EscRect content = contentRect();
         EscBackground.render(g, content, style.theme());
         EscTypography.drawCentered(g, font, heading.toUpperCase(Locale.ROOT),
@@ -380,10 +391,10 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
 
         EscPanel.renderPanel(g, footerBounds, style);
         EscCrtLayer.render(g, content, style.theme());
-        super.render(g, mouseX, mouseY, partialTick);
+        super.render(pose, mouseX, mouseY, partialTick);
     }
 
-    private void drawHueWheel(GuiGraphics g) {
+    private void drawHueWheel(EscGraphics g) {
         int cx = wheelArea.x() + wheelArea.width() / 2;
         int cy = wheelArea.y() + wheelArea.height() / 2;
         for (int a = 0; a < 360; a += 2) {
@@ -406,7 +417,7 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
         EscPanel.border(g, swatch, style.panelBorderColor(), 1);
     }
 
-    private void drawSvSquare(GuiGraphics g) {
+    private void drawSvSquare(EscGraphics g) {
         for (int y = 0; y < svSize; y += 2) {
             float vv = 1f - y / (float) Math.max(1, svSize - 1);
             for (int x = 0; x < svSize; x += 2) {
@@ -422,7 +433,7 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
         EscPanel.border(g, new EscRect(px - 2, py - 2, 4, 4), 0xFF000000, 1);
     }
 
-    private void drawPreview(GuiGraphics g) {
+    private void drawPreview(EscGraphics g) {
         EscPanel.fill(g, previewArea, workingArgb);
         EscPanel.border(g, previewArea, style.panelBorderColor(), 1);
         String label = "#" + EscColor.toHexRgb(workingArgb)
@@ -431,7 +442,7 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
         g.drawString(font, label, previewArea.x() + 6, previewArea.y() + (previewArea.height() - font.lineHeight) / 2, textColor, false);
     }
 
-    private void drawChipRow(GuiGraphics g, EscRect area, List<Integer> colors, String title) {
+    private void drawChipRow(EscGraphics g, EscRect area, List<Integer> colors, String title) {
         if (area == null) return;
         g.drawString(font, title, area.x(), area.y() - font.lineHeight - 2, style.textColorBody() | 0xFF000000, false);
         int x = area.x();
@@ -443,18 +454,31 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
         }
     }
 
-    private void drawPresetRow(GuiGraphics g) {
+    private void drawPresetRow(EscGraphics g) {
         if (presetArea == null) return;
         g.drawString(font, "Presets (RMB on hub = cycle)", presetArea.x(),
             presetArea.y() - font.lineHeight - 2, style.textColorBody() | 0xFF000000, false);
         int x = presetArea.x();
         for (EscThemeSwatch sw : EscThemeSwatch.values()) {
             EscRect chip = new EscRect(x, presetArea.y(), CHIP, CHIP);
-            int color = switch (role == null ? EscColorRole.ACCENT : role) {
-                case BORDER -> sw.borderArgb();
-                case TEXT -> EscColor.opaque(sw.titleRgb());
-                case ACCENT -> sw.accentArgb();
-            };
+            int color = 0;
+            switch (role == null ? EscColorRole.ACCENT : role) {
+                case BORDER:
+                    {
+                        color = sw.borderArgb();
+                        break;
+                    }
+                case TEXT:
+                    {
+                        color = EscColor.opaque(sw.titleRgb());
+                        break;
+                    }
+                case ACCENT:
+                    {
+                        color = sw.accentArgb();
+                        break;
+                    }
+            }
             EscPanel.fill(g, chip, color);
             EscPanel.border(g, chip, style.panelBorderColor(), 1);
             x += CHIP + 3;
@@ -504,11 +528,24 @@ public final class EscColorPickerScreen extends EscScreen implements EscOwnsBack
         for (EscThemeSwatch sw : EscThemeSwatch.values()) {
             EscRect chip = new EscRect(x, presetArea.y(), CHIP, CHIP);
             if (chip.contains(mx, my)) {
-                int color = switch (role == null ? EscColorRole.ACCENT : role) {
-                    case BORDER -> sw.borderArgb();
-                    case TEXT -> EscColor.opaque(sw.titleRgb());
-                    case ACCENT -> sw.accentArgb();
-                };
+                int color = 0;
+                switch (role == null ? EscColorRole.ACCENT : role) {
+                    case BORDER:
+                        {
+                            color = sw.borderArgb();
+                            break;
+                        }
+                    case TEXT:
+                        {
+                            color = EscColor.opaque(sw.titleRgb());
+                            break;
+                        }
+                    case ACCENT:
+                        {
+                            color = sw.accentArgb();
+                            break;
+                        }
+                }
                 setFromArgb(color);
                 syncFieldsFromWorking();
                 EscSound.play(EscUiCue.SELECT);

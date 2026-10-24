@@ -1,12 +1,12 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FormattedCharSequence;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.IReorderingProcessor;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 public final class EscText {
 
@@ -15,38 +15,38 @@ public final class EscText {
     private EscText() {
     }
 
-    public static int wrapHeight(Font font, String text, int maxWidth) {
+    public static int wrapHeight(FontRenderer font, String text, int maxWidth) {
         return wrapHeight(font, text, maxWidth, EscFonts.DEFAULT);
     }
 
-    public static Component literal(String text) {
+    public static ITextComponent literal(String text) {
         return literalCompat(text).withStyle(s -> s.withFont(EscFonts.DEFAULT));
     }
 
-    public static Component styled(Component text) {
+    public static ITextComponent styled(ITextComponent text) {
         return copyCompat(text).withStyle(s -> s.withFont(EscFonts.DEFAULT));
     }
 
-    public static void drawWrapped(GuiGraphics graphics, Font font, String text, int x, int y, int maxWidth, int color) {
+    public static void drawWrapped(EscGraphics graphics, FontRenderer font, String text, int x, int y, int maxWidth, int color) {
         drawWrapped(graphics, font, text, x, y, maxWidth, color, EscFonts.DEFAULT);
     }
 
-    public static int headingHeight(Font font, String heading, int maxWidth) {
+    public static int headingHeight(FontRenderer font, String heading, int maxWidth) {
         return wrapHeight(font, heading, maxWidth, EscFonts.DEFAULT);
     }
 
-    public static int wrapHeight(Font font, String text, int maxWidth, ResourceLocation fontId) {
+    public static int wrapHeight(FontRenderer font, String text, int maxWidth, ResourceLocation fontId) {
         int lines = font.split(literalCompat(text).withStyle(s -> s.withFont(fontId)), maxWidth).size();
         if (lines <= 0) return 0;
         int step = wrappedLineAdvance(font);
         return (lines - 1) * step + font.lineHeight;
     }
 
-    public static int wrapHeight(Font font, Component text, int maxWidth) {
+    public static int wrapHeight(FontRenderer font, ITextComponent text, int maxWidth) {
         return wrapHeight(font, text, maxWidth, EscFonts.DEFAULT);
     }
 
-    public static int wrapHeight(Font font, Component text, int maxWidth, ResourceLocation fontId) {
+    public static int wrapHeight(FontRenderer font, ITextComponent text, int maxWidth, ResourceLocation fontId) {
         if (maxWidth <= 0) {
             return 0;
         }
@@ -56,14 +56,14 @@ public final class EscText {
         return (lines - 1) * step + font.lineHeight;
     }
 
-    public static void drawWrappedComponent(GuiGraphics graphics, Font font, Component text, int x, int y, int maxWidth, int color) {
+    public static void drawWrappedComponent(EscGraphics graphics, FontRenderer font, ITextComponent text, int x, int y, int maxWidth, int color) {
         drawWrappedComponent(graphics, font, text, x, y, maxWidth, color, EscFonts.DEFAULT);
     }
 
     public static void drawWrappedComponent(
-        GuiGraphics graphics,
-        Font font,
-        Component text,
+        EscGraphics graphics,
+        FontRenderer font,
+        ITextComponent text,
         int x,
         int y,
         int maxWidth,
@@ -74,19 +74,19 @@ public final class EscText {
             return;
         }
         int step = wrappedLineAdvance(font);
-        for (FormattedCharSequence line : font.split(copyCompat(text).withStyle(s -> s.withFont(fontId)), maxWidth)) {
+        for (IReorderingProcessor line : font.split(copyCompat(text).withStyle(s -> s.withFont(fontId)), maxWidth)) {
             graphics.drawString(font, line, x, y, color, false);
             y += step;
         }
     }
 
     /**
-     * Draw wrapped {@link Component} text clipped to a rect (word wrap + scissor). Returns bottom Y after last line.
+     * Draw wrapped {@link ITextComponent} text clipped to a rect (word wrap + scissor). Returns bottom Y after last line.
      */
     public static int drawWrappedComponentInRect(
-        GuiGraphics graphics,
-        Font font,
-        Component text,
+        EscGraphics graphics,
+        FontRenderer font,
+        ITextComponent text,
         EscRect bounds,
         int color
     ) {
@@ -97,7 +97,7 @@ public final class EscText {
         int y = bounds.y();
         try {
             int step = wrappedLineAdvance(font);
-            for (FormattedCharSequence line : font.split(
+            for (IReorderingProcessor line : font.split(
                 copyCompat(text).withStyle(s -> s.withFont(EscFonts.DEFAULT)), Math.max(1, bounds.width()))) {
                 if (y + font.lineHeight > bounds.bottom()) {
                     break;
@@ -111,43 +111,43 @@ public final class EscText {
         return y;
     }
 
-    public static void drawWrapped(GuiGraphics graphics, Font font, String text, int x, int y, int maxWidth, int color, ResourceLocation fontId) {
+    public static void drawWrapped(EscGraphics graphics, FontRenderer font, String text, int x, int y, int maxWidth, int color, ResourceLocation fontId) {
         int step = wrappedLineAdvance(font);
-        for (FormattedCharSequence line : font.split(literalCompat(text).withStyle(s -> s.withFont(fontId)), maxWidth)) {
+        for (IReorderingProcessor line : font.split(literalCompat(text).withStyle(s -> s.withFont(fontId)), maxWidth)) {
             graphics.drawString(font, line, x, y, color, false);
             y += step;
         }
     }
 
     /** One extra px between baselines avoids descenders crashing into ascenders with TTF-heavy fonts (e.g. Fira). */
-    private static int wrappedLineAdvance(Font font) {
+    private static int wrappedLineAdvance(FontRenderer font) {
         return font.lineHeight + 1;
     }
 
-    public static void drawString(GuiGraphics graphics, Font font, String text, int x, int y, int color, boolean shadow, ResourceLocation fontId) {
+    public static void drawString(EscGraphics graphics, FontRenderer font, String text, int x, int y, int color, boolean shadow, ResourceLocation fontId) {
         graphics.drawString(font, literalCompat(text).withStyle(s -> s.withFont(fontId)), x, y, color, shadow);
     }
 
-    public static void drawComponent(GuiGraphics graphics, Font font, Component text, int x, int y, int color, boolean shadow) {
+    public static void drawComponent(EscGraphics graphics, FontRenderer font, ITextComponent text, int x, int y, int color, boolean shadow) {
         drawComponent(graphics, font, text, x, y, color, shadow, EscFonts.DEFAULT);
     }
 
-    public static void drawComponent(GuiGraphics graphics, Font font, Component text, int x, int y, int color, boolean shadow, ResourceLocation fontId) {
+    public static void drawComponent(EscGraphics graphics, FontRenderer font, ITextComponent text, int x, int y, int color, boolean shadow, ResourceLocation fontId) {
         graphics.drawString(font, copyCompat(text).withStyle(s -> s.withFont(fontId)), x, y, color, shadow);
     }
 
-    public static void drawCentered(GuiGraphics graphics, Font font, Component text, int centerX, int y, int color) {
+    public static void drawCentered(EscGraphics graphics, FontRenderer font, ITextComponent text, int centerX, int y, int color) {
         drawCentered(graphics, font, text, centerX, y, color, EscFonts.DEFAULT);
     }
 
-    public static void drawCentered(GuiGraphics graphics, Font font, Component text, int centerX, int y, int color, ResourceLocation fontId) {
-        FormattedCharSequence visual = copyCompat(text).withStyle(s -> s.withFont(fontId)).getVisualOrderText();
+    public static void drawCentered(EscGraphics graphics, FontRenderer font, ITextComponent text, int centerX, int y, int color, ResourceLocation fontId) {
+        IReorderingProcessor visual = copyCompat(text).withStyle(s -> s.withFont(fontId)).getVisualOrderText();
         int w = font.width(visual);
         graphics.drawString(font, visual, centerX - w / 2, y, color, false);
     }
 
     /** Line height for a font id — use for vertical centering when drawing with {@link EscFonts#DEFAULT}. */
-    public static int measureLineHeight(Font font, ResourceLocation fontId) {
+    public static int measureLineHeight(FontRenderer font, ResourceLocation fontId) {
         return wrappedLineAdvance(font);
     }
 
@@ -156,30 +156,30 @@ public final class EscText {
      * Use instead of raw {@code font.width} whenever the text is drawn through ESC,
      * otherwise measurements drift from the glyphs actually shown (carets, rules, chips).
      */
-    public static int width(Font font, String text, ResourceLocation fontId) {
+    public static int width(FontRenderer font, String text, ResourceLocation fontId) {
         if (text == null || text.isEmpty()) {
             return 0;
         }
         return font.width(literalCompat(text).withStyle(s -> s.withFont(fontId)));
     }
 
-    public static int width(Font font, String text) {
+    public static int width(FontRenderer font, String text) {
         return width(font, text, EscFonts.DEFAULT);
     }
 
-    public static int measureLineHeight(Font font) {
+    public static int measureLineHeight(FontRenderer font) {
         return measureLineHeight(font, EscFonts.DEFAULT);
     }
 
     /** Draw text centered in a rect; scales down if wider than bounds, else truncates with ellipsis. */
-    public static void drawFitted(GuiGraphics graphics, Font font, Component text, EscRect bounds, int color) {
+    public static void drawFitted(EscGraphics graphics, FontRenderer font, ITextComponent text, EscRect bounds, int color) {
         drawFitted(graphics, font, text, bounds, color, EscFonts.DEFAULT, DEFAULT_MIN_SCALE);
     }
 
     public static void drawFitted(
-        GuiGraphics graphics,
-        Font font,
-        Component text,
+        EscGraphics graphics,
+        FontRenderer font,
+        ITextComponent text,
         EscRect bounds,
         int color,
         ResourceLocation fontId,
@@ -190,9 +190,9 @@ public final class EscText {
 
     /** Draw text inside a rect with scissor clip; optionally scale down to fit width. */
     public static void drawInRect(
-        GuiGraphics graphics,
-        Font font,
-        Component text,
+        EscGraphics graphics,
+        FontRenderer font,
+        ITextComponent text,
         EscRect bounds,
         int color,
         ResourceLocation fontId,
@@ -202,14 +202,14 @@ public final class EscText {
         if (bounds.width() <= 0 || bounds.height() <= 0) {
             return;
         }
-        FormattedCharSequence visual = copyCompat(text).withStyle(s -> s.withFont(fontId)).getVisualOrderText();
+        IReorderingProcessor visual = copyCompat(text).withStyle(s -> s.withFont(fontId)).getVisualOrderText();
         int textWidth = font.width(visual);
         int lineHeight = measureLineHeight(font, fontId);
 
         graphics.enableScissor(bounds.x(), bounds.y(), bounds.right(), bounds.bottom());
         if (scaleDown && textWidth > bounds.width()) {
             float scale = Math.max(minScale, (float) bounds.width() / (float) textWidth);
-            PoseStack pose = graphics.pose();
+            MatrixStack pose = graphics.pose();
             pose.pushPose();
             float cx = bounds.x() + bounds.width() / 2f;
             float cy = bounds.y() + bounds.height() / 2f;
@@ -234,7 +234,7 @@ public final class EscText {
         graphics.disableScissor();
     }
 
-    private static String truncateToWidth(Font font, String text, int maxWidth, ResourceLocation fontId) {
+    private static String truncateToWidth(FontRenderer font, String text, int maxWidth, ResourceLocation fontId) {
         if (text == null || text.isEmpty()) {
             return "";
         }
@@ -251,12 +251,15 @@ public final class EscText {
         return ellipsis;
     }
 
-    private static MutableComponent literalCompat(String text) {
-        return Component.empty().append(text);
+    private static IFormattableTextComponent literalCompat(String text) {
+        return new StringTextComponent(text == null ? "" : text);
     }
 
-    private static MutableComponent copyCompat(Component text) {
-        return Component.empty().append(text);
+    private static IFormattableTextComponent copyCompat(ITextComponent text) {
+        if (text == null) {
+            return new StringTextComponent("");
+        }
+        return text.copy();
     }
 
     public static String truncate(String text, int maxChars) {
@@ -268,8 +271,8 @@ public final class EscText {
 
     /** Marquee text clipped to {@code maxWidth}; static when it already fits. */
     public static void drawScrollingString(
-        GuiGraphics graphics,
-        Font font,
+        EscGraphics graphics,
+        FontRenderer font,
         String text,
         int x,
         int y,
@@ -280,8 +283,8 @@ public final class EscText {
     }
 
     public static void drawScrollingString(
-        GuiGraphics graphics,
-        Font font,
+        EscGraphics graphics,
+        FontRenderer font,
         String text,
         int x,
         int y,
@@ -292,7 +295,7 @@ public final class EscText {
         if (text == null || text.isEmpty() || maxWidth <= 0) {
             return;
         }
-        FormattedCharSequence visual = literalCompat(text).withStyle(s -> s.withFont(fontId)).getVisualOrderText();
+        IReorderingProcessor visual = literalCompat(text).withStyle(s -> s.withFont(fontId)).getVisualOrderText();
         int textWidth = font.width(visual);
         if (textWidth <= maxWidth) {
             graphics.drawString(font, visual, x, y, color, false);

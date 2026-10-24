@@ -62,7 +62,7 @@ public enum EscThemeSwatch {
     }
 
     public static EscThemeSwatch byName(String raw) {
-        if (raw == null || raw.isBlank()) {
+        if (raw == null || raw.trim().isEmpty()) {
             return null;
         }
         String key = raw.trim();

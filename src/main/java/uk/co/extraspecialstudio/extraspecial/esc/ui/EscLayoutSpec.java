@@ -4,14 +4,30 @@ package uk.co.extraspecialstudio.extraspecial.esc.ui;
  * Anchor + offset layout specification relative to a parent {@link EscRect}.
  * Width/height of {@code -1} means derive from anchor mode (stretch/fill).
  */
-public record EscLayoutSpec(
-    EscAnchor anchor,
-    int offsetX,
-    int offsetY,
-    int width,
-    int height,
-    EscInsets stretchInsets
-) {
+public final class EscLayoutSpec {
+    private final EscAnchor anchor;
+    private final int offsetX;
+    private final int offsetY;
+    private final int width;
+    private final int height;
+    private final EscInsets stretchInsets;
+
+    public EscLayoutSpec(EscAnchor anchor, int offsetX, int offsetY, int width, int height, EscInsets stretchInsets) {
+        this.anchor = anchor;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+        this.width = width;
+        this.height = height;
+        this.stretchInsets = stretchInsets;
+    }
+
+    public EscAnchor anchor() { return this.anchor; }
+    public int offsetX() { return this.offsetX; }
+    public int offsetY() { return this.offsetY; }
+    public int width() { return this.width; }
+    public int height() { return this.height; }
+    public EscInsets stretchInsets() { return this.stretchInsets; }
+
     public static EscLayoutSpec of(EscAnchor anchor, int offsetX, int offsetY, int width, int height) {
         return new EscLayoutSpec(anchor, offsetX, offsetY, width, height, EscInsets.ZERO);
     }

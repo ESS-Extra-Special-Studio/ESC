@@ -9,7 +9,7 @@ public enum EscGuiLayoutMode {
     FULL;
 
     public static EscGuiLayoutMode parse(String raw) {
-        if (raw == null || raw.isBlank()) {
+        if (raw == null || raw.trim().isEmpty()) {
             return CLASSIC;
         }
         try {

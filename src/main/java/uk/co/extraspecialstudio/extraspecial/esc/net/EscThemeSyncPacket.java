@@ -1,9 +1,9 @@
 package uk.co.extraspecialstudio.extraspecial.esc.net;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.fml.network.NetworkEvent;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscFrameStyle;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscTheme;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscThemeConfigs;
@@ -36,7 +36,7 @@ public final class EscThemeSyncPacket {
         return new EscThemeSyncPacket(true, pack.lockPlayers(), pack.theme());
     }
 
-    public static void encode(EscThemeSyncPacket msg, FriendlyByteBuf buf) {
+    public static void encode(EscThemeSyncPacket msg, PacketBuffer buf) {
         buf.writeVarInt(VERSION);
         buf.writeBoolean(msg.override);
         buf.writeBoolean(msg.lockPlayers);
@@ -58,7 +58,7 @@ public final class EscThemeSyncPacket {
         buf.writeFloat(t.motionScale());
     }
 
-    public static EscThemeSyncPacket decode(FriendlyByteBuf buf) {
+    public static EscThemeSyncPacket decode(PacketBuffer buf) {
         int ver = buf.readVarInt();
         boolean override = buf.readBoolean();
         boolean lock = buf.readBoolean();

@@ -1,8 +1,9 @@
 package uk.co.extraspecialstudio.extraspecial.esc.gui;
 
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.text.ITextComponent;
 import uk.co.extraspecialstudio.extraspecial.esc.gui.asset.EscAssetRenderContext;
 import uk.co.extraspecialstudio.extraspecial.esc.gui.profile.EscGuiBindings;
 import uk.co.extraspecialstudio.extraspecial.esc.gui.profile.EscGuiProfile;
@@ -62,15 +63,16 @@ public final class EscGuiScreen extends EscScreen {
     }
 
     @Override
-    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        renderBackground(g);
+    public void render(MatrixStack pose, int mouseX, int mouseY, float partialTick) {
+        EscGraphics g = new EscGraphics(pose);
+        renderBackground(pose);
         EscBackground.render(g, new EscRect(0, 0, width, height), style.theme());
         EscPanel.renderPanel(g, contentBounds, style);
         EscAssetRenderContext ctx = new EscAssetRenderContext(
             g, font, contentBounds, style, bindings, this, actions, this::invokeAction
         );
         EscGuiRuntime.renderProfile(ctx, profile, contentBounds);
-        super.render(g, mouseX, mouseY, partialTick);
+        super.render(pose, mouseX, mouseY, partialTick);
         EscCrtLayer.render(g, contentBounds, style.theme());
     }
 

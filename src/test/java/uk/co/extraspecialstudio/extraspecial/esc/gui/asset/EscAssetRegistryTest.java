@@ -31,7 +31,7 @@ class EscAssetRegistryTest {
 
     @Test
     void createInstanceAppliesDefaults() {
-        EscAssetDef header = EscAssetRegistry.get("esc:header").orElseThrow();
+        EscAssetDef header = EscAssetRegistry.get("esc:header").get();
         EscAssetInstance instance = header.createInstance(EscAssetSlot.TITLE);
         assertEquals("esc:header", instance.assetId());
         assertEquals(EscAssetSlot.TITLE, instance.slot());

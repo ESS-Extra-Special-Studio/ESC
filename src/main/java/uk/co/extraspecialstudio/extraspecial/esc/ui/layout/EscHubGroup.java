@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,19 +12,36 @@ import java.util.Objects;
  * group represents an author, studio, or curated family — otherwise the badge will
  * silently follow whichever leaf sorts first.
  */
-public record EscHubGroup(String id, String title, List<EscHubLeaf> leaves, ResourceLocation icon) {
+public final class EscHubGroup {
+    private final String id;
+    private final String title;
+    private final List<EscHubLeaf> leaves;
+    private final ResourceLocation icon;
+
+    public EscHubGroup(String id, String title, List<EscHubLeaf> leaves, ResourceLocation icon) {
+    Objects.requireNonNull(id, "id");
+    Objects.requireNonNull(title, "title");
+    leaves = leaves == null ? java.util.Collections.emptyList() : java.util.Collections.unmodifiableList(new java.util.ArrayList<>(leaves));
+    if (icon == null) {
+    icon = firstLeafIcon(leaves);
+    }
+
+        this.id = id;
+        this.title = title;
+        this.leaves = leaves;
+        this.icon = icon;
+    }
+
+    public String id() { return this.id; }
+    public String title() { return this.title; }
+    public List<EscHubLeaf> leaves() { return this.leaves; }
+    public ResourceLocation icon() { return this.icon; }
+
     public EscHubGroup(String id, String title, List<EscHubLeaf> leaves) {
         this(id, title, leaves, firstLeafIcon(leaves));
     }
 
-    public EscHubGroup {
-        Objects.requireNonNull(id, "id");
-        Objects.requireNonNull(title, "title");
-        leaves = leaves == null ? List.of() : List.copyOf(leaves);
-        if (icon == null) {
-            icon = firstLeafIcon(leaves);
-        }
-    }
+    
 
     /** True when this group is a single openable entry (common for UTILITY). */
     public boolean singleton() {

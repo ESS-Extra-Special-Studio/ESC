@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import net.minecraft.client.gui.GuiGraphics;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscVisualBudget;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscBackground;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscCrtLayer;
@@ -46,7 +46,32 @@ public final class EscOrbitalLayout implements EscHubLayout {
         return EscLayoutBands.rows(bounds, new float[]{0.55f, 0.45f}, 8, new int[]{80, 72});
     }
 
-    private record OrbitGeom(EscRect orbit, EscRect hub, int rx, int ry, int nodeW, int nodeH, float baseAngle) {
+    private static final class OrbitGeom {
+        private final EscRect orbit;
+        private final EscRect hub;
+        private final int rx;
+        private final int ry;
+        private final int nodeW;
+        private final int nodeH;
+        private final float baseAngle;
+
+        public OrbitGeom(EscRect orbit, EscRect hub, int rx, int ry, int nodeW, int nodeH, float baseAngle) {
+            this.orbit = orbit;
+            this.hub = hub;
+            this.rx = rx;
+            this.ry = ry;
+            this.nodeW = nodeW;
+            this.nodeH = nodeH;
+            this.baseAngle = baseAngle;
+        }
+
+        public EscRect orbit() { return this.orbit; }
+        public EscRect hub() { return this.hub; }
+        public int rx() { return this.rx; }
+        public int ry() { return this.ry; }
+        public int nodeW() { return this.nodeW; }
+        public int nodeH() { return this.nodeH; }
+        public float baseAngle() { return this.baseAngle; }
     }
 
     private static OrbitGeom geometry(EscHubLayoutContext ctx, EscRect orbit, float selectionOffset) {
@@ -104,7 +129,7 @@ public final class EscOrbitalLayout implements EscHubLayout {
     }
 
     @Override
-    public void render(GuiGraphics g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick) {
+    public void render(EscGraphics g, EscHubLayoutContext ctx, EscRect bounds, int mouseX, int mouseY, float partialTick) {
         if (!ctx.hostDrawsChrome()) {
             EscBackground.render(g, bounds, ctx.style().theme());
         }

@@ -10,14 +10,14 @@ public final class EscGuiBindings {
     private final Map<String, String> values = new LinkedHashMap<>();
 
     public EscGuiBindings bind(String key, String value) {
-        if (key != null && !key.isBlank()) {
+        if (key != null && !key.trim().isEmpty()) {
             values.put(key, value == null ? "" : value);
         }
         return this;
     }
 
     public Map<String, String> asMap() {
-        return Map.copyOf(values);
+        return java.util.Collections.unmodifiableMap(new java.util.LinkedHashMap<>(values));
     }
 
     public String get(String key) {

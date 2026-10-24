@@ -28,15 +28,15 @@ public final class EscAssetDef {
         EscAssetRenderer renderer,
         boolean interactive
     ) {
-        if (id == null || id.isBlank()) {
+        if (id == null || id.trim().isEmpty()) {
             throw new IllegalArgumentException("id required");
         }
         this.id = id;
         this.type = type == null ? EscAssetType.PANEL : type;
         this.category = category == null ? EscAssetCategory.CORE : category;
-        this.displayName = displayName == null || displayName.isBlank() ? id : displayName;
+        this.displayName = displayName == null || displayName.trim().isEmpty() ? id : displayName;
         this.description = description == null ? "" : description;
-        this.properties = properties == null ? List.of() : List.copyOf(properties);
+        this.properties = properties == null ? java.util.Collections.emptyList() : java.util.Collections.unmodifiableList(new java.util.ArrayList<>(properties));
         this.renderer = renderer;
         this.interactive = interactive;
     }

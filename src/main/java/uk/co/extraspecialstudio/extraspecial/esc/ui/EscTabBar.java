@@ -1,7 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.FontRenderer;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +13,25 @@ import java.util.Objects;
  */
 public final class EscTabBar {
 
-    public record Tab(String id, String label, boolean enabled) {
-        public Tab {
-            Objects.requireNonNull(id, "id");
-            Objects.requireNonNull(label, "label");
+    public static final class Tab {
+        private final String id;
+        private final String label;
+        private final boolean enabled;
+
+        public Tab(String id, String label, boolean enabled) {
+        Objects.requireNonNull(id, "id");
+        Objects.requireNonNull(label, "label");
+
+            this.id = id;
+            this.label = label;
+            this.enabled = enabled;
         }
+
+        public String id() { return this.id; }
+        public String label() { return this.label; }
+        public boolean enabled() { return this.enabled; }
+
+        
 
         public static Tab of(String id, String label) {
             return new Tab(id, label, true);
@@ -26,26 +40,57 @@ public final class EscTabBar {
         public static Tab disabled(String id, String label) {
             return new Tab(id, label, false);
         }
+    
     }
 
-    public record Style(
-        int tabWidth,
-        int tabHeight,
-        int gap,
-        int bgSelected,
-        int bgIdle,
-        int bgHover,
-        int bgDisabled,
-        int fgSelected,
-        int fgIdle,
-        int fgDisabled,
-        int underlineSelected,
-        int underlineIdle,
-        /** When true, selected tab is drawn as {@code [ LABEL ]} with a rule gap under it (Fallout). */
-        boolean bracketSelected,
-        /** When true, skip opaque tab cell fills (text + rule only). */
-        boolean textOnly
-    ) {
+    public static final class Style {
+        private final int tabWidth;
+        private final int tabHeight;
+        private final int gap;
+        private final int bgSelected;
+        private final int bgIdle;
+        private final int bgHover;
+        private final int bgDisabled;
+        private final int fgSelected;
+        private final int fgIdle;
+        private final int fgDisabled;
+        private final int underlineSelected;
+        private final int underlineIdle;
+        private final boolean bracketSelected;
+        private final boolean textOnly;
+
+        public Style(int tabWidth, int tabHeight, int gap, int bgSelected, int bgIdle, int bgHover, int bgDisabled, int fgSelected, int fgIdle, int fgDisabled, int underlineSelected, int underlineIdle, boolean bracketSelected, boolean textOnly) {
+            this.tabWidth = tabWidth;
+            this.tabHeight = tabHeight;
+            this.gap = gap;
+            this.bgSelected = bgSelected;
+            this.bgIdle = bgIdle;
+            this.bgHover = bgHover;
+            this.bgDisabled = bgDisabled;
+            this.fgSelected = fgSelected;
+            this.fgIdle = fgIdle;
+            this.fgDisabled = fgDisabled;
+            this.underlineSelected = underlineSelected;
+            this.underlineIdle = underlineIdle;
+            this.bracketSelected = bracketSelected;
+            this.textOnly = textOnly;
+        }
+
+        public int tabWidth() { return this.tabWidth; }
+        public int tabHeight() { return this.tabHeight; }
+        public int gap() { return this.gap; }
+        public int bgSelected() { return this.bgSelected; }
+        public int bgIdle() { return this.bgIdle; }
+        public int bgHover() { return this.bgHover; }
+        public int bgDisabled() { return this.bgDisabled; }
+        public int fgSelected() { return this.fgSelected; }
+        public int fgIdle() { return this.fgIdle; }
+        public int fgDisabled() { return this.fgDisabled; }
+        public int underlineSelected() { return this.underlineSelected; }
+        public int underlineIdle() { return this.underlineIdle; }
+        public boolean bracketSelected() { return this.bracketSelected; }
+        public boolean textOnly() { return this.textOnly; }
+
         public Style(
             int tabWidth,
             int tabHeight,
@@ -90,6 +135,7 @@ public final class EscTabBar {
                 true, true
             );
         }
+    
     }
 
     private final List<Tab> tabs;
@@ -102,7 +148,7 @@ public final class EscTabBar {
     private int cellGap;
 
     public EscTabBar(List<Tab> tabs, Style style) {
-        this.tabs = List.copyOf(tabs);
+        this.tabs = java.util.Collections.unmodifiableList(new java.util.ArrayList<>(tabs));
         this.style = Objects.requireNonNull(style, "style");
         this.selectedIndex = 0;
         this.cellWidth = style.tabWidth();
@@ -113,7 +159,7 @@ public final class EscTabBar {
     }
 
     public static EscTabBar of(Style style, Tab... tabs) {
-        return new EscTabBar(List.of(tabs), style);
+        return new EscTabBar(java.util.Arrays.asList(tabs), style);
     }
 
     public List<Tab> tabs() {
@@ -194,7 +240,7 @@ public final class EscTabBar {
         return EscPanel.bodyBelowTabs(parent, style.tabHeight(), gapBelowTabs);
     }
 
-    public void render(GuiGraphics graphics, Font font, int mouseX, int mouseY) {
+    public void render(EscGraphics graphics, FontRenderer font, int mouseX, int mouseY) {
         EscRect selectedCell = null;
         for (int i = 0; i < tabs.size(); i++) {
             Tab tab = tabs.get(i);

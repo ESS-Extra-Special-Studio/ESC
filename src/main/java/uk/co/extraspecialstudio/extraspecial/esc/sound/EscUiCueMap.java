@@ -51,6 +51,6 @@ public final class EscUiCueMap {
     }
 
     public static Map<EscUiCue, Integer> snapshot() {
-        return Map.copyOf(TO_MENU);
+        return java.util.Collections.unmodifiableMap(new java.util.LinkedHashMap<>(TO_MENU));
     }
 }

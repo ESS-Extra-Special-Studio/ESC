@@ -11,7 +11,7 @@ public enum EscFrameStyle {
     BRACKET;
 
     public static EscFrameStyle byName(String raw) {
-        if (raw == null || raw.isBlank()) {
+        if (raw == null || raw.trim().isEmpty()) {
             return SQUARE;
         }
         try {

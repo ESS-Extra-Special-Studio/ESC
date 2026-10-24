@@ -6,23 +6,57 @@ import uk.co.extraspecialstudio.extraspecial.esc.ui.EscFalloutDraw;
  * Resolved ESC visual tokens — colours, glass, frames, and effect budgets.
  * Mods ask for a panel; ESC supplies the look.
  */
-public record EscTheme(
-    String name,
-    int borderArgb,
-    int textTitleRgb,
-    int textBodyRgb,
-    int accentArgb,
-    int panelFillArgb,
-    int focusBorderArgb,
-    int secondaryArgb,
-    int mutedRgb,
-    float panelOpacity,
-    EscFrameStyle frameStyle,
-    float shadowStrength,
-    float glowStrength,
-    float crtIntensity,
-    float motionScale
-) {
+public final class EscTheme {
+    private final String name;
+    private final int borderArgb;
+    private final int textTitleRgb;
+    private final int textBodyRgb;
+    private final int accentArgb;
+    private final int panelFillArgb;
+    private final int focusBorderArgb;
+    private final int secondaryArgb;
+    private final int mutedRgb;
+    private final float panelOpacity;
+    private final EscFrameStyle frameStyle;
+    private final float shadowStrength;
+    private final float glowStrength;
+    private final float crtIntensity;
+    private final float motionScale;
+
+    public EscTheme(String name, int borderArgb, int textTitleRgb, int textBodyRgb, int accentArgb, int panelFillArgb, int focusBorderArgb, int secondaryArgb, int mutedRgb, float panelOpacity, EscFrameStyle frameStyle, float shadowStrength, float glowStrength, float crtIntensity, float motionScale) {
+        this.name = name;
+        this.borderArgb = borderArgb;
+        this.textTitleRgb = textTitleRgb;
+        this.textBodyRgb = textBodyRgb;
+        this.accentArgb = accentArgb;
+        this.panelFillArgb = panelFillArgb;
+        this.focusBorderArgb = focusBorderArgb;
+        this.secondaryArgb = secondaryArgb;
+        this.mutedRgb = mutedRgb;
+        this.panelOpacity = panelOpacity;
+        this.frameStyle = frameStyle;
+        this.shadowStrength = shadowStrength;
+        this.glowStrength = glowStrength;
+        this.crtIntensity = crtIntensity;
+        this.motionScale = motionScale;
+    }
+
+    public String name() { return this.name; }
+    public int borderArgb() { return this.borderArgb; }
+    public int textTitleRgb() { return this.textTitleRgb; }
+    public int textBodyRgb() { return this.textBodyRgb; }
+    public int accentArgb() { return this.accentArgb; }
+    public int panelFillArgb() { return this.panelFillArgb; }
+    public int focusBorderArgb() { return this.focusBorderArgb; }
+    public int secondaryArgb() { return this.secondaryArgb; }
+    public int mutedRgb() { return this.mutedRgb; }
+    public float panelOpacity() { return this.panelOpacity; }
+    public EscFrameStyle frameStyle() { return this.frameStyle; }
+    public float shadowStrength() { return this.shadowStrength; }
+    public float glowStrength() { return this.glowStrength; }
+    public float crtIntensity() { return this.crtIntensity; }
+    public float motionScale() { return this.motionScale; }
+
     /** Colour-only convenience for older call sites; presentation defaults to vanilla. */
     public EscTheme(
         String name,

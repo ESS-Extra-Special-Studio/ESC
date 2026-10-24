@@ -6,7 +6,24 @@ import java.util.List;
 /**
  * Axis-aligned rectangle in screen pixel space.
  */
-public record EscRect(int x, int y, int width, int height) {
+public final class EscRect {
+    private final int x;
+    private final int y;
+    private final int width;
+    private final int height;
+
+    public EscRect(int x, int y, int width, int height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+
+    public int x() { return this.x; }
+    public int y() { return this.y; }
+    public int width() { return this.width; }
+    public int height() { return this.height; }
+
 
     public int right() {
         return x + width;
@@ -122,19 +139,19 @@ public record EscRect(int x, int y, int width, int height) {
     /** Convenience: split parent into fixed-count equal columns. */
     public List<EscRect> columns(int count, int gap) {
         if (count <= 0) {
-            return List.of();
+            return java.util.Collections.emptyList();
         }
         float[] ratios = new float[count];
         for (int i = 0; i < count; i++) {
             ratios[i] = 1f;
         }
-        return List.of(splitColumns(ratios, gap));
+        return java.util.Arrays.asList(splitColumns(ratios, gap));
     }
 
     /** Convenience: split parent into fixed-count equal rows. */
     public List<EscRect> rows(int count, int gap) {
         if (count <= 0) {
-            return List.of();
+            return java.util.Collections.emptyList();
         }
         float[] ratios = new float[count];
         for (int i = 0; i < count; i++) {

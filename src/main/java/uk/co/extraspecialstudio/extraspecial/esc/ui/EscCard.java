@@ -1,8 +1,8 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.FontRenderer;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
+import net.minecraft.util.ResourceLocation;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscTheme;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscVisualBudget;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.anim.EscAnim;
@@ -19,8 +19,8 @@ public final class EscCard {
     }
 
     public static void render(
-        GuiGraphics g,
-        Font font,
+        EscGraphics g,
+        FontRenderer font,
         EscRect area,
         EscUiStyle style,
         String title,
@@ -32,8 +32,8 @@ public final class EscCard {
     }
 
     public static void render(
-        GuiGraphics g,
-        Font font,
+        EscGraphics g,
+        FontRenderer font,
         EscRect area,
         EscUiStyle style,
         String title,
@@ -54,8 +54,8 @@ public final class EscCard {
      * Hub section showcase card — large icon, accent rule, badge chip.
      */
     public static void renderIdentity(
-        GuiGraphics g,
-        Font font,
+        EscGraphics g,
+        FontRenderer font,
         EscRect area,
         EscUiStyle style,
         String title,
@@ -114,7 +114,7 @@ public final class EscCard {
         int textX = contentLeft + (icon != null ? iconSize + 10 : 0);
         int textMax = Math.max(0, box.right() - textX - 12);
         String t = title == null ? "" : title;
-        boolean hasBadge = badge != null && !badge.isBlank();
+        boolean hasBadge = badge != null && !badge.trim().isEmpty();
         int chipTop = box.bottom() - (font.lineHeight + 4) - 8;
         int chipLeft = box.right() - 10 - (EscText.width(font, hasBadge ? badge : "") + 10);
 
@@ -134,7 +134,7 @@ public final class EscCard {
                 }
             }
 
-            if (subtitle != null && !subtitle.isBlank()) {
+            if (subtitle != null && !subtitle.trim().isEmpty()) {
                 int subY = box.y() + Math.max(iconSize + 16, 36);
                 if (subY + font.lineHeight <= box.bottom() - 2) {
                     EscText.drawScrollingString(g, font, subtitle, contentLeft, subY,
@@ -145,14 +145,14 @@ public final class EscCard {
             g.disableScissor();
         }
 
-        if (badge != null && !badge.isBlank()) {
+        if (badge != null && !badge.trim().isEmpty()) {
             drawBadgeChip(g, font, box, badge, accent, alpha, style);
         }
     }
 
     private static void renderCompact(
-        GuiGraphics g,
-        Font font,
+        EscGraphics g,
+        FontRenderer font,
         EscRect area,
         EscUiStyle style,
         String title,
@@ -207,7 +207,7 @@ public final class EscCard {
 
         // On a short card the bottom-right badge chip sits level with the text, so those
         // rows have to give up its column; on a tall card they can use the full width.
-        boolean hasBadge = badge != null && !badge.isBlank();
+        boolean hasBadge = badge != null && !badge.trim().isEmpty();
         int chipH = font.lineHeight + 4;
         int chipTop = box.bottom() - chipH - 8;
         int chipLeft = box.right() - 10 - (EscText.width(font, badge == null ? "" : badge) + 10);
@@ -217,7 +217,7 @@ public final class EscCard {
         try {
             EscText.drawScrollingString(g, font, title == null ? "" : title, textX, ty,
                 rowWidth(textX, ty, font, box, hasBadge, chipTop, chipLeft), titleColor);
-            if (subtitle != null && !subtitle.isBlank()) {
+            if (subtitle != null && !subtitle.trim().isEmpty()) {
                 int subY = ty + font.lineHeight + 4;
                 if (subY + font.lineHeight <= box.bottom() - 2) {
                     EscText.drawScrollingString(g, font, subtitle, textX, subY,
@@ -228,13 +228,13 @@ public final class EscCard {
             g.disableScissor();
         }
 
-        if (badge != null && !badge.isBlank()) {
+        if (badge != null && !badge.trim().isEmpty()) {
             drawBadgeChip(g, font, box, badge, accentColor, alpha, style);
         }
     }
 
     /** Width available to a text row at {@code rowY}, minus the badge chip if they collide. */
-    private static int rowWidth(int textX, int rowY, Font font, EscRect box,
+    private static int rowWidth(int textX, int rowY, FontRenderer font, EscRect box,
                                boolean hasBadge, int chipTop, int chipLeft) {
         int right = box.right() - 8;
         if (hasBadge && rowY + font.lineHeight > chipTop) {
@@ -244,8 +244,8 @@ public final class EscCard {
     }
 
     private static void drawBadgeChip(
-        GuiGraphics g,
-        Font font,
+        EscGraphics g,
+        FontRenderer font,
         EscRect box,
         String badge,
         int accentColor,

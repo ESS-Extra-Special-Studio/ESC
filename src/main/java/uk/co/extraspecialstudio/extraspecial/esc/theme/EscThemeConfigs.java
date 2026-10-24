@@ -4,7 +4,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.fml.config.ModConfig;
 import uk.co.extraspecialstudio.extraspecial.Extraspecialcore;
 
 import java.util.ArrayList;
@@ -289,62 +289,128 @@ public final class EscThemeConfigs {
     }
 
     public static int playerColorArgb(EscColorRole role, int fallbackArgb) {
-        String raw = switch (role) {
-            case BORDER -> playerBorderColorRaw();
-            case TEXT -> playerTextColorRaw();
-            case ACCENT -> playerAccentColorRaw();
-        };
+        String raw = null;
+        switch (role) {
+            case BORDER:
+                {
+                    raw = playerBorderColorRaw();
+                    break;
+                }
+            case TEXT:
+                {
+                    raw = playerTextColorRaw();
+                    break;
+                }
+            case ACCENT:
+                {
+                    raw = playerAccentColorRaw();
+                    break;
+                }
+        }
         Integer custom = EscColor.parseHex(raw);
         if (custom != null) {
             return custom;
         }
-        EscThemeSwatch sw = switch (role) {
-            case BORDER -> EscThemeSwatch.byIndex(playerBorderIndex());
-            case TEXT -> EscThemeSwatch.byIndex(playerTextIndex());
-            case ACCENT -> EscThemeSwatch.byIndex(playerAccentIndex());
-        };
-        return switch (role) {
-            case BORDER -> sw.borderArgb();
-            case TEXT -> EscColor.opaque(sw.titleRgb());
-            case ACCENT -> sw.accentArgb();
-        };
+        EscThemeSwatch sw = null;
+        switch (role) {
+            case BORDER:
+                {
+                    sw = EscThemeSwatch.byIndex(playerBorderIndex());
+                    break;
+                }
+            case TEXT:
+                {
+                    sw = EscThemeSwatch.byIndex(playerTextIndex());
+                    break;
+                }
+            case ACCENT:
+                {
+                    sw = EscThemeSwatch.byIndex(playerAccentIndex());
+                    break;
+                }
+        }
+                switch (role) {
+            case BORDER:
+                {
+                    return sw.borderArgb();
+                }
+            case TEXT:
+                {
+                    return EscColor.opaque(sw.titleRgb());
+                }
+            case ACCENT:
+                {
+                    return sw.accentArgb();
+                }
+        }
+        throw new IllegalStateException();
     }
 
     public static void setPlayerCustomColor(EscColorRole role, int argb) {
         PLAYER_CUSTOM.set(true);
         String hex = "#" + EscColor.toHexRgb(argb);
         EscThemeSwatch nearest = EscColor.nearestSwatch(argb);
-        switch (role) {
-            case BORDER -> {
-                PLAYER_BORDER_COLOR.set(hex);
-                PLAYER_BORDER.set(nearest.ordinal());
-            }
-            case TEXT -> {
-                PLAYER_TEXT_COLOR.set(hex);
-                PLAYER_TEXT.set(nearest.ordinal());
-            }
-            case ACCENT -> {
-                PLAYER_ACCENT_COLOR.set(hex);
-                PLAYER_ACCENT.set(nearest.ordinal());
-            }
+                switch (role) {
+            case BORDER:
+                {
+                                PLAYER_BORDER_COLOR.set(hex);
+                                PLAYER_BORDER.set(nearest.ordinal());
+                            
+                }
+            case TEXT:
+                {
+                                PLAYER_TEXT_COLOR.set(hex);
+                                PLAYER_TEXT.set(nearest.ordinal());
+                            
+                }
+            case ACCENT:
+                {
+                                PLAYER_ACCENT_COLOR.set(hex);
+                                PLAYER_ACCENT.set(nearest.ordinal());
+                            
+                }
         }
     }
 
     public static void clearPlayerCustomColor(EscColorRole role) {
-        switch (role) {
-            case BORDER -> PLAYER_BORDER_COLOR.set("");
-            case TEXT -> PLAYER_TEXT_COLOR.set("");
-            case ACCENT -> PLAYER_ACCENT_COLOR.set("");
+                switch (role) {
+            case BORDER:
+                {
+                    PLAYER_BORDER_COLOR.set("");
+                    break;
+                }
+            case TEXT:
+                {
+                    PLAYER_TEXT_COLOR.set("");
+                    break;
+                }
+            case ACCENT:
+                {
+                    PLAYER_ACCENT_COLOR.set("");
+                    break;
+                }
         }
     }
 
     public static void cyclePlayerSwatch(EscColorRole role) {
         PLAYER_CUSTOM.set(true);
         clearPlayerCustomColor(role);
-        switch (role) {
-            case BORDER -> PLAYER_BORDER.set(EscThemeSwatch.byIndex(PLAYER_BORDER.get()).next().ordinal());
-            case TEXT -> PLAYER_TEXT.set(EscThemeSwatch.byIndex(PLAYER_TEXT.get()).next().ordinal());
-            case ACCENT -> PLAYER_ACCENT.set(EscThemeSwatch.byIndex(PLAYER_ACCENT.get()).next().ordinal());
+                switch (role) {
+            case BORDER:
+                {
+                    PLAYER_BORDER.set(EscThemeSwatch.byIndex(PLAYER_BORDER.get()).next().ordinal());
+                    break;
+                }
+            case TEXT:
+                {
+                    PLAYER_TEXT.set(EscThemeSwatch.byIndex(PLAYER_TEXT.get()).next().ordinal());
+                    break;
+                }
+            case ACCENT:
+                {
+                    PLAYER_ACCENT.set(EscThemeSwatch.byIndex(PLAYER_ACCENT.get()).next().ordinal());
+                    break;
+                }
         }
     }
 
@@ -381,7 +447,7 @@ public final class EscThemeConfigs {
 
     private static List<Integer> parseColorList(String raw) {
         List<Integer> out = new ArrayList<>();
-        if (raw == null || raw.isBlank()) {
+        if (raw == null || raw.trim().isEmpty()) {
             return out;
         }
         for (String part : raw.split(",")) {
@@ -458,7 +524,7 @@ public final class EscThemeConfigs {
         if (effect != EscEffectPreset.NONE) {
             base = effect.apply(base);
         }
-        if (PACK_FRAME.get() != null && !PACK_FRAME.get().isBlank()) {
+        if (PACK_FRAME.get() != null && !PACK_FRAME.get().trim().isEmpty()) {
             base = base.withPresentation(
                 base.panelOpacity(), EscFrameStyle.byName(PACK_FRAME.get()),
                 base.shadowStrength(), base.glowStrength(), base.crtIntensity(), base.motionScale()
@@ -482,29 +548,43 @@ public final class EscThemeConfigs {
     private enum Token { BORDER, TEXT, BODY, ACCENT, PANEL }
 
     private static EscTheme applyToken(EscTheme theme, String raw, Token token) {
-        if (raw == null || raw.isBlank()) {
+        if (raw == null || raw.trim().isEmpty()) {
             return theme;
         }
         EscThemeSwatch sw = EscThemeSwatch.byName(raw);
         Integer hex = parseHex(raw);
-        return switch (token) {
-            case BORDER -> theme.withBorder(sw != null ? sw.borderArgb() : (hex != null ? asArgb(hex) : theme.borderArgb()));
-            case TEXT -> {
-                if (sw != null) yield theme.withText(sw.titleRgb(), sw.bodyRgb());
-                if (hex != null) {
-                    int rgb = hex & 0xFFFFFF;
-                    yield theme.withText(rgb, dim(rgb));
+                switch (token) {
+            case BORDER:
+                {
+                    return theme.withBorder(sw != null ? sw.borderArgb() : (hex != null ? asArgb(hex) : theme.borderArgb()));
                 }
-                yield theme;
-            }
-            case BODY -> {
-                if (sw != null) yield theme.withText(theme.textTitleRgb(), sw.bodyRgb());
-                if (hex != null) yield theme.withText(theme.textTitleRgb(), hex & 0xFFFFFF);
-                yield theme;
-            }
-            case ACCENT -> theme.withAccent(sw != null ? sw.accentArgb() : (hex != null ? asArgb(hex) : theme.accentArgb()));
-            case PANEL -> hex == null ? theme : theme.withPanelFill(asArgb(hex));
-        };
+            case TEXT:
+                {
+                                if (sw != null) return theme.withText(sw.titleRgb(), sw.bodyRgb());
+                                if (hex != null) {
+                                    int rgb = hex & 0xFFFFFF;
+                                    return theme.withText(rgb, dim(rgb));
+                                }
+                                return theme;
+                            
+                }
+            case BODY:
+                {
+                                if (sw != null) return theme.withText(theme.textTitleRgb(), sw.bodyRgb());
+                                if (hex != null) return theme.withText(theme.textTitleRgb(), hex & 0xFFFFFF);
+                                return theme;
+                            
+                }
+            case ACCENT:
+                {
+                    return theme.withAccent(sw != null ? sw.accentArgb() : (hex != null ? asArgb(hex) : theme.accentArgb()));
+                }
+            case PANEL:
+                {
+                    return hex == null ? theme : theme.withPanelFill(asArgb(hex));
+                }
+        }
+        throw new IllegalStateException();
     }
 
     private static int asArgb(int hex) {
@@ -537,7 +617,7 @@ public final class EscThemeConfigs {
         }
 
         @SubscribeEvent
-        public static void onLoad(ModConfigEvent event) {
+        public static void onLoad(ModConfig.ModConfigEvent event) {
             Object spec = event.getConfig().getSpec();
             if (spec != COMMON_SPEC && spec != CLIENT_SPEC) {
                 return;

@@ -11,13 +11,29 @@ public enum EscHubLayoutId {
     CLASSIC;
 
     public String displayName() {
-        return switch (this) {
-            case CAROUSEL -> "Carousel";
-            case CONTROL_CENTRE -> "Control Centre";
-            case DASHBOARD -> "Dashboard";
-            case ORBITAL -> "Orbital";
-            case CLASSIC -> "Classic";
-        };
+                switch (this) {
+            case CAROUSEL:
+                {
+                    return "Carousel";
+                }
+            case CONTROL_CENTRE:
+                {
+                    return "Control Centre";
+                }
+            case DASHBOARD:
+                {
+                    return "Dashboard";
+                }
+            case ORBITAL:
+                {
+                    return "Orbital";
+                }
+            case CLASSIC:
+                {
+                    return "Classic";
+                }
+        }
+        throw new IllegalStateException();
     }
 
     public EscHubLayoutId next() {

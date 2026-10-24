@@ -36,7 +36,7 @@ public final class EscAssetRegistry {
     }
 
     public static List<EscAssetDef> byCategory(EscAssetCategory category) {
-        return all().stream().filter(d -> d.category() == category).toList();
+        return all().stream().filter(d -> d.category() == category).collect(java.util.stream.Collectors.toList());
     }
 
     public static void clear() {

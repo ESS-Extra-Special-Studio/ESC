@@ -3,23 +3,57 @@ package uk.co.extraspecialstudio.extraspecial.esc.theme;
 /**
  * Partial theme override for inheritance (null = leave underlying value).
  */
-public record EscThemePartial(
-    String name,
-    Integer borderArgb,
-    Integer textTitleRgb,
-    Integer textBodyRgb,
-    Integer accentArgb,
-    Integer panelFillArgb,
-    Integer focusBorderArgb,
-    Integer secondaryArgb,
-    Integer mutedRgb,
-    Float panelOpacity,
-    EscFrameStyle frameStyle,
-    Float shadowStrength,
-    Float glowStrength,
-    Float crtIntensity,
-    Float motionScale
-) {
+public final class EscThemePartial {
+    private final String name;
+    private final Integer borderArgb;
+    private final Integer textTitleRgb;
+    private final Integer textBodyRgb;
+    private final Integer accentArgb;
+    private final Integer panelFillArgb;
+    private final Integer focusBorderArgb;
+    private final Integer secondaryArgb;
+    private final Integer mutedRgb;
+    private final Float panelOpacity;
+    private final EscFrameStyle frameStyle;
+    private final Float shadowStrength;
+    private final Float glowStrength;
+    private final Float crtIntensity;
+    private final Float motionScale;
+
+    public EscThemePartial(String name, Integer borderArgb, Integer textTitleRgb, Integer textBodyRgb, Integer accentArgb, Integer panelFillArgb, Integer focusBorderArgb, Integer secondaryArgb, Integer mutedRgb, Float panelOpacity, EscFrameStyle frameStyle, Float shadowStrength, Float glowStrength, Float crtIntensity, Float motionScale) {
+        this.name = name;
+        this.borderArgb = borderArgb;
+        this.textTitleRgb = textTitleRgb;
+        this.textBodyRgb = textBodyRgb;
+        this.accentArgb = accentArgb;
+        this.panelFillArgb = panelFillArgb;
+        this.focusBorderArgb = focusBorderArgb;
+        this.secondaryArgb = secondaryArgb;
+        this.mutedRgb = mutedRgb;
+        this.panelOpacity = panelOpacity;
+        this.frameStyle = frameStyle;
+        this.shadowStrength = shadowStrength;
+        this.glowStrength = glowStrength;
+        this.crtIntensity = crtIntensity;
+        this.motionScale = motionScale;
+    }
+
+    public String name() { return this.name; }
+    public Integer borderArgb() { return this.borderArgb; }
+    public Integer textTitleRgb() { return this.textTitleRgb; }
+    public Integer textBodyRgb() { return this.textBodyRgb; }
+    public Integer accentArgb() { return this.accentArgb; }
+    public Integer panelFillArgb() { return this.panelFillArgb; }
+    public Integer focusBorderArgb() { return this.focusBorderArgb; }
+    public Integer secondaryArgb() { return this.secondaryArgb; }
+    public Integer mutedRgb() { return this.mutedRgb; }
+    public Float panelOpacity() { return this.panelOpacity; }
+    public EscFrameStyle frameStyle() { return this.frameStyle; }
+    public Float shadowStrength() { return this.shadowStrength; }
+    public Float glowStrength() { return this.glowStrength; }
+    public Float crtIntensity() { return this.crtIntensity; }
+    public Float motionScale() { return this.motionScale; }
+
     public static EscThemePartial empty() {
         return new EscThemePartial(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     }

@@ -14,20 +14,30 @@ public final class EscLayout {
         }
         EscInsets pad = spec.stretchInsets() != null ? spec.stretchInsets() : EscInsets.ZERO;
 
-        return switch (spec.anchor()) {
-            case FILL -> parent.inset(pad);
-            case STRETCH_H -> {
-                EscRect inner = parent.inset(pad);
-                int h = spec.height() >= 0 ? spec.height() : inner.height();
-                yield new EscRect(inner.x(), inner.y() + spec.offsetY(), inner.width(), h);
-            }
-            case STRETCH_V -> {
-                EscRect inner = parent.inset(pad);
-                int w = spec.width() >= 0 ? spec.width() : inner.width();
-                yield new EscRect(inner.x() + spec.offsetX(), inner.y(), w, inner.height());
-            }
-            default -> resolvePointAnchor(parent, spec);
-        };
+                switch (spec.anchor()) {
+            case FILL:
+                {
+                    return parent.inset(pad);
+                }
+            case STRETCH_H:
+                {
+                                EscRect inner = parent.inset(pad);
+                                int h = spec.height() >= 0 ? spec.height() : inner.height();
+                                return new EscRect(inner.x(), inner.y() + spec.offsetY(), inner.width(), h);
+                            
+                }
+            case STRETCH_V:
+                {
+                                EscRect inner = parent.inset(pad);
+                                int w = spec.width() >= 0 ? spec.width() : inner.width();
+                                return new EscRect(inner.x() + spec.offsetX(), inner.y(), w, inner.height());
+                            
+                }
+            default:
+                {
+                    return resolvePointAnchor(parent, spec);
+                }
+        }
     }
 
     private static EscRect resolvePointAnchor(EscRect parent, EscLayoutSpec spec) {
@@ -39,21 +49,57 @@ public final class EscLayout {
     }
 
     private static int anchorX(EscRect parent, EscAnchor anchor, int width, int offsetX) {
-        return switch (anchor) {
-            case TOP_LEFT, CENTER_LEFT, BOTTOM_LEFT -> parent.x() + offsetX;
-            case TOP_CENTER, CENTER, BOTTOM_CENTER -> parent.x() + (parent.width() - width) / 2 + offsetX;
-            case TOP_RIGHT, CENTER_RIGHT, BOTTOM_RIGHT -> parent.right() - width + offsetX;
-            default -> parent.x() + offsetX;
-        };
+                switch (anchor) {
+            case TOP_LEFT:
+            case CENTER_LEFT:
+            case BOTTOM_LEFT:
+                {
+                    return parent.x() + offsetX;
+                }
+            case TOP_CENTER:
+            case CENTER:
+            case BOTTOM_CENTER:
+                {
+                    return parent.x() + (parent.width() - width) / 2 + offsetX;
+                }
+            case TOP_RIGHT:
+            case CENTER_RIGHT:
+            case BOTTOM_RIGHT:
+                {
+                    return parent.right() - width + offsetX;
+                }
+            default:
+                {
+                    return parent.x() + offsetX;
+                }
+        }
     }
 
     private static int anchorY(EscRect parent, EscAnchor anchor, int height, int offsetY) {
-        return switch (anchor) {
-            case TOP_LEFT, TOP_CENTER, TOP_RIGHT -> parent.y() + offsetY;
-            case CENTER_LEFT, CENTER, CENTER_RIGHT -> parent.y() + (parent.height() - height) / 2 + offsetY;
-            case BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT -> parent.bottom() - height + offsetY;
-            default -> parent.y() + offsetY;
-        };
+                switch (anchor) {
+            case TOP_LEFT:
+            case TOP_CENTER:
+            case TOP_RIGHT:
+                {
+                    return parent.y() + offsetY;
+                }
+            case CENTER_LEFT:
+            case CENTER:
+            case CENTER_RIGHT:
+                {
+                    return parent.y() + (parent.height() - height) / 2 + offsetY;
+                }
+            case BOTTOM_LEFT:
+            case BOTTOM_CENTER:
+            case BOTTOM_RIGHT:
+                {
+                    return parent.bottom() - height + offsetY;
+                }
+            default:
+                {
+                    return parent.y() + offsetY;
+                }
+        }
     }
 
     /**

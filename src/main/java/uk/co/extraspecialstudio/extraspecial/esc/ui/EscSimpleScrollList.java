@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +15,7 @@ public final class EscSimpleScrollList<T> {
     private final EscUiStyle style;
     private final EscListRowRenderer<T> renderer;
 
-    private List<T> items = List.of();
+    private List<T> items = java.util.Collections.emptyList();
     private EscRect viewport = new EscRect(0, 0, 0, 0);
     private double scrollPixels;
 
@@ -43,7 +43,7 @@ public final class EscSimpleScrollList<T> {
     }
 
     public List<T> items() {
-        return List.copyOf(items);
+        return java.util.Collections.unmodifiableList(new java.util.ArrayList<>(items));
     }
 
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
@@ -99,7 +99,7 @@ public final class EscSimpleScrollList<T> {
         clampScroll();
     }
 
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(EscGraphics graphics, int mouseX, int mouseY, float partialTick) {
         int x0 = viewport.x();
         int y0 = viewport.y();
         int x1 = viewport.right();

@@ -40,7 +40,7 @@ public final class EscGuiProfile {
     }
 
     public void setId(String id) {
-        this.id = id == null || id.isBlank() ? "unknown:untitled" : id;
+        this.id = id == null || id.trim().isEmpty() ? "unknown:untitled" : id;
     }
 
     public String title() {
@@ -89,13 +89,13 @@ public final class EscGuiProfile {
 
     public List<String> validate() {
         List<String> errors = new ArrayList<>();
-        if (id.isBlank() || !id.contains(":")) {
+        if (id.trim().isEmpty() || !id.contains(":")) {
             errors.add("Profile id must be namespace:path (e.g. mymod:settings)");
         }
         for (int i = 0; i < components.size(); i++) {
             EscAssetInstance instance = components.get(i);
-            if (instance.assetId() == null || instance.assetId().isBlank()) {
-                errors.add("Component " + i + " missing asset id");
+            if (instance.assetId() == null || instance.assetId().trim().isEmpty()) {
+                errors.add("ITextComponent " + i + " missing asset id");
                 continue;
             }
             if (!EscAssetRegistry.contains(instance.assetId())) {

@@ -150,7 +150,7 @@ public final class EscLayoutBands {
                 out.add(tile);
             }
         }
-        return out.toArray(EscRect[]::new);
+        return out.toArray(new EscRect[0]);
     }
 
     /**

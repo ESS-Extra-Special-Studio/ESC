@@ -1,8 +1,8 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
+import net.minecraft.util.ResourceLocation;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.anim.EscFocusVisual;
 
 /**
@@ -15,7 +15,7 @@ public final class EscImage {
 
     /** Draw assuming a 16×16 source (vanilla item icons). */
     public static void draw(
-        GuiGraphics g,
+        EscGraphics g,
         ResourceLocation texture,
         int x,
         int y,
@@ -28,7 +28,7 @@ public final class EscImage {
     }
 
     public static void draw(
-        GuiGraphics g,
+        EscGraphics g,
         ResourceLocation texture,
         int x,
         int y,
@@ -48,15 +48,15 @@ public final class EscImage {
         int gr = (color >>> 8) & 0xFF;
         int b = color & 0xFF;
         RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(r / 255f, gr / 255f, b / 255f, a / 255f);
+        RenderSystem.color4f(r / 255f, gr / 255f, b / 255f, a / 255f);
         g.blit(texture, x, y, 0, 0, w, h, texW, texH);
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        RenderSystem.color4f(1f, 1f, 1f, 1f);
         RenderSystem.disableBlend();
     }
 
     /** Fit texture into a box preserving aspect (letterbox). */
     public static void drawContained(
-        GuiGraphics g,
+        EscGraphics g,
         ResourceLocation texture,
         EscRect box,
         int texW,
@@ -78,7 +78,7 @@ public final class EscImage {
     }
 
     /** Crop-to-fill (cover). Assumes square UV for simplicity. */
-    public static void drawCover(GuiGraphics g, ResourceLocation texture, EscRect box, int tintArgb, float alpha) {
+    public static void drawCover(EscGraphics g, ResourceLocation texture, EscRect box, int tintArgb, float alpha) {
         if (texture == null) return;
         draw(g, texture, box.x(), box.y(), box.width(), box.height(), box.width(), box.height(), tintArgb, alpha);
     }
@@ -88,7 +88,7 @@ public final class EscImage {
      * (mod logos, section art, dynamic uploads) stretch the full image into the dest box.
      */
     public static void drawAuto(
-        GuiGraphics g,
+        EscGraphics g,
         ResourceLocation texture,
         int x,
         int y,
@@ -109,9 +109,9 @@ public final class EscImage {
             int gr = (color >>> 8) & 0xFF;
             int b = color & 0xFF;
             RenderSystem.enableBlend();
-            RenderSystem.setShaderColor(r / 255f, gr / 255f, b / 255f, a / 255f);
+            RenderSystem.color4f(r / 255f, gr / 255f, b / 255f, a / 255f);
             g.blit(texture, x, y, w, h, 0f, 0f, w, h, w, h);
-            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+            RenderSystem.color4f(1f, 1f, 1f, 1f);
             RenderSystem.disableBlend();
         }
     }

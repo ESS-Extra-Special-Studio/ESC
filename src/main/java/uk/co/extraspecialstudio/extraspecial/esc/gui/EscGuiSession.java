@@ -1,7 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screen.Screen;
 import uk.co.extraspecialstudio.extraspecial.esc.gui.profile.EscGuiBindings;
 import uk.co.extraspecialstudio.extraspecial.esc.gui.profile.EscGuiProfile;
 import uk.co.extraspecialstudio.extraspecial.esc.gui.profile.EscGuiProfileStore;
@@ -37,7 +37,7 @@ public final class EscGuiSession {
     }
 
     public EscGuiSession action(String id, Runnable handler) {
-        if (id != null && !id.isBlank() && handler != null) {
+        if (id != null && !id.trim().isEmpty() && handler != null) {
             actions.put(id, handler);
         }
         return this;

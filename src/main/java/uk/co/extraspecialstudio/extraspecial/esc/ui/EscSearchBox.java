@@ -1,14 +1,14 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.Util;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.util.FormattedCharSequence;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.util.Util;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.IReorderingProcessor;
 
-public class EscSearchBox extends EditBox {
+public class EscSearchBox extends TextFieldWidget {
     private static final int TEXT_PAD_H = 4;
     private static final int TEXT_PAD_V = 2;
 
@@ -17,20 +17,20 @@ public class EscSearchBox extends EditBox {
     private final int textColorRgb;
     private final int hintColorRgb;
     private final int cursorColor;
-    private final Font typeface;
-    private Component displayHint;
+    private final FontRenderer typeface;
+    private ITextComponent displayHint;
 
-    public EscSearchBox(Font font, int x, int y, int width, int height, Component message) {
+    public EscSearchBox(FontRenderer font, int x, int y, int width, int height, ITextComponent message) {
         this(font, x, y, width, height, message, 0xE0000000, 0xFFB0B0B0, 0xE0E0E0, 0xA0A0A0);
     }
 
     public EscSearchBox(
-        Font font,
+        FontRenderer font,
         int x,
         int y,
         int width,
         int height,
-        Component message,
+        ITextComponent message,
         int backgroundColor,
         int borderColor,
         int textColorRgb,
@@ -46,20 +46,20 @@ public class EscSearchBox extends EditBox {
         setBordered(false);
         setTextColor(this.textColorRgb);
         setTextColorUneditable(this.hintColorRgb);
-        this.setFormatter((text, cursorPos) -> FormattedCharSequence.forward(text, Style.EMPTY.withFont(EscFonts.DEFAULT)));
+        this.setFormatter((text, cursorPos) -> IReorderingProcessor.forward(text, Style.EMPTY.withFont(EscFonts.DEFAULT)));
     }
 
     /** Single-line height for anchor layout — matches rendered chrome and centered text. */
-    public static int recommendedHeight(Font font) {
+    public static int recommendedHeight(FontRenderer font) {
         return EscText.measureLineHeight(font, EscFonts.DEFAULT) + TEXT_PAD_V * 2;
     }
 
-    public static EscSearchBox at(Font font, EscRect bounds, Component message) {
+    public static EscSearchBox at(FontRenderer font, EscRect bounds, ITextComponent message) {
         int h = recommendedHeight(font);
         return new EscSearchBox(font, bounds.x(), bounds.y(), bounds.width(), h, message);
     }
 
-    public static EscSearchBox at(Font font, EscRect bounds, Component message, EscUiStyle style) {
+    public static EscSearchBox at(FontRenderer font, EscRect bounds, ITextComponent message, EscUiStyle style) {
         int h = recommendedHeight(font);
         if (style == null) {
             return at(font, bounds, message);
@@ -81,31 +81,30 @@ public class EscSearchBox extends EditBox {
 
     public void layout(EscRect bounds) {
         int h = recommendedHeight(typeface);
-        setX(bounds.x());
-        setY(bounds.y());
+        this.x = bounds.x();
+        this.y = bounds.y();
         setWidth(bounds.width());
         setHeight(h);
     }
 
-    @Override
-    public void setHint(Component hint) {
+    public void setHint(ITextComponent hint) {
         this.displayHint = hint;
-        super.setHint(Component.empty());
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.active && this.visible && this.isMouseOver(mouseX, mouseY)) {
-            this.setFocused(true);
+            this.setFocus(true);
             return super.mouseClicked(mouseX, mouseY, button) || true;
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        int x0 = getX();
-        int y0 = getY();
+    public void renderButton(MatrixStack pose, int mouseX, int mouseY, float partialTick) {
+        EscGraphics guiGraphics = new EscGraphics(pose);
+        int x0 = this.x;
+        int y0 = this.y;
         int x1 = x0 + getWidth();
         int y1 = y0 + getHeight();
         guiGraphics.fill(x0, y0, x1, y1, backgroundColor);

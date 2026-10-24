@@ -1,10 +1,10 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.text.ITextComponent;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscThemeConfigs;
 
 /**
@@ -20,11 +20,11 @@ public abstract class EscScreen extends Screen {
 
     protected EscUiStyle style;
 
-    protected EscScreen(Component title) {
+    protected EscScreen(ITextComponent title) {
         this(title, EscUiStyle.active());
     }
 
-    protected EscScreen(Component title, EscUiStyle style) {
+    protected EscScreen(ITextComponent title, EscUiStyle style) {
         super(title);
         this.style = style;
     }
@@ -45,14 +45,19 @@ public abstract class EscScreen extends Screen {
         buildLayout();
     }
 
+    protected void clearWidgets() {
+        this.buttons.clear();
+        this.children.clear();
+    }
+
     /** Define widget positions and custom panel bounds. Called on every {@code init()} (including resize). */
     protected abstract void buildLayout();
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        super.render(graphics, mouseX, mouseY, partialTick);
+    public void render(MatrixStack pose, int mouseX, int mouseY, float partialTick) {
+        super.render(pose, mouseX, mouseY, partialTick);
         if (EscThemeConfigs.layoutDebugEnabled()) {
-            renderLayoutDebug(graphics);
+            renderLayoutDebug(new EscGraphics(pose));
         }
     }
 
@@ -60,16 +65,16 @@ public abstract class EscScreen extends Screen {
      * Draws content + default footer outlines. Subclasses that override {@link #render}
      * without calling {@code super.render} should call this when debugging layout.
      */
-    protected void renderLayoutDebug(GuiGraphics g) {
+    protected void renderLayoutDebug(EscGraphics g) {
         EscRect content = contentRect();
         EscRect footer = EscPanel.footer(content, style);
         EscPanel.border(g, content, 0xFF00FF88, 1);
         EscPanel.border(g, footer, 0xFFFFAA00, 1);
     }
 
-    protected void layoutWidget(AbstractWidget widget, EscRect bounds) {
-        widget.setX(bounds.x());
-        widget.setY(bounds.y());
+    protected void layoutWidget(Widget widget, EscRect bounds) {
+        widget.x = bounds.x();
+        widget.y = bounds.y();
         widget.setWidth(Math.max(MIN_WIDGET_WIDTH, bounds.width()));
         widget.setHeight(Math.max(MIN_WIDGET_HEIGHT, bounds.height()));
     }
@@ -78,39 +83,39 @@ public abstract class EscScreen extends Screen {
         return EscLayout.resolve(parent, spec);
     }
 
-    protected Button addAnchoredButton(Component label, EscRect parent, EscLayoutSpec spec, Button.OnPress onPress) {
+    protected Button addAnchoredButton(ITextComponent label, EscRect parent, EscLayoutSpec spec, Button.IPressable onPress) {
         EscRect bounds = clampWidgetBounds(EscLayout.resolve(parent, spec));
         Button button = EscButtons.button(label, bounds.x(), bounds.y(), bounds.width(), bounds.height(), style, onPress);
-        addRenderableWidget(button);
+        addButton(button);
         return button;
     }
 
-    protected Button addButton(Component label, EscRect bounds, Button.OnPress onPress) {
+    protected Button addButton(ITextComponent label, EscRect bounds, Button.IPressable onPress) {
         EscRect sized = clampWidgetBounds(bounds);
         Button button = EscButtons.button(label, sized.x(), sized.y(), sized.width(), sized.height(), style, onPress);
-        addRenderableWidget(button);
+        addButton(button);
         return button;
     }
 
-    protected EscSearchBox addSearchBox(EscRect bounds, Component message) {
+    protected EscSearchBox addSearchBox(EscRect bounds, ITextComponent message) {
         return addSearchBox(bounds, message, null);
     }
 
-    protected EscSearchBox addSearchBox(EscRect bounds, Component message, Component hint) {
+    protected EscSearchBox addSearchBox(EscRect bounds, ITextComponent message, ITextComponent hint) {
         EscRect sized = new EscRect(bounds.x(), bounds.y(), bounds.width(), EscSearchBox.recommendedHeight(font));
         EscSearchBox box = EscSearchBox.at(font, sized, message, style);
         if (hint != null) {
             box.setHint(hint);
         }
-        addRenderableWidget(box);
+        addButton(box);
         return box;
     }
 
-    protected EscSearchBox addAnchoredSearchBox(EscRect parent, EscLayoutSpec spec, Component message, Component hint) {
+    protected EscSearchBox addAnchoredSearchBox(EscRect parent, EscLayoutSpec spec, ITextComponent message, ITextComponent hint) {
         return addSearchBox(EscLayout.resolve(parent, spec), message, hint);
     }
 
-    protected EscSearchBox addAnchoredSearchBox(EscRect parent, EscLayoutSpec spec, Component message) {
+    protected EscSearchBox addAnchoredSearchBox(EscRect parent, EscLayoutSpec spec, ITextComponent message) {
         return addAnchoredSearchBox(parent, spec, message, null);
     }
 
@@ -128,15 +133,15 @@ public abstract class EscScreen extends Screen {
         return style;
     }
 
-    public Button escButton(Component label, EscRect bounds, Button.OnPress onPress) {
+    public Button escButton(ITextComponent label, EscRect bounds, Button.IPressable onPress) {
         return addButton(label, bounds, onPress);
     }
 
-    public EscSearchBox escSearchBox(EscRect bounds, Component message) {
+    public EscSearchBox escSearchBox(EscRect bounds, ITextComponent message) {
         return addSearchBox(bounds, message);
     }
 
-    public EscSearchBox escSearchBox(EscRect bounds, Component message, Component hint) {
+    public EscSearchBox escSearchBox(EscRect bounds, ITextComponent message, ITextComponent hint) {
         return addSearchBox(bounds, message, hint);
     }
 }

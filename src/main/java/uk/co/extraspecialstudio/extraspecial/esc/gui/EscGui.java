@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.gui;
 
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screen.Screen;
 
 /**
  * Public façade for opening declarative ESC screens from saved profiles.

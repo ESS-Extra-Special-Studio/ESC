@@ -1,11 +1,11 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.client.KeyMapping;
+import org.lwjgl.glfw.GLFW;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 import uk.co.extraspecialstudio.extraspecial.esc.sound.EscSound;
 import uk.co.extraspecialstudio.extraspecial.esc.sound.EscUiCue;
@@ -22,17 +22,17 @@ import java.util.function.Supplier;
 /**
  * Reusable hold-to-aim radial action wheel for ESC consumers.
  * <p>
- * Register once from client setup, pass a {@link KeyMapping}, options, and confirm callback.
+ * Register once from client setup, pass a {@link KeyBinding}, options, and confirm callback.
  * ESC owns tick + overlay rendering — feature mods must not re-implement the wheel chrome.
  *
  * <pre>{@code
  * EscActionWheel.register("mymod.orders", MY_KEY)
- *     .options(() -> List.of(
+ *     .options(() -> java.util.Arrays.asList(
  *         new EscActionWheelOption("mymod.opt.a", "mymod.blurb.a"),
  *         new EscActionWheelOption("mymod.opt.b", "mymod.blurb.b")))
  *     .canOpen(() -> hasTargets())
  *     .onConfirm(index -> sendOrder(index))
- *     .hubSubtitle(() -> Component.literal(count + " ready"));
+ *     .hubSubtitle(() -> new net.minecraft.util.text.StringTextComponent(count + " ready"));
  * }</pre>
  */
 public final class EscActionWheel {
@@ -54,13 +54,13 @@ public final class EscActionWheel {
     };
 
     private final String id;
-    private final KeyMapping key;
-    private Supplier<List<EscActionWheelOption>> options = List::of;
+    private final KeyBinding key;
+    private Supplier<List<EscActionWheelOption>> options = java.util.Collections::emptyList;
     private BooleanSupplier canOpen = () -> true;
     private IntConsumer onConfirm = i -> {};
-    private Supplier<Component> hubSubtitle = () -> Component.empty();
-    private Supplier<Component> cancelLabel = () -> Component.translatable("esc.action_wheel.cancel");
-    private Supplier<Component> idleHint = () -> Component.translatable("esc.action_wheel.hint");
+    private Supplier<ITextComponent> hubSubtitle = () -> new net.minecraft.util.text.StringTextComponent("");
+    private Supplier<ITextComponent> cancelLabel = () -> new net.minecraft.util.text.TranslationTextComponent("esc.action_wheel.cancel");
+    private Supplier<ITextComponent> idleHint = () -> new net.minecraft.util.text.TranslationTextComponent("esc.action_wheel.hint");
     private boolean doubleTapRepeat = true;
     private boolean releaseMouse = true;
     private boolean actionBarOnConfirm = true;
@@ -76,9 +76,9 @@ public final class EscActionWheel {
     private boolean suppressReleaseConfirm;
     private boolean ignoreUntilRelease;
     private boolean[] hotWasDown = new boolean[0];
-    private List<EscActionWheelOption> cachedOptions = List.of();
+    private List<EscActionWheelOption> cachedOptions = java.util.Collections.emptyList();
 
-    private EscActionWheel(String id, KeyMapping key) {
+    private EscActionWheel(String id, KeyBinding key) {
         this.id = Objects.requireNonNull(id, "id");
         this.key = Objects.requireNonNull(key, "key");
     }
@@ -87,7 +87,7 @@ public final class EscActionWheel {
      * Register (or replace) a wheel. Returns the instance for fluent configuration.
      * Safe to call from client setup; not from common constructors.
      */
-    public static EscActionWheel register(String id, KeyMapping key) {
+    public static EscActionWheel register(String id, KeyBinding key) {
         EscActionWheel wheel = new EscActionWheel(id, key);
         EscActionWheel prev = REGISTRY.put(id, wheel);
         if (prev != null && prev.open) {
@@ -113,12 +113,12 @@ public final class EscActionWheel {
     }
 
     public EscActionWheel options(Supplier<List<EscActionWheelOption>> options) {
-        this.options = options != null ? options : List::of;
+        this.options = options != null ? options : java.util.Collections::emptyList;
         return this;
     }
 
     public EscActionWheel options(List<EscActionWheelOption> fixed) {
-        List<EscActionWheelOption> copy = List.copyOf(fixed != null ? fixed : List.of());
+        List<EscActionWheelOption> copy = java.util.Collections.unmodifiableList(new java.util.ArrayList<>(fixed != null ? fixed : java.util.Collections.emptyList()));
         this.options = () -> copy;
         return this;
     }
@@ -133,18 +133,18 @@ public final class EscActionWheel {
         return this;
     }
 
-    public EscActionWheel hubSubtitle(Supplier<Component> hubSubtitle) {
-        this.hubSubtitle = hubSubtitle != null ? hubSubtitle : () -> Component.empty();
+    public EscActionWheel hubSubtitle(Supplier<ITextComponent> hubSubtitle) {
+        this.hubSubtitle = hubSubtitle != null ? hubSubtitle : () -> new net.minecraft.util.text.StringTextComponent("");
         return this;
     }
 
-    public EscActionWheel cancelLabel(Supplier<Component> cancelLabel) {
-        this.cancelLabel = cancelLabel != null ? cancelLabel : () -> Component.translatable("esc.action_wheel.cancel");
+    public EscActionWheel cancelLabel(Supplier<ITextComponent> cancelLabel) {
+        this.cancelLabel = cancelLabel != null ? cancelLabel : () -> new net.minecraft.util.text.TranslationTextComponent("esc.action_wheel.cancel");
         return this;
     }
 
-    public EscActionWheel idleHint(Supplier<Component> idleHint) {
-        this.idleHint = idleHint != null ? idleHint : () -> Component.translatable("esc.action_wheel.hint");
+    public EscActionWheel idleHint(Supplier<ITextComponent> idleHint) {
+        this.idleHint = idleHint != null ? idleHint : () -> new net.minecraft.util.text.TranslationTextComponent("esc.action_wheel.hint");
         return this;
     }
 
@@ -242,14 +242,14 @@ public final class EscActionWheel {
             return;
         }
         if (lockedHotbarSlot < 0) {
-            lockedHotbarSlot = mc.player.getInventory().selected;
-        } else if (mc.player.getInventory().selected != lockedHotbarSlot) {
-            mc.player.getInventory().selected = lockedHotbarSlot;
+            lockedHotbarSlot = mc.player.inventory.selected;
+        } else if (mc.player.inventory.selected != lockedHotbarSlot) {
+            mc.player.inventory.selected = lockedHotbarSlot;
         }
     }
 
     /** Called by ESC overlay registration — do not call from feature mods. */
-    static void renderAll(GuiGraphics g, int screenWidth, int screenHeight) {
+    static void renderAll(EscGraphics g, int screenWidth, int screenHeight) {
         if (openWheel != null && openWheel.open) {
             openWheel.renderInstance(g, screenWidth, screenHeight);
         }
@@ -332,9 +332,9 @@ public final class EscActionWheel {
     private void refreshOptions() {
         List<EscActionWheelOption> list = options.get();
         if (list == null || list.isEmpty()) {
-            cachedOptions = List.of();
+            cachedOptions = java.util.Collections.emptyList();
         } else {
-            cachedOptions = List.copyOf(list);
+            cachedOptions = java.util.Collections.unmodifiableList(new java.util.ArrayList<>(list));
         }
         int n = Math.min(DIGIT_KEYS.length, cachedOptions.size());
         if (hotWasDown.length != n) {
@@ -358,10 +358,10 @@ public final class EscActionWheel {
         Minecraft mc = Minecraft.getInstance();
         long window = mc.getWindow().getWindow();
         for (int i = 0; i < hotWasDown.length; i++) {
-            hotWasDown[i] = InputConstants.isKeyDown(window, DIGIT_KEYS[i]);
+            hotWasDown[i] = (GLFW.glfwGetKey(window, DIGIT_KEYS[i]) == GLFW.GLFW_PRESS);
         }
         if (mc.player != null) {
-            lockedHotbarSlot = mc.player.getInventory().selected;
+            lockedHotbarSlot = mc.player.inventory.selected;
         }
         EscSound.play(EscUiCue.EXPAND);
         if (releaseMouse && !mouseReleased) {
@@ -381,7 +381,7 @@ public final class EscActionWheel {
         long window = mc.getWindow().getWindow();
         int pressed = -1;
         for (int i = 0; i < hotWasDown.length; i++) {
-            boolean d = InputConstants.isKeyDown(window, DIGIT_KEYS[i]);
+            boolean d = (GLFW.glfwGetKey(window, DIGIT_KEYS[i]) == GLFW.GLFW_PRESS);
             if (d && !hotWasDown[i] && pressed < 0) pressed = i;
             hotWasDown[i] = d;
         }
@@ -463,7 +463,7 @@ public final class EscActionWheel {
         }
     }
 
-    private void renderInstance(GuiGraphics g, int screenWidth, int screenHeight) {
+    private void renderInstance(EscGraphics g, int screenWidth, int screenHeight) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.options.hideGui) return;
         List<EscActionWheelOption> opts = cachedOptions;
@@ -475,7 +475,7 @@ public final class EscActionWheel {
         int cy = screenHeight / 2;
 
         float anim = 1f - (openAnim / (float) OPEN_ANIM_TICKS);
-        anim = Mth.clamp(anim, 0f, 1f);
+        anim = MathHelper.clamp(anim, 0f, 1f);
         anim = 1f - (1f - anim) * (1f - anim);
         int dimAlpha = (int) (0x66 * anim);
         EscPanel.fill(g, new EscRect(0, 0, screenWidth, screenHeight), (dimAlpha << 24));
@@ -546,13 +546,13 @@ public final class EscActionWheel {
             hoverIndex < 0 ? style.panelBorderColor() : style.focusBorderColor(),
             1, EscFrameStyle.SQUARE);
 
-        Component center = hoverIndex < 0 || hoverIndex >= count
+        ITextComponent center = hoverIndex < 0 || hoverIndex >= count
             ? cancelLabel.get()
             : opts.get(hoverIndex).label();
         EscText.drawCentered(g, mc.font, center, cx, cy - 14,
             opaque(style.textColorTitle()), EscFonts.DEFAULT);
 
-        Component blurb = hoverIndex < 0 || hoverIndex >= count
+        ITextComponent blurb = hoverIndex < 0 || hoverIndex >= count
             ? idleHint.get()
             : opts.get(hoverIndex).blurb();
         if (blurb != null && !blurb.getString().isEmpty()) {
@@ -560,14 +560,14 @@ public final class EscActionWheel {
                 opaque(style.mutedColor()), EscFonts.DEFAULT);
         }
 
-        Component sub = hubSubtitle.get();
+        ITextComponent sub = hubSubtitle.get();
         if (sub != null && !sub.getString().isEmpty()) {
             EscText.drawCentered(g, mc.font, sub, cx, cy + 10,
                 opaque(style.secondaryColor()), EscFonts.DEFAULT);
         }
     }
 
-    private static void drawWedgeFan(GuiGraphics g, int cx, int cy, int inner, int outer,
+    private static void drawWedgeFan(EscGraphics g, int cx, int cy, int inner, int outer,
                                      int index, int count, int argb) {
         double step = (Math.PI * 2.0) / count;
         double a0 = step * index;
@@ -582,7 +582,7 @@ public final class EscActionWheel {
         }
     }
 
-    private static void drawLine(GuiGraphics g, int x0, int y0, int x1, int y1, int argb) {
+    private static void drawLine(EscGraphics g, int x0, int y0, int x1, int y1, int argb) {
         int steps = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
         if (steps <= 0) {
             EscPanel.fill(g, new EscRect(x0, y0, 1, 1), argb);

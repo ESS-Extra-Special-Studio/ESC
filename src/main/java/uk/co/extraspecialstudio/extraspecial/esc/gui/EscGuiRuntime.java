@@ -44,25 +44,33 @@ public final class EscGuiRuntime {
         EscRect body = EscPanel.bodyBelowTitle(content, style);
         body = new EscRect(body.x(), body.y(), body.width(), Math.max(0, footer.y() - body.y() - 4));
 
-        switch (profile.layout()) {
-            case FULL -> slots.put(EscAssetSlot.FULL, content);
-            case SIMPLE -> {
-                slots.put(EscAssetSlot.BODY, body);
-                slots.put(EscAssetSlot.FOOTER, footer);
-            }
-            default -> {
-                slots.put(EscAssetSlot.TITLE, title);
-                slots.put(EscAssetSlot.HEADER, title);
-                slots.put(EscAssetSlot.BODY, body);
-                slots.put(EscAssetSlot.FOOTER, footer);
-                int sidebarW = Math.min(120, Math.max(80, content.width() / 4));
-                EscRect sidebar = new EscRect(content.x(), body.y(), sidebarW, body.height());
-                EscRect detail = new EscRect(sidebar.right() + 4, body.y(), content.right() - sidebar.right() - 4, body.height());
-                slots.put(EscAssetSlot.SIDEBAR, sidebar);
-                slots.put(EscAssetSlot.DETAIL, detail);
-                slots.put(EscAssetSlot.NAV, sidebar);
-                slots.put(EscAssetSlot.BACKDROP, content);
-            }
+                switch (profile.layout()) {
+            case FULL:
+                {
+                    slots.put(EscAssetSlot.FULL, content);
+                    break;
+                }
+            case SIMPLE:
+                {
+                                slots.put(EscAssetSlot.BODY, body);
+                                slots.put(EscAssetSlot.FOOTER, footer);
+                            
+                }
+            default:
+                {
+                                slots.put(EscAssetSlot.TITLE, title);
+                                slots.put(EscAssetSlot.HEADER, title);
+                                slots.put(EscAssetSlot.BODY, body);
+                                slots.put(EscAssetSlot.FOOTER, footer);
+                                int sidebarW = Math.min(120, Math.max(80, content.width() / 4));
+                                EscRect sidebar = new EscRect(content.x(), body.y(), sidebarW, body.height());
+                                EscRect detail = new EscRect(sidebar.right() + 4, body.y(), content.right() - sidebar.right() - 4, body.height());
+                                slots.put(EscAssetSlot.SIDEBAR, sidebar);
+                                slots.put(EscAssetSlot.DETAIL, detail);
+                                slots.put(EscAssetSlot.NAV, sidebar);
+                                slots.put(EscAssetSlot.BACKDROP, content);
+                            
+                }
         }
         return slots;
     }
@@ -116,11 +124,21 @@ public final class EscGuiRuntime {
                 if (area == null) {
                     return;
                 }
-                switch (def.type()) {
-                    case BUTTON_BAR -> buildButtonBar(screen, area, instance, profile, bindings, actions);
-                    case SEARCH_BAR -> buildSearchBar(screen, area, instance, bindings);
-                    default -> {
-                    }
+                                switch (def.type()) {
+                    case BUTTON_BAR:
+                        {
+                            buildButtonBar(screen, area, instance, profile, bindings, actions);
+                            break;
+                        }
+                    case SEARCH_BAR:
+                        {
+                            buildSearchBar(screen, area, instance, bindings);
+                            break;
+                        }
+                    default:
+                        {
+                                            
+                        }
                 }
             });
         }
@@ -136,7 +154,7 @@ public final class EscGuiRuntime {
     ) {
         List<String> buttons = parseCsv(bindings.resolve(instance.prop("buttons")));
         if (buttons.isEmpty()) {
-            buttons = List.of("back");
+            buttons = java.util.Arrays.asList("back");
         }
         int y = area.y() + EscButtonBar.DEFAULT_PAD;
         EscRect[] row = EscButtonBar.equalRow(area, buttons.size(), y, EscButtonBar.DEFAULT_HEIGHT);
@@ -163,7 +181,7 @@ public final class EscGuiRuntime {
     ) {
         String hint = bindings.resolve(instance.prop("hint"));
         EscSearchBox box = screen.escSearchBox(area, EscText.literal(bindings.resolve(instance.prop("label"))));
-        if (!hint.isBlank()) {
+        if (!hint.trim().isEmpty()) {
             box.setHint(EscText.literal(hint));
         }
     }
@@ -191,7 +209,7 @@ public final class EscGuiRuntime {
                 String sub = ctx.resolve(inst.prop("subtitle"));
                 EscTypography.draw(ctx.graphics(), ctx.font(), title, ctx.area().x() + 8, ctx.area().y() + 6,
                     ctx.style(), EscTypeRole.TITLE, ctx.area().width() - 16, 1f);
-                if (!sub.isBlank()) {
+                if (!sub.trim().isEmpty()) {
                     EscTypography.draw(ctx.graphics(), ctx.font(), sub, ctx.area().x() + 8, ctx.area().y() + 20,
                         ctx.style(), EscTypeRole.META, ctx.area().width() - 16, 1f);
                 }
@@ -204,7 +222,7 @@ public final class EscGuiRuntime {
             .prop(EscAssetPropDef.string("hint", "", "Hint"))
             .renderer((ctx, inst) -> {
                 String hint = ctx.resolve(inst.prop("hint"));
-                if (!hint.isBlank()) {
+                if (!hint.trim().isEmpty()) {
                     EscTypography.draw(ctx.graphics(), ctx.font(), hint, ctx.area().x() + 8, ctx.area().y() + 4,
                         ctx.style(), EscTypeRole.META, ctx.area().width() - 16, 1f);
                 }
@@ -374,13 +392,26 @@ public final class EscGuiRuntime {
         EscAssetRegistry.register(EscAssetDef.builder("esc:color_chip", EscAssetType.COLOR_CHIP, EscAssetCategory.EFFECTS)
             .displayName("Colour chip")
             .description("Theme colour swatch preview")
-            .prop(EscAssetPropDef.anEnum("role", "ACCENT", List.of("BORDER", "TEXT", "ACCENT"), "Role"))
+            .prop(EscAssetPropDef.anEnum("role", "ACCENT", java.util.Arrays.asList("BORDER", "TEXT", "ACCENT"), "Role"))
             .renderer((ctx, inst) -> {
-                int color = switch (inst.prop("role")) {
-                    case "BORDER" -> ctx.style().panelBorderColor();
-                    case "TEXT" -> ctx.style().textColorBody();
-                    default -> ctx.style().accentColor();
-                };
+                int color = 0;
+                switch (inst.prop("role")) {
+                    case "BORDER":
+                        {
+                            color = ctx.style().panelBorderColor();
+                            break;
+                        }
+                    case "TEXT":
+                        {
+                            color = ctx.style().textColorBody();
+                            break;
+                        }
+                    default:
+                        {
+                            color = ctx.style().accentColor();
+                            break;
+                        }
+                }
                 EscRect chip = new EscRect(ctx.area().x() + 8, ctx.area().y() + 8, 48, 16);
                 EscPanel.fill(ctx.graphics(), chip, color | 0xFF000000);
                 EscPanel.border(ctx.graphics(), chip, ctx.style().focusBorderColor(), 1);
@@ -417,8 +448,8 @@ public final class EscGuiRuntime {
     }
 
     private static List<String> parseCsv(String raw) {
-        if (raw == null || raw.isBlank()) {
-            return List.of();
+        if (raw == null || raw.trim().isEmpty()) {
+            return java.util.Collections.emptyList();
         }
         List<String> out = new ArrayList<>();
         for (String part : raw.split(",")) {
@@ -431,7 +462,7 @@ public final class EscGuiRuntime {
     }
 
     private static String capitalize(String id) {
-        if (id == null || id.isBlank()) {
+        if (id == null || id.trim().isEmpty()) {
             return "Action";
         }
         return id.substring(0, 1).toUpperCase() + id.substring(1);
@@ -461,6 +492,6 @@ public final class EscGuiRuntime {
             }
         }
         values.add("GRID");
-        return values.stream().distinct().toList();
+        return values.stream().distinct().collect(java.util.stream.Collectors.toList());
     }
 }

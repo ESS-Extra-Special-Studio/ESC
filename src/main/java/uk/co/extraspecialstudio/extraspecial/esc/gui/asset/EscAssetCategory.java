@@ -11,12 +11,28 @@ public enum EscAssetCategory {
     CUSTOM;
 
     public String displayName() {
-        return switch (this) {
-            case CORE -> "Core";
-            case NAVIGATION -> "Navigation";
-            case EFFECTS -> "Effects";
-            case ESH -> "ESH";
-            case CUSTOM -> "Custom";
-        };
+                switch (this) {
+            case CORE:
+                {
+                    return "Core";
+                }
+            case NAVIGATION:
+                {
+                    return "Navigation";
+                }
+            case EFFECTS:
+                {
+                    return "Effects";
+                }
+            case ESH:
+                {
+                    return "ESH";
+                }
+            case CUSTOM:
+                {
+                    return "Custom";
+                }
+        }
+        throw new IllegalStateException();
     }
 }

@@ -1,10 +1,10 @@
 package uk.co.extraspecialstudio.extraspecial.esc.sound;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.fml.RegistryObject;
 import uk.co.extraspecialstudio.extraspecial.Extraspecialcore;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public final class EscSounds {
     }
 
     private static RegistryObject<SoundEvent> register(String path) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(Extraspecialcore.MODID, path);
-        return REGISTER.register(path.replace('.', '_'), () -> SoundEvent.createVariableRangeEvent(id));
+        ResourceLocation id = new ResourceLocation(Extraspecialcore.MODID, path);
+        return REGISTER.register(path.replace('.', '_'), () -> new SoundEvent(id));
     }
 }

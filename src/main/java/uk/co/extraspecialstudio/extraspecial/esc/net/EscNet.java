@@ -1,11 +1,11 @@
 package uk.co.extraspecialstudio.extraspecial.esc.net;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 import uk.co.extraspecialstudio.extraspecial.Extraspecialcore;
 
 public final class EscNet {
@@ -26,11 +26,11 @@ public final class EscNet {
         CHANNEL.messageBuilder(EscThemeSyncPacket.class, nextId++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(EscThemeSyncPacket::encode)
             .decoder(EscThemeSyncPacket::decode)
-            .consumerMainThread(EscThemeSyncPacket::handle)
+            .consumer(EscThemeSyncPacket::handle)
             .add();
     }
 
-    public static void sendThemeTo(ServerPlayer player) {
+    public static void sendThemeTo(ServerPlayerEntity player) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), EscThemeSyncPacket.fromCommonConfig());
     }
 }

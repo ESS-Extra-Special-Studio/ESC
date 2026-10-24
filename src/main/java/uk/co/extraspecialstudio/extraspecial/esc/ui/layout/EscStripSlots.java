@@ -9,7 +9,23 @@ public final class EscStripSlots {
     private EscStripSlots() {
     }
 
-    public record Plan(int slotW, int gap, int startX, int count) {
+    public static final class Plan {
+        private final int slotW;
+        private final int gap;
+        private final int startX;
+        private final int count;
+
+        public Plan(int slotW, int gap, int startX, int count) {
+            this.slotW = slotW;
+            this.gap = gap;
+            this.startX = startX;
+            this.count = count;
+        }
+
+        public int slotW() { return this.slotW; }
+        public int gap() { return this.gap; }
+        public int startX() { return this.startX; }
+        public int count() { return this.count; }
     }
 
     /**

@@ -1,8 +1,8 @@
 package uk.co.extraspecialstudio.extraspecial.esc.sound;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.sounds.SoundEvent;
+import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscThemeConfigs;
 
@@ -128,7 +128,7 @@ public final class EscSound {
         if (mc == null || mc.getSoundManager() == null) {
             return;
         }
-        mc.getSoundManager().play(SimpleSoundInstance.forUI(event, p, v));
+        mc.getSoundManager().play(SimpleSound.forUI(event, p, v));
         lastMenuPlayMs = now;
         lastMenuIndex = index;
     }

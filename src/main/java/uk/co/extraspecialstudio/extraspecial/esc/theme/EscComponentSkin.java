@@ -13,20 +13,46 @@ public enum EscComponentSkin {
     HUD;
 
     public EscFrameStyle preferredFrame() {
-        return switch (this) {
-            case TERMINAL, HUD -> EscFrameStyle.BRACKET;
-            case CHAMFERED -> EscFrameStyle.CHAMFER;
-            case PILL, MINIMAL -> EscFrameStyle.ROUNDED_SOFT;
-            case OUTLINE, DEFAULT -> EscFrameStyle.SQUARE;
-        };
+                switch (this) {
+            case TERMINAL:
+            case HUD:
+                {
+                    return EscFrameStyle.BRACKET;
+                }
+            case CHAMFERED:
+                {
+                    return EscFrameStyle.CHAMFER;
+                }
+            case PILL:
+            case MINIMAL:
+                {
+                    return EscFrameStyle.ROUNDED_SOFT;
+                }
+            case OUTLINE:
+            case DEFAULT:
+                {
+                    return EscFrameStyle.SQUARE;
+                }
+        }
+        throw new IllegalStateException();
     }
 
     public float opacityBias() {
-        return switch (this) {
-            case MINIMAL, HUD -> -0.08f;
-            case TERMINAL -> 0.05f;
-            default -> 0f;
-        };
+                switch (this) {
+            case MINIMAL:
+            case HUD:
+                {
+                    return -0.08f;
+                }
+            case TERMINAL:
+                {
+                    return 0.05f;
+                }
+            default:
+                {
+                    return 0f;
+                }
+        }
     }
 
     public EscTheme apply(EscTheme base) {

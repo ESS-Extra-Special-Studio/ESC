@@ -30,12 +30,25 @@ public enum EscQualityMode {
     }
 
     public float effectScale() {
-        return switch (this) {
-            case OFF -> 0f;
-            case LOW -> 0.35f;
-            case MEDIUM -> 0.7f;
-            case HIGH -> 1f;
-        };
+                switch (this) {
+            case OFF:
+                {
+                    return 0f;
+                }
+            case LOW:
+                {
+                    return 0.35f;
+                }
+            case MEDIUM:
+                {
+                    return 0.7f;
+                }
+            case HIGH:
+                {
+                    return 1f;
+                }
+        }
+        throw new IllegalStateException();
     }
 
     public EscQualityMode next() {
@@ -44,7 +57,7 @@ public enum EscQualityMode {
     }
 
     public static EscQualityMode byName(String raw) {
-        if (raw == null || raw.isBlank()) {
+        if (raw == null || raw.trim().isEmpty()) {
             return MEDIUM;
         }
         try {

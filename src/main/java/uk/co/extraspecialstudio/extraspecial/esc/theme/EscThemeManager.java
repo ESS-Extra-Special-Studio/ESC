@@ -27,10 +27,36 @@ public final class EscThemeManager {
     private EscThemeManager() {
     }
 
-    public record PackTheme(boolean override, boolean lockPlayers, EscTheme theme) {
+    public static final class PackTheme {
+        private final boolean override;
+        private final boolean lockPlayers;
+        private final EscTheme theme;
+
+        public PackTheme(boolean override, boolean lockPlayers, EscTheme theme) {
+            this.override = override;
+            this.lockPlayers = lockPlayers;
+            this.theme = theme;
+        }
+
+        public boolean override() { return this.override; }
+        public boolean lockPlayers() { return this.lockPlayers; }
+        public EscTheme theme() { return this.theme; }
     }
 
-    private record CachedResolve(long stamp, EscThemeResolved resolved, uk.co.extraspecialstudio.extraspecial.esc.ui.EscUiStyle style) {
+    private static final class CachedResolve {
+        private final long stamp;
+        private final EscThemeResolved resolved;
+        private final uk.co.extraspecialstudio.extraspecial.esc.ui.EscUiStyle style;
+
+        public CachedResolve(long stamp, EscThemeResolved resolved, uk.co.extraspecialstudio.extraspecial.esc.ui.EscUiStyle style) {
+            this.stamp = stamp;
+            this.resolved = resolved;
+            this.style = style;
+        }
+
+        public long stamp() { return this.stamp; }
+        public EscThemeResolved resolved() { return this.resolved; }
+        public uk.co.extraspecialstudio.extraspecial.esc.ui.EscUiStyle style() { return this.style; }
     }
 
     /** Dedicated-server push (cleared on client logout). */
@@ -52,7 +78,7 @@ public final class EscThemeManager {
      * when pack override is off.
      */
     public static void registerApplicationTheme(String applicationId, EscTheme theme) {
-        if (applicationId == null || applicationId.isBlank() || theme == null) {
+        if (applicationId == null || applicationId.trim().isEmpty() || theme == null) {
             return;
         }
         APPLICATION.put(applicationId, EscThemeValidator.clamp(theme));
@@ -62,7 +88,7 @@ public final class EscThemeManager {
 
     /** Soft application overlay — only set fields on the partial replace underlying tokens. */
     public static void registerApplicationPartial(String applicationId, EscThemePartial partial) {
-        if (applicationId == null || applicationId.isBlank() || partial == null) {
+        if (applicationId == null || applicationId.trim().isEmpty() || partial == null) {
             return;
         }
         EscTheme base = APPLICATION.getOrDefault(applicationId, EscThemePreset.byName(EscThemeConfigs.defaultPreset()).theme());
@@ -101,7 +127,7 @@ public final class EscThemeManager {
             theme = pack.theme();
             locked = pack.lockPlayers();
         }
-        if (!locked && applicationId != null && !applicationId.isBlank()) {
+        if (!locked && applicationId != null && !applicationId.trim().isEmpty()) {
             EscTheme app = APPLICATION.get(applicationId);
             if (app != null) {
                 theme = app;
@@ -138,7 +164,7 @@ public final class EscThemeManager {
     }
 
     private static CachedResolve cached(String applicationId) {
-        String key = applicationId == null || applicationId.isBlank() ? "" : applicationId;
+        String key = applicationId == null || applicationId.trim().isEmpty() ? "" : applicationId;
         long stamp = configStamp(key);
         CachedResolve hit = CACHE.get(key);
         if (hit != null && hit.stamp() == stamp) {
@@ -189,7 +215,7 @@ public final class EscThemeManager {
             locked = pack.lockPlayers();
         }
 
-        if (!locked && applicationId != null && !applicationId.isBlank()) {
+        if (!locked && applicationId != null && !applicationId.trim().isEmpty()) {
             EscTheme app = APPLICATION.get(applicationId);
             if (app != null) {
                 theme = app;

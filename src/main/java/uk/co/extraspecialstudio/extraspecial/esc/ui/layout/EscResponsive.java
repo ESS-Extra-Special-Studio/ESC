@@ -10,7 +10,23 @@ public final class EscResponsive {
     private EscResponsive() {
     }
 
-    public record CardPlan(int cardW, int cardH, int gap, int visible) {
+    public static final class CardPlan {
+        private final int cardW;
+        private final int cardH;
+        private final int gap;
+        private final int visible;
+
+        public CardPlan(int cardW, int cardH, int gap, int visible) {
+            this.cardW = cardW;
+            this.cardH = cardH;
+            this.gap = gap;
+            this.visible = visible;
+        }
+
+        public int cardW() { return this.cardW; }
+        public int cardH() { return this.cardH; }
+        public int gap() { return this.gap; }
+        public int visible() { return this.visible; }
     }
 
     public static CardPlan carouselCards(EscRect carousel, int sectionCount) {

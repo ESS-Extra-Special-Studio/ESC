@@ -1,9 +1,8 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.Component;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.ITextComponent;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscFrameStyle;
 
 /**
@@ -18,38 +17,38 @@ public final class EscButtons {
     private EscButtons() {
     }
 
-    public static Button button(Component label, int x, int y, int width, int height, Button.OnPress onPress) {
+    public static Button button(ITextComponent label, int x, int y, int width, int height, Button.IPressable onPress) {
         return button(label, x, y, width, height, null, onPress);
     }
 
     public static Button button(
-        Component label,
+        ITextComponent label,
         int x,
         int y,
         int width,
         int height,
         EscUiStyle style,
-        Button.OnPress onPress
+        Button.IPressable onPress
     ) {
-        Component styled = EscText.styled(label);
+        ITextComponent styled = EscText.styled(label);
         return new EscChromeButton(x, y, width, height, styled, style, onPress);
     }
 
-    public static Button button(Component label, int x, int y, EscUiStyle style, Button.OnPress onPress) {
+    public static Button button(ITextComponent label, int x, int y, EscUiStyle style, Button.IPressable onPress) {
         return button(label, x, y, style.defaultButtonWidth(), style.defaultButtonHeight(), style, onPress);
     }
 
-    public static Button button(Component label, EscRect parent, EscLayoutSpec spec, Button.OnPress onPress) {
+    public static Button button(ITextComponent label, EscRect parent, EscLayoutSpec spec, Button.IPressable onPress) {
         EscRect resolved = EscLayout.resolve(parent, spec);
         return button(label, resolved.x(), resolved.y(), resolved.width(), resolved.height(), onPress);
     }
 
     public static Button button(
-        Component label,
+        ITextComponent label,
         EscRect parent,
         EscLayoutSpec spec,
         EscUiStyle style,
-        Button.OnPress onPress
+        Button.IPressable onPress
     ) {
         EscRect resolved = EscLayout.resolve(parent, spec);
         return button(label, resolved.x(), resolved.y(), resolved.width(), resolved.height(), style, onPress);
@@ -63,39 +62,35 @@ public final class EscButtons {
             int y,
             int width,
             int height,
-            Component message,
+            ITextComponent message,
             EscUiStyle styleOverride,
-            OnPress onPress
+            Button.IPressable onPress
         ) {
-            super(x, y, width, height, message, onPress, DEFAULT_NARRATION);
+            super(x, y, width, height, message, onPress);
             this.styleOverride = styleOverride;
         }
 
         @Override
-        protected void renderWidget(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+        public void renderButton(MatrixStack pose, int mouseX, int mouseY, float partialTick) {
+            EscGraphics g = new EscGraphics(pose);
             EscUiStyle style = styleOverride != null ? styleOverride : EscUiStyle.active();
-            EscRect box = new EscRect(getX(), getY(), getWidth(), getHeight());
-            boolean hot = isHoveredOrFocused();
+            EscRect box = new EscRect(this.x, this.y, getWidth(), getHeight());
+            boolean hot = (isHovered() || isFocused());
             int fill = EscPanel.withOpacity(style.panelFillColor(), Math.min(1f, style.panelOpacity() + (hot ? 0.08f : 0f)));
             EscPanel.fill(g, box, fill);
             int border = hot ? style.focusBorderColor() : style.panelBorderColor();
             // Buttons stay rectangular so themed cut-corners / brackets cannot clip labels.
             EscPanel.renderFrame(g, box, border, Math.max(1, style.panelBorderWidth()), EscFrameStyle.SQUARE);
             int textColor = hot ? (style.textColorTitle() | 0xFF000000) : (style.textColorBody() | 0xFF000000);
-            renderString(g, net.minecraft.client.Minecraft.getInstance().font, textColor);
-        }
-
-        @Override
-        public void renderString(GuiGraphics guiGraphics, Font font, int color) {
             EscWidgetText.renderScrollingStringNoShadow(
-                guiGraphics,
-                font,
+                g,
+                net.minecraft.client.Minecraft.getInstance().font,
                 getMessage(),
-                getX() + TEXT_MARGIN,
-                getY(),
-                getX() + getWidth() - TEXT_MARGIN,
-                getY() + getHeight(),
-                color
+                this.x + TEXT_MARGIN,
+                this.y,
+                this.x + getWidth() - TEXT_MARGIN,
+                this.y + getHeight(),
+                textColor
             );
         }
     }

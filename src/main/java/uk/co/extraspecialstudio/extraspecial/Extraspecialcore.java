@@ -1,8 +1,8 @@
 package uk.co.extraspecialstudio.extraspecial;
 
-import com.mojang.logging.LogUtils;
+import org.slf4j.LoggerFactory;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -18,7 +18,7 @@ import uk.co.extraspecialstudio.extraspecial.esc.theme.EscThemeConfigs;
 public class Extraspecialcore {
 
     public static final String MODID = "extraspecialcore";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    private static final Logger LOGGER = LoggerFactory.getLogger(Extraspecialcore.class);
 
     public Extraspecialcore() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -38,7 +38,7 @@ public class Extraspecialcore {
     }
 
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
+    public void onServerStarting(FMLServerStartingEvent event) {
         if (Config.debugLogging) {
             LOGGER.debug("ExtraSpecialCore: server starting.");
         }

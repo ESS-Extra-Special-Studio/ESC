@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import com.mojang.blaze3d.platform.InputConstants;
+import org.lwjgl.glfw.GLFW;
 import uk.co.extraspecialstudio.extraspecial.esc.sound.EscSound;
 import uk.co.extraspecialstudio.extraspecial.esc.sound.EscUiCue;
 
@@ -21,7 +21,7 @@ public final class EscHubNav {
         if (ctx == null || ctx.sections().isEmpty()) {
             return false;
         }
-        if (keyCode == InputConstants.KEY_LEFT || keyCode == InputConstants.KEY_A) {
+        if (keyCode == GLFW.GLFW_KEY_LEFT || keyCode == GLFW.GLFW_KEY_A) {
             int before = ctx.sectionIndex();
             ctx.cycleSection(-1);
             if (ctx.sectionIndex() != before) {
@@ -30,7 +30,7 @@ public final class EscHubNav {
             ctx.resetDetailCursor();
             return true;
         }
-        if (keyCode == InputConstants.KEY_RIGHT || keyCode == InputConstants.KEY_D) {
+        if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_D) {
             int before = ctx.sectionIndex();
             ctx.cycleSection(1);
             if (ctx.sectionIndex() != before) {
@@ -43,21 +43,21 @@ public final class EscHubNav {
         if (sel == null) {
             return false;
         }
-        if (keyCode == InputConstants.KEY_UP || keyCode == InputConstants.KEY_W) {
+        if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_W) {
             if (EscAccordion.moveFocus(ctx, sel.id(), -1)) {
                 EscSound.play(EscUiCue.MOVE);
                 return true;
             }
             return false;
         }
-        if (keyCode == InputConstants.KEY_DOWN || keyCode == InputConstants.KEY_S) {
+        if (keyCode == GLFW.GLFW_KEY_DOWN || keyCode == GLFW.GLFW_KEY_S) {
             if (EscAccordion.moveFocus(ctx, sel.id(), 1)) {
                 EscSound.play(EscUiCue.MOVE);
                 return true;
             }
             return false;
         }
-        if (keyCode == InputConstants.KEY_RETURN || keyCode == InputConstants.KEY_SPACE) {
+        if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_SPACE) {
             if (EscAccordion.activateFocused(ctx, sel.id())) {
                 return true;
             }

@@ -15,19 +15,43 @@ public enum EscTypeRole {
     }
 
     public float trackingExtra() {
-        return switch (this) {
-            case TITLE -> 0.5f;
-            case META, NUMERIC -> 0.25f;
-            default -> 0f;
-        };
+                switch (this) {
+            case TITLE:
+                {
+                    return 0.5f;
+                }
+            case META:
+            case NUMERIC:
+                {
+                    return 0.25f;
+                }
+            default:
+                {
+                    return 0f;
+                }
+        }
     }
 
     public int color(EscUiStyle style) {
-        return switch (this) {
-            case TITLE -> style.textColorTitle();
-            case SUBTITLE, BODY -> style.textColorBody();
-            case META -> style.mutedColor();
-            case NUMERIC -> style.accentColor() & 0xFFFFFF;
-        };
+                switch (this) {
+            case TITLE:
+                {
+                    return style.textColorTitle();
+                }
+            case SUBTITLE:
+            case BODY:
+                {
+                    return style.textColorBody();
+                }
+            case META:
+                {
+                    return style.mutedColor();
+                }
+            case NUMERIC:
+                {
+                    return style.accentColor() & 0xFFFFFF;
+                }
+        }
+        throw new IllegalStateException();
     }
 }

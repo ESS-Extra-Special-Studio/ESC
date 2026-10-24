@@ -18,7 +18,7 @@ class EscGuiProfileCodecTest {
         original.setThemePreset("CLEAN");
         original.setBackdrop("GRID");
         original.components().add(new EscAssetInstance("esc:header", EscAssetSlot.TITLE,
-            java.util.Map.of("title", "{bind:title}")));
+            java.util.Collections.singletonMap("title",  "{bind:title}")));
         original.actions().put("apply", "action:apply");
 
         String json = EscGuiProfileCodec.toJson(original);
@@ -36,17 +36,7 @@ class EscGuiProfileCodecTest {
 
     @Test
     void parsesDemoSettingsShape() {
-        String json = """
-            {
-              "id": "extraspecialcore:demo_settings",
-              "title": "Demo Settings",
-              "layout": "CLASSIC",
-              "components": [
-                { "asset": "esc:button_bar", "slot": "footer", "props": { "buttons": "apply,back" } }
-              ],
-              "actions": { "back": "action:back" }
-            }
-            """;
+        String json = "{\n  \"id\": \"extraspecialcore:demo_settings\",\n  \"title\": \"Demo Settings\",\n  \"layout\": \"CLASSIC\",\n  \"components\": [\n    { \"asset\": \"esc:button_bar\", \"slot\": \"footer\", \"props\": { \"buttons\": \"apply,back\" } }\n  ],\n  \"actions\": { \"back\": \"action:back\" }\n}";
         EscGuiProfile profile = EscGuiProfileCodec.fromJson(json);
         assertEquals("extraspecialcore:demo_settings", profile.id());
         assertEquals(1, profile.components().size());

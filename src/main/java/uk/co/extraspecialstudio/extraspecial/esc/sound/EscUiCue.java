@@ -1,7 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.sound;
 
-import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.util.SoundEvent;
+import net.minecraftforge.fml.RegistryObject;
 
 /**
  * Semantic UI cues for ESC / ESH. Maps to {@link EscSounds} with default volume/pitch.

@@ -1,12 +1,12 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
 
 @FunctionalInterface
 public interface EscListRowRenderer<T> {
 
     void render(
-        GuiGraphics graphics,
+        EscGraphics graphics,
         T row,
         int index,
         int left,

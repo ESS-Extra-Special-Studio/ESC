@@ -1,11 +1,11 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.client.gui.screen.IngameMenuScreen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -35,7 +35,7 @@ public final class EscActionWheelClient {
         }
 
         @SubscribeEvent
-        public static void onLogout(ClientPlayerNetworkEvent.LoggingOut event) {
+        public static void onLogout(ClientPlayerNetworkEvent.LoggedOutEvent event) {
             EscActionWheel.forceResetAll();
         }
 
@@ -44,9 +44,9 @@ public final class EscActionWheelClient {
          * Opening pause would set {@code mc.screen} and force-reset the wheel; block that.
          */
         @SubscribeEvent
-        public static void onScreenOpening(ScreenEvent.Opening event) {
+        public static void onScreenOpening(GuiOpenEvent event) {
             if (!EscActionWheel.anyOpen()) return;
-            if (event.getNewScreen() instanceof PauseScreen) {
+            if (event.getGui() instanceof IngameMenuScreen) {
                 event.setCanceled(true);
             }
         }
@@ -57,7 +57,7 @@ public final class EscActionWheelClient {
          * RMB cancel is polled via GLFW inside {@link EscActionWheel}.
          */
         @SubscribeEvent
-        public static void onMouseButton(InputEvent.MouseButton.Pre event) {
+        public static void onMouseButton(InputEvent.RawMouseEvent event) {
             if (!EscActionWheel.anyOpen()) return;
             if (event.getAction() == GLFW.GLFW_PRESS) {
                 event.setCanceled(true);
@@ -65,29 +65,26 @@ public final class EscActionWheelClient {
         }
 
         @SubscribeEvent
-        public static void onMouseScroll(InputEvent.MouseScrollingEvent event) {
+        public static void onMouseScroll(InputEvent.MouseScrollEvent event) {
             if (EscActionWheel.anyOpen()) {
                 event.setCanceled(true);
             }
         }
 
         @SubscribeEvent
-        public static void onInteraction(InputEvent.InteractionKeyMappingTriggered event) {
+        public static void onInteraction(InputEvent.ClickInputEvent event) {
             if (!EscActionWheel.anyOpen()) return;
             event.setCanceled(true);
             event.setSwingHand(false);
         }
-    }
-
-    @Mod.EventBusSubscriber(modid = Extraspecialcore.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static final class ModBus {
-        private ModBus() {}
 
         @SubscribeEvent
-        public static void onRegisterOverlays(RegisterGuiOverlaysEvent event) {
-            event.registerAboveAll("esc_action_wheel",
-                (gui, guiGraphics, partialTick, screenWidth, screenHeight) ->
-                    EscActionWheel.renderAll(guiGraphics, screenWidth, screenHeight));
+        public static void onOverlay(RenderGameOverlayEvent.Post event) {
+            if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
+                return;
+            }
+            net.minecraft.client.MainWindow window = event.getWindow();
+            EscActionWheel.renderAll(new EscGraphics(event.getMatrixStack()), window.getGuiScaledWidth(), window.getGuiScaledHeight());
         }
     }
 }

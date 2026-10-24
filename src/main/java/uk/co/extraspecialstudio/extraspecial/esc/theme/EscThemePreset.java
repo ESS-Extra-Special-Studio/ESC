@@ -54,7 +54,7 @@ public enum EscThemePreset {
     }
 
     public static EscThemePreset byName(String raw) {
-        if (raw == null || raw.isBlank()) {
+        if (raw == null || raw.trim().isEmpty()) {
             return GROWTH;
         }
         String key = raw.trim();

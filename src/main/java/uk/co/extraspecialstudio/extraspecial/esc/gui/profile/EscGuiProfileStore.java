@@ -1,14 +1,16 @@
 package uk.co.extraspecialstudio.extraspecial.esc.gui.profile;
 
-import com.mojang.logging.LogUtils;
+import org.slf4j.LoggerFactory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.IResource;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.slf4j.Logger;
 import uk.co.extraspecialstudio.extraspecial.esc.gui.asset.EscAssetRegistry;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -23,7 +25,7 @@ import java.util.stream.Stream;
  * Load/save/list GUI profiles from config and resource packs.
  */
 public final class EscGuiProfileStore {
-    private static final Logger LOGGER = LogUtils.getLogger();
+    private static final Logger LOGGER = LoggerFactory.getLogger(EscGuiProfileStore.class);
     private static final Path CONFIG_ROOT = FMLPaths.CONFIGDIR.get().resolve("extraspecialcore/gui-profiles");
 
     private EscGuiProfileStore() {
@@ -34,7 +36,7 @@ public final class EscGuiProfileStore {
     }
 
     public static Optional<EscGuiProfile> load(String profileId) {
-        if (profileId == null || profileId.isBlank()) {
+        if (profileId == null || profileId.trim().isEmpty()) {
             return Optional.empty();
         }
         Optional<EscGuiProfile> fromConfig = loadFromConfig(profileId);
@@ -50,7 +52,7 @@ public final class EscGuiProfileStore {
             return Optional.empty();
         }
         try {
-            String json = Files.readString(path, StandardCharsets.UTF_8);
+            String json = new String(java.nio.file.Files.readAllBytes(path), StandardCharsets.UTF_8);
             EscGuiProfile profile = EscGuiProfileCodec.fromJson(json);
             profile.setId(profileId);
             return Optional.of(profile);
@@ -72,11 +74,14 @@ public final class EscGuiProfileStore {
         if (mc == null || mc.getResourceManager() == null) {
             return Optional.empty();
         }
-        Optional<Resource> resource = mc.getResourceManager().getResource(loc);
-        if (resource.isEmpty()) {
+        final IResource resource;
+        try {
+            resource = mc.getResourceManager().getResource(loc);
+        } catch (IOException missing) {
             return Optional.empty();
         }
-        try (Reader reader = resource.get().openAsReader()) {
+        try (InputStream in = resource.getInputStream();
+             Reader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
             StringBuilder sb = new StringBuilder();
             char[] buf = new char[4096];
             int read;
@@ -99,7 +104,7 @@ public final class EscGuiProfileStore {
         }
         Path path = configPathFor(profile.id());
         Files.createDirectories(path.getParent());
-        Files.writeString(path, EscGuiProfileCodec.toJson(profile), StandardCharsets.UTF_8);
+        Files.write(path, EscGuiProfileCodec.toJson(profile).getBytes(StandardCharsets.UTF_8));
     }
 
     public static boolean delete(String profileId) throws IOException {
@@ -116,7 +121,7 @@ public final class EscGuiProfileStore {
         ids.addAll(listConfigIds());
         ids.addAll(listResourceIds());
         ids.sort(Comparator.naturalOrder());
-        return ids.stream().distinct().toList();
+        return ids.stream().distinct().collect(java.util.stream.Collectors.toList());
     }
 
     public static List<String> listConfigIds() {
@@ -146,7 +151,7 @@ public final class EscGuiProfileStore {
         if (mc == null || mc.getResourceManager() == null) {
             return ids;
         }
-        for (ResourceLocation loc : mc.getResourceManager().listResources("esc/gui", rl -> rl.getPath().endsWith(".json")).keySet()) {
+        for (ResourceLocation loc : mc.getResourceManager().listResources("esc/gui", path -> path.endsWith(".json"))) {
             String path = loc.getPath();
             String local = path.substring("esc/gui/".length());
             if (local.endsWith(".json")) {

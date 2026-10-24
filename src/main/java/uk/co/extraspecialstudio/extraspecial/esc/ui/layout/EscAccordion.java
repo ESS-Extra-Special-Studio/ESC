@@ -1,7 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui.layout;
 
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.FontRenderer;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscImage;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscPanel;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscRect;
@@ -21,24 +21,41 @@ import java.util.Map;
 public final class EscAccordion {
     private static final Map<String, Integer> SCROLL = new HashMap<>();
     private static String navCacheKey;
-    private static List<NavItem> navCache = List.of();
+    private static List<NavItem> navCache = java.util.Collections.emptyList();
     private static String rowLabelCacheKey;
     private static final Map<Integer, String> rowLabelCache = new HashMap<>();
 
     private EscAccordion() {
     }
 
-    private sealed interface NavItem {
-        record Group(EscHubGroup group) implements NavItem {
+    private interface NavItem {
+        static final class Group implements NavItem {
+            private final EscHubGroup group;
+
+            public Group(EscHubGroup group) {
+                this.group = group;
+            }
+
+            public EscHubGroup group() { return this.group; }
         }
 
-        record Leaf(EscHubLeaf leaf, EscHubGroup parent) implements NavItem {
+        static final class Leaf implements NavItem {
+            private final EscHubLeaf leaf;
+            private final EscHubGroup parent;
+
+            public Leaf(EscHubLeaf leaf, EscHubGroup parent) {
+                this.leaf = leaf;
+                this.parent = parent;
+            }
+
+            public EscHubLeaf leaf() { return this.leaf; }
+            public EscHubGroup parent() { return this.parent; }
         }
     }
 
-    public static void render(GuiGraphics g, EscHubLayoutContext ctx, EscRect area, String sectionId) {
+    public static void render(EscGraphics g, EscHubLayoutContext ctx, EscRect area, String sectionId) {
         EscUiStyle style = ctx.style();
-        Font font = ctx.font();
+        FontRenderer font = ctx.font();
         EscPanel.renderPanel(g, area, style);
         int inset = ctx.detailTopInset();
         int scroll = SCROLL.getOrDefault(sectionId, 0);
@@ -132,7 +149,7 @@ public final class EscAccordion {
         }
     }
 
-    private static void drawFocusRow(GuiGraphics g, EscRect area, int y, int row, EscUiStyle style) {
+    private static void drawFocusRow(EscGraphics g, EscRect area, int y, int row, EscUiStyle style) {
         int fill = EscFocusVisual.applyAlpha(style.accentColor() | 0xFF000000, 0.22f);
         EscPanel.fill(g, new EscRect(area.x() + 2, y - 1, area.width() - 6, row), fill);
         EscPanel.border(g, new EscRect(area.x() + 2, y - 1, area.width() - 6, row),
@@ -141,7 +158,7 @@ public final class EscAccordion {
 
     /** L-shaped branch: down from the spine, then right toward the leaf label. */
     private static void drawTreeBranch(
-        GuiGraphics g, int baseX, int y, int rowH, EscUiStyle style, int index, int count
+        EscGraphics g, int baseX, int y, int rowH, EscUiStyle style, int index, int count
     ) {
         int color = (style.textColorBody() & 0xFFFFFF) | 0xCC000000;
         int spineX = baseX + 4;
@@ -196,7 +213,8 @@ public final class EscAccordion {
             return false;
         }
         NavItem item = nav.get(cur);
-        if (item instanceof NavItem.Group g) {
+        if (item instanceof NavItem.Group) {
+            NavItem.Group g = (NavItem.Group) item;
             if (g.group().singleton()) {
                 EscHubLeaf only = g.group().leaves().get(0);
                 if (!only.enabled()) {
@@ -211,7 +229,8 @@ public final class EscAccordion {
             ctx.setDetailCursor(indexOfGroup(ctx, sectionId, g.group().id()));
             return true;
         }
-        if (item instanceof NavItem.Leaf leaf) {
+        if (item instanceof NavItem.Leaf) {
+            NavItem.Leaf leaf = (NavItem.Leaf) item;
             ctx.openLeaf(leaf.leaf());
             return true;
         }
@@ -221,7 +240,7 @@ public final class EscAccordion {
     private static int indexOfGroup(EscHubLayoutContext ctx, String sectionId, String groupId) {
         List<NavItem> nav = buildNav(ctx, sectionId);
         for (int i = 0; i < nav.size(); i++) {
-            if (nav.get(i) instanceof NavItem.Group g && g.group().id().equals(groupId)) {
+            if (nav.get(i) instanceof NavItem.Group && ((NavItem.Group) (nav.get(i))).group().id().equals(groupId)) {
                 return i;
             }
         }
@@ -229,7 +248,7 @@ public final class EscAccordion {
     }
 
     private static void ensureVisible(EscHubLayoutContext ctx, String sectionId, int navIndex) {
-        Font font = ctx.font();
+        FontRenderer font = ctx.font();
         int tipLine = font.lineHeight + 4;
         int row = font.lineHeight + 6;
         int tipsH = 0;
@@ -299,7 +318,7 @@ public final class EscAccordion {
 
     private static String leafRowLabel(EscHubLeaf leaf, boolean focused, boolean treeNav) {
         String mark = leaf.enabled() ? "" : " [install]";
-        String sub = leaf.subtitle().isBlank() ? "" : "  — " + leaf.subtitle();
+        String sub = leaf.subtitle().trim().isEmpty() ? "" : "  — " + leaf.subtitle();
         if (treeNav) {
             return leaf.title() + mark + sub;
         }
@@ -311,7 +330,7 @@ public final class EscAccordion {
         if (!area.contains(mx, my)) {
             return false;
         }
-        Font font = ctx.font();
+        FontRenderer font = ctx.font();
         int tipLine = font.lineHeight + 4;
         int row = font.lineHeight + 6;
         int contentBottom = measureContentHeight(ctx, sectionId, tipLine, row);
@@ -329,7 +348,7 @@ public final class EscAccordion {
         if (!area.contains(mx, my)) {
             return false;
         }
-        Font font = ctx.font();
+        FontRenderer font = ctx.font();
         int scroll = SCROLL.getOrDefault(sectionId, 0);
         int y = area.y() + 6 + ctx.detailTopInset() - scroll;
         int tipLine = font.lineHeight + 4;

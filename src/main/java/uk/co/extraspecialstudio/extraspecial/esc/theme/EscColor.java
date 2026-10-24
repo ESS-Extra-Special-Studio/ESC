@@ -45,7 +45,7 @@ public final class EscColor {
     }
 
     public static Integer parseHex(String raw) {
-        if (raw == null || raw.isBlank()) {
+        if (raw == null || raw.trim().isEmpty()) {
             return null;
         }
         String s = raw.trim();
