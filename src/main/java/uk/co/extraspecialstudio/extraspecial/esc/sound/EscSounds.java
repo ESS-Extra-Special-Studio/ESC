@@ -69,7 +69,7 @@ public final class EscSounds {
     }
 
     private static RegistryObject<SoundEvent> register(String path) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(Extraspecialcore.MODID, path);
-        return REGISTER.register(path.replace('.', '_'), () -> SoundEvent.createVariableRangeEvent(id));
+        ResourceLocation id = new ResourceLocation(Extraspecialcore.MODID, path);
+        return REGISTER.register(path.replace('.', '_'), () -> new SoundEvent(id));
     }
 }

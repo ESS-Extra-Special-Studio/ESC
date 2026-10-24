@@ -1,7 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
 import net.minecraft.resources.ResourceLocation;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscTheme;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscVisualBudget;
@@ -19,7 +19,7 @@ public final class EscCard {
     }
 
     public static void render(
-        GuiGraphics g,
+        EscGraphics g,
         Font font,
         EscRect area,
         EscUiStyle style,
@@ -32,7 +32,7 @@ public final class EscCard {
     }
 
     public static void render(
-        GuiGraphics g,
+        EscGraphics g,
         Font font,
         EscRect area,
         EscUiStyle style,
@@ -54,7 +54,7 @@ public final class EscCard {
      * Hub section showcase card — large icon, accent rule, badge chip.
      */
     public static void renderIdentity(
-        GuiGraphics g,
+        EscGraphics g,
         Font font,
         EscRect area,
         EscUiStyle style,
@@ -151,7 +151,7 @@ public final class EscCard {
     }
 
     private static void renderCompact(
-        GuiGraphics g,
+        EscGraphics g,
         Font font,
         EscRect area,
         EscUiStyle style,
@@ -244,7 +244,7 @@ public final class EscCard {
     }
 
     private static void drawBadgeChip(
-        GuiGraphics g,
+        EscGraphics g,
         Font font,
         EscRect box,
         String badge,

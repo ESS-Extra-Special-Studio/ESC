@@ -166,7 +166,7 @@ dependencies {
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    implementation "uk.co.extraspecialstudio:extraspeciallib:${esl_version}"
+    implementation files('C:/Users/Ksivi/IdeaProjects/ESL - 1.18.2 Forge/build/libs/extraspeciallib-1.2.0+1.18.2-forge.jar')
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
 }
@@ -235,4 +235,4 @@ tasks.register('copyToTestPacks') {
     }
 }
 
-tasks.named('build').configure { finalizedBy 'copyToTestPacks' }
+// copyToTestPacks stays available but is not part of build.

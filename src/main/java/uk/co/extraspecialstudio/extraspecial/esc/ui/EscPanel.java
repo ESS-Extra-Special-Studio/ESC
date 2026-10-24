@@ -1,6 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscFrameStyle;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscQualityMode;
@@ -53,11 +53,11 @@ public final class EscPanel {
         return new EscRect(content.x(), content.bottom() - fh, content.width(), fh);
     }
 
-    public static void fill(GuiGraphics graphics, EscRect rect, int argb) {
+    public static void fill(EscGraphics graphics, EscRect rect, int argb) {
         graphics.fill(rect.x(), rect.y(), rect.right(), rect.bottom(), argb);
     }
 
-    public static void border(GuiGraphics graphics, EscRect rect, int argb, int thickness) {
+    public static void border(EscGraphics graphics, EscRect rect, int argb, int thickness) {
         int t = Math.max(1, thickness);
         int x0 = rect.x();
         int y0 = rect.y();
@@ -70,7 +70,7 @@ public final class EscPanel {
     }
 
     /** Soft drop shadow under a rect. */
-    public static void dropShadow(GuiGraphics g, EscRect rect, float strength) {
+    public static void dropShadow(EscGraphics g, EscRect rect, float strength) {
         if (strength <= 0.01f) return;
         int layers = Math.max(1, Math.min(4, Math.round(strength * 4)));
         for (int i = layers; i >= 1; i--) {
@@ -81,7 +81,7 @@ public final class EscPanel {
     }
 
     /** Soft outer glow using border colour. */
-    public static void outerGlow(GuiGraphics g, EscRect rect, int borderArgb, float strength) {
+    public static void outerGlow(EscGraphics g, EscRect rect, int borderArgb, float strength) {
         if (strength <= 0.01f) return;
         int maxLayers = EscVisualBudget.quality() == EscQualityMode.HIGH ? 3 : 1;
         int layers = Math.max(1, Math.min(maxLayers, Math.round(strength * 3)));
@@ -93,7 +93,7 @@ public final class EscPanel {
     }
 
     /** Top edge highlight for raised panels. */
-    public static void edgeHighlight(GuiGraphics g, EscRect rect, float strength) {
+    public static void edgeHighlight(EscGraphics g, EscRect rect, float strength) {
         if (strength <= 0.01f) return;
         int a = Math.max(10, Math.min(90, Math.round(70 * strength)));
         g.fill(rect.x() + 1, rect.y() + 1, rect.right() - 1, rect.y() + 2, (a << 24) | 0xFFFFFF);
@@ -107,7 +107,7 @@ public final class EscPanel {
         return (na << 24) | (argb & 0x00FFFFFF);
     }
 
-    public static void renderFrame(GuiGraphics g, EscRect rect, int borderArgb, int thickness, EscFrameStyle style) {
+    public static void renderFrame(EscGraphics g, EscRect rect, int borderArgb, int thickness, EscFrameStyle style) {
         EscFrameStyle fs = style == null ? EscFrameStyle.SQUARE : style;
         int t = Math.max(1, thickness);
         switch (fs) {
@@ -118,7 +118,7 @@ public final class EscPanel {
         }
     }
 
-    private static void drawChamfer(GuiGraphics g, EscRect r, int c, int t, int cut) {
+    private static void drawChamfer(EscGraphics g, EscRect r, int c, int t, int cut) {
         int x0 = r.x();
         int y0 = r.y();
         int x1 = r.right();
@@ -142,7 +142,7 @@ public final class EscPanel {
         g.fill(x1 - k - t, y1 - k, x1 - k, y1, c);
     }
 
-    private static void drawBrackets(GuiGraphics g, EscRect r, int c, int t) {
+    private static void drawBrackets(EscGraphics g, EscRect r, int c, int t) {
         int arm = Math.min(14, Math.min(r.width(), r.height()) / 4);
         int x0 = r.x();
         int y0 = r.y();
@@ -162,7 +162,7 @@ public final class EscPanel {
         g.fill(x1 - t, y1 - arm, x1, y1, c);
     }
 
-    public static void renderPanel(GuiGraphics graphics, EscRect rect, EscUiStyle style) {
+    public static void renderPanel(EscGraphics graphics, EscRect rect, EscUiStyle style) {
         float opacity = style.panelOpacity();
         float shadow = style.shadowStrength();
         float glow = style.glowStrength();
@@ -182,7 +182,7 @@ public final class EscPanel {
     }
 
     /** Progress-style animated border highlight (Wave C); no-op when budget disallows. */
-    public static void animatedBorderSweep(GuiGraphics g, EscRect rect, int color, float progress01, float strength) {
+    public static void animatedBorderSweep(EscGraphics g, EscRect rect, int color, float progress01, float strength) {
         if (strength <= 0.01f || !EscVisualBudget.animatedBorders()) return;
         float p = Math.max(0f, Math.min(1f, progress01));
         int peri = 2 * (rect.width() + rect.height());
@@ -194,7 +194,7 @@ public final class EscPanel {
         drawPerimeterSegment(g, rect, color, pos, len);
     }
 
-    private static void drawPerimeterSegment(GuiGraphics g, EscRect r, int c, int start, int len) {
+    private static void drawPerimeterSegment(EscGraphics g, EscRect r, int c, int start, int len) {
         int w = r.width();
         int h = r.height();
         int peri = 2 * (w + h);

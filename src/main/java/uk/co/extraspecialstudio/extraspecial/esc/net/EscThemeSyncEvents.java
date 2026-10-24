@@ -16,7 +16,7 @@ public final class EscThemeSyncEvents {
 
     @SubscribeEvent
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
+        if (event.getPlayer() instanceof ServerPlayer player) {
             EscNet.sendThemeTo(player);
         }
     }
@@ -27,7 +27,7 @@ public final class EscThemeSyncEvents {
         }
 
         @SubscribeEvent
-        public static void onLogout(ClientPlayerNetworkEvent.LoggingOut event) {
+        public static void onLogout(ClientPlayerNetworkEvent.LoggedOutEvent event) {
             EscThemeManager.clearServerPackTheme();
         }
     }

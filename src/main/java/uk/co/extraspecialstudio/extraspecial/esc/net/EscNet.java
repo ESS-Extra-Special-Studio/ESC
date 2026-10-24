@@ -26,7 +26,7 @@ public final class EscNet {
         CHANNEL.messageBuilder(EscThemeSyncPacket.class, nextId++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(EscThemeSyncPacket::encode)
             .decoder(EscThemeSyncPacket::decode)
-            .consumerMainThread(EscThemeSyncPacket::handle)
+            .consumer(EscThemeSyncPacket::handle)
             .add();
     }
 

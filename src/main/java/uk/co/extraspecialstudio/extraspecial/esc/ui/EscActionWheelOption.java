@@ -10,19 +10,19 @@ import net.minecraft.network.chat.Component;
  */
 public record EscActionWheelOption(Component label, Component blurb) {
     public EscActionWheelOption {
-        if (label == null) label = Component.empty();
-        if (blurb == null) blurb = Component.empty();
+        if (label == null) label = new net.minecraft.network.chat.TextComponent("");
+        if (blurb == null) blurb = new net.minecraft.network.chat.TextComponent("");
     }
 
     public EscActionWheelOption(Component label) {
-        this(label, Component.empty());
+        this(label, new net.minecraft.network.chat.TextComponent(""));
     }
 
     public EscActionWheelOption(String labelKey) {
-        this(Component.translatable(labelKey), Component.empty());
+        this(new net.minecraft.network.chat.TranslatableComponent(labelKey), new net.minecraft.network.chat.TextComponent(""));
     }
 
     public EscActionWheelOption(String labelKey, String blurbKey) {
-        this(Component.translatable(labelKey), Component.translatable(blurbKey));
+        this(new net.minecraft.network.chat.TranslatableComponent(labelKey), new net.minecraft.network.chat.TranslatableComponent(blurbKey));
     }
 }

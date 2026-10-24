@@ -1,7 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.anim.EscFocusVisual;
@@ -15,7 +15,7 @@ public final class EscTypography {
     }
 
     public static void draw(
-        GuiGraphics g,
+        EscGraphics g,
         Font font,
         String text,
         int x,
@@ -41,7 +41,7 @@ public final class EscTypography {
      * text that already fits is drawn static, so this is safe as a default for such lines.
      */
     public static void drawScrolling(
-        GuiGraphics g,
+        EscGraphics g,
         Font font,
         String text,
         int x,
@@ -63,7 +63,7 @@ public final class EscTypography {
     }
 
     public static void drawCentered(
-        GuiGraphics g,
+        EscGraphics g,
         Font font,
         String text,
         int centerX,
@@ -105,7 +105,7 @@ public final class EscTypography {
         if (role != null && role.uppercase()) {
             t = t.toUpperCase();
         }
-        return Component.literal(t).withStyle(Style.EMPTY.withFont(EscFonts.DEFAULT));
+        return new net.minecraft.network.chat.TextComponent(t).withStyle(Style.EMPTY.withFont(EscFonts.DEFAULT));
     }
 
     /** Word-wrap {@code text} to {@code maxWidth}; blank input yields one empty line. */
@@ -149,7 +149,7 @@ public final class EscTypography {
      * Empty strings in {@code lines} render as a half-line spacer.
      */
     public static int drawParagraph(
-        GuiGraphics g,
+        EscGraphics g,
         Font font,
         java.util.List<String> lines,
         int x,

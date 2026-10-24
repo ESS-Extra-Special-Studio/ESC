@@ -4,11 +4,12 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.event.ScreenOpenEvent;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
 import uk.co.extraspecialstudio.extraspecial.Extraspecialcore;
 
@@ -35,7 +36,7 @@ public final class EscActionWheelClient {
         }
 
         @SubscribeEvent
-        public static void onLogout(ClientPlayerNetworkEvent.LoggingOut event) {
+        public static void onLogout(ClientPlayerNetworkEvent.LoggedOutEvent event) {
             EscActionWheel.forceResetAll();
         }
 
@@ -44,9 +45,9 @@ public final class EscActionWheelClient {
          * Opening pause would set {@code mc.screen} and force-reset the wheel; block that.
          */
         @SubscribeEvent
-        public static void onScreenOpening(ScreenEvent.Opening event) {
+        public static void onScreenOpening(ScreenOpenEvent event) {
             if (!EscActionWheel.anyOpen()) return;
-            if (event.getNewScreen() instanceof PauseScreen) {
+            if (event.getScreen() instanceof PauseScreen) {
                 event.setCanceled(true);
             }
         }
@@ -57,7 +58,7 @@ public final class EscActionWheelClient {
          * RMB cancel is polled via GLFW inside {@link EscActionWheel}.
          */
         @SubscribeEvent
-        public static void onMouseButton(InputEvent.MouseButton.Pre event) {
+        public static void onMouseButton(InputEvent.MouseInputEvent event) {
             if (!EscActionWheel.anyOpen()) return;
             if (event.getAction() == GLFW.GLFW_PRESS) {
                 event.setCanceled(true);
@@ -65,14 +66,14 @@ public final class EscActionWheelClient {
         }
 
         @SubscribeEvent
-        public static void onMouseScroll(InputEvent.MouseScrollingEvent event) {
+        public static void onMouseScroll(InputEvent.MouseScrollEvent event) {
             if (EscActionWheel.anyOpen()) {
                 event.setCanceled(true);
             }
         }
 
         @SubscribeEvent
-        public static void onInteraction(InputEvent.InteractionKeyMappingTriggered event) {
+        public static void onInteraction(InputEvent.ClickInputEvent event) {
             if (!EscActionWheel.anyOpen()) return;
             event.setCanceled(true);
             event.setSwingHand(false);
@@ -84,10 +85,9 @@ public final class EscActionWheelClient {
         private ModBus() {}
 
         @SubscribeEvent
-        public static void onRegisterOverlays(RegisterGuiOverlaysEvent event) {
-            event.registerAboveAll("esc_action_wheel",
-                (gui, guiGraphics, partialTick, screenWidth, screenHeight) ->
-                    EscActionWheel.renderAll(guiGraphics, screenWidth, screenHeight));
+        public static void onClientSetup(FMLClientSetupEvent event) {
+            OverlayRegistry.registerOverlayTop("esc_action_wheel", (gui, pose, partialTick, screenWidth, screenHeight) ->
+                EscActionWheel.renderAll(new EscGraphics(pose), screenWidth, screenHeight));
         }
     }
 }

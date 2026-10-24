@@ -1,7 +1,6 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import uk.co.extraspecialstudio.extraspecial.esc.theme.EscFrameStyle;
@@ -67,14 +66,15 @@ public final class EscButtons {
             EscUiStyle styleOverride,
             OnPress onPress
         ) {
-            super(x, y, width, height, message, onPress, DEFAULT_NARRATION);
+            super(x, y, width, height, message, onPress);
             this.styleOverride = styleOverride;
         }
 
         @Override
-        protected void renderWidget(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+        public void renderButton(PoseStack pose, int mouseX, int mouseY, float partialTick) {
+            EscGraphics g = new EscGraphics(pose);
             EscUiStyle style = styleOverride != null ? styleOverride : EscUiStyle.active();
-            EscRect box = new EscRect(getX(), getY(), getWidth(), getHeight());
+            EscRect box = new EscRect(this.x, this.y, getWidth(), getHeight());
             boolean hot = isHoveredOrFocused();
             int fill = EscPanel.withOpacity(style.panelFillColor(), Math.min(1f, style.panelOpacity() + (hot ? 0.08f : 0f)));
             EscPanel.fill(g, box, fill);
@@ -82,20 +82,15 @@ public final class EscButtons {
             // Buttons stay rectangular so themed cut-corners / brackets cannot clip labels.
             EscPanel.renderFrame(g, box, border, Math.max(1, style.panelBorderWidth()), EscFrameStyle.SQUARE);
             int textColor = hot ? (style.textColorTitle() | 0xFF000000) : (style.textColorBody() | 0xFF000000);
-            renderString(g, net.minecraft.client.Minecraft.getInstance().font, textColor);
-        }
-
-        @Override
-        public void renderString(GuiGraphics guiGraphics, Font font, int color) {
             EscWidgetText.renderScrollingStringNoShadow(
-                guiGraphics,
-                font,
+                g,
+                net.minecraft.client.Minecraft.getInstance().font,
                 getMessage(),
-                getX() + TEXT_MARGIN,
-                getY(),
-                getX() + getWidth() - TEXT_MARGIN,
-                getY() + getHeight(),
-                color
+                this.x + TEXT_MARGIN,
+                this.y,
+                this.x + getWidth() - TEXT_MARGIN,
+                this.y + getHeight(),
+                textColor
             );
         }
     }

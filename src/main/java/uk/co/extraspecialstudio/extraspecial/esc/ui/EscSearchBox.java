@@ -1,8 +1,8 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -81,16 +81,14 @@ public class EscSearchBox extends EditBox {
 
     public void layout(EscRect bounds) {
         int h = recommendedHeight(typeface);
-        setX(bounds.x());
-        setY(bounds.y());
+        this.x = bounds.x();
+        this.y = bounds.y();
         setWidth(bounds.width());
         setHeight(h);
     }
 
-    @Override
     public void setHint(Component hint) {
         this.displayHint = hint;
-        super.setHint(Component.empty());
     }
 
     @Override
@@ -103,9 +101,10 @@ public class EscSearchBox extends EditBox {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        int x0 = getX();
-        int y0 = getY();
+    public void renderButton(PoseStack pose, int mouseX, int mouseY, float partialTick) {
+        EscGraphics guiGraphics = new EscGraphics(pose);
+        int x0 = this.x;
+        int y0 = this.y;
         int x1 = x0 + getWidth();
         int y1 = y0 + getHeight();
         guiGraphics.fill(x0, y0, x1, y1, backgroundColor);

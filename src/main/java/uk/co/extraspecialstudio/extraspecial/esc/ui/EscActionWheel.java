@@ -3,7 +3,7 @@ package uk.co.extraspecialstudio.extraspecial.esc.ui;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
@@ -32,7 +32,7 @@ import java.util.function.Supplier;
  *         new EscActionWheelOption("mymod.opt.b", "mymod.blurb.b")))
  *     .canOpen(() -> hasTargets())
  *     .onConfirm(index -> sendOrder(index))
- *     .hubSubtitle(() -> Component.literal(count + " ready"));
+ *     .hubSubtitle(() -> new net.minecraft.network.chat.TextComponent(count + " ready"));
  * }</pre>
  */
 public final class EscActionWheel {
@@ -58,9 +58,9 @@ public final class EscActionWheel {
     private Supplier<List<EscActionWheelOption>> options = List::of;
     private BooleanSupplier canOpen = () -> true;
     private IntConsumer onConfirm = i -> {};
-    private Supplier<Component> hubSubtitle = () -> Component.empty();
-    private Supplier<Component> cancelLabel = () -> Component.translatable("esc.action_wheel.cancel");
-    private Supplier<Component> idleHint = () -> Component.translatable("esc.action_wheel.hint");
+    private Supplier<Component> hubSubtitle = () -> new net.minecraft.network.chat.TextComponent("");
+    private Supplier<Component> cancelLabel = () -> new net.minecraft.network.chat.TranslatableComponent("esc.action_wheel.cancel");
+    private Supplier<Component> idleHint = () -> new net.minecraft.network.chat.TranslatableComponent("esc.action_wheel.hint");
     private boolean doubleTapRepeat = true;
     private boolean releaseMouse = true;
     private boolean actionBarOnConfirm = true;
@@ -134,17 +134,17 @@ public final class EscActionWheel {
     }
 
     public EscActionWheel hubSubtitle(Supplier<Component> hubSubtitle) {
-        this.hubSubtitle = hubSubtitle != null ? hubSubtitle : () -> Component.empty();
+        this.hubSubtitle = hubSubtitle != null ? hubSubtitle : () -> new net.minecraft.network.chat.TextComponent("");
         return this;
     }
 
     public EscActionWheel cancelLabel(Supplier<Component> cancelLabel) {
-        this.cancelLabel = cancelLabel != null ? cancelLabel : () -> Component.translatable("esc.action_wheel.cancel");
+        this.cancelLabel = cancelLabel != null ? cancelLabel : () -> new net.minecraft.network.chat.TranslatableComponent("esc.action_wheel.cancel");
         return this;
     }
 
     public EscActionWheel idleHint(Supplier<Component> idleHint) {
-        this.idleHint = idleHint != null ? idleHint : () -> Component.translatable("esc.action_wheel.hint");
+        this.idleHint = idleHint != null ? idleHint : () -> new net.minecraft.network.chat.TranslatableComponent("esc.action_wheel.hint");
         return this;
     }
 
@@ -249,7 +249,7 @@ public final class EscActionWheel {
     }
 
     /** Called by ESC overlay registration — do not call from feature mods. */
-    static void renderAll(GuiGraphics g, int screenWidth, int screenHeight) {
+    static void renderAll(EscGraphics g, int screenWidth, int screenHeight) {
         if (openWheel != null && openWheel.open) {
             openWheel.renderInstance(g, screenWidth, screenHeight);
         }
@@ -463,7 +463,7 @@ public final class EscActionWheel {
         }
     }
 
-    private void renderInstance(GuiGraphics g, int screenWidth, int screenHeight) {
+    private void renderInstance(EscGraphics g, int screenWidth, int screenHeight) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.options.hideGui) return;
         List<EscActionWheelOption> opts = cachedOptions;
@@ -567,7 +567,7 @@ public final class EscActionWheel {
         }
     }
 
-    private static void drawWedgeFan(GuiGraphics g, int cx, int cy, int inner, int outer,
+    private static void drawWedgeFan(EscGraphics g, int cx, int cy, int inner, int outer,
                                      int index, int count, int argb) {
         double step = (Math.PI * 2.0) / count;
         double a0 = step * index;
@@ -582,7 +582,7 @@ public final class EscActionWheel {
         }
     }
 
-    private static void drawLine(GuiGraphics g, int x0, int y0, int x1, int y1, int argb) {
+    private static void drawLine(EscGraphics g, int x0, int y0, int x1, int y1, int argb) {
         int steps = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
         if (steps <= 0) {
             EscPanel.fill(g, new EscRect(x0, y0, 1, 1), argb);

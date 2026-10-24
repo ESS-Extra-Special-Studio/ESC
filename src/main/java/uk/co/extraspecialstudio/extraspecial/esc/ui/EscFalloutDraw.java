@@ -1,7 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.ui;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -22,11 +22,11 @@ public final class EscFalloutDraw {
     /** Soft scanline tint (ARGB). */
     public static final int SCANLINE = 0x22001008;
 
-    public static void scanlines(GuiGraphics graphics, EscRect rect, int spacing) {
+    public static void scanlines(EscGraphics graphics, EscRect rect, int spacing) {
         scanlines(graphics, rect, spacing, 1);
     }
 
-    public static void scanlines(GuiGraphics graphics, EscRect rect, int spacing, int thickness) {
+    public static void scanlines(EscGraphics graphics, EscRect rect, int spacing, int thickness) {
         int step = Math.max(2, spacing);
         int thick = Math.max(1, thickness);
         int y1 = rect.bottom();
@@ -35,7 +35,7 @@ public final class EscFalloutDraw {
         }
     }
 
-    public static void greenRule(GuiGraphics graphics, int x0, int y, int x1, int color) {
+    public static void greenRule(EscGraphics graphics, int x0, int y, int x1, int color) {
         if (x1 <= x0) {
             return;
         }
@@ -45,7 +45,7 @@ public final class EscFalloutDraw {
     /**
      * Horizontal rule with a gap under {@code gapX0..gapX1} (selected Fallout tab underline break).
      */
-    public static void greenRuleWithGap(GuiGraphics graphics, int x0, int y, int x1, int gapX0, int gapX1, int color) {
+    public static void greenRuleWithGap(EscGraphics graphics, int x0, int y, int x1, int gapX0, int gapX1, int color) {
         if (gapX1 <= gapX0) {
             greenRule(graphics, x0, y, x1, color);
             return;
@@ -59,7 +59,7 @@ public final class EscFalloutDraw {
      * Layout: {@code LABEL} then track; optional right caption (e.g. {@code 20/20}).
      */
     public static void labeledBar(
-        GuiGraphics graphics,
+        EscGraphics graphics,
         Font font,
         String label,
         String rightCaption,
@@ -74,12 +74,12 @@ public final class EscFalloutDraw {
     ) {
         int barH = Math.max(4, height);
         int labelW = font.width(label) + 4;
-        graphics.drawString(font, Component.literal(label), x, y + Math.max(0, (barH - 8) / 2), labelColor, false);
+        graphics.drawString(font, new net.minecraft.network.chat.TextComponent(label), x, y + Math.max(0, (barH - 8) / 2), labelColor, false);
         int trackX = x + labelW;
         int trackW = Math.max(8, width - labelW);
         if (rightCaption != null && !rightCaption.isEmpty()) {
             int rw = font.width(rightCaption);
-            graphics.drawString(font, Component.literal(rightCaption),
+            graphics.drawString(font, new net.minecraft.network.chat.TextComponent(rightCaption),
                 trackX + trackW - rw, y + Math.max(0, (barH - 8) / 2), labelColor, false);
             trackW = Math.max(8, trackW - rw - 4);
         }

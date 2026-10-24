@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import uk.co.extraspecialstudio.extraspecial.esc.gui.asset.EscAssetRegistry;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -72,11 +74,14 @@ public final class EscGuiProfileStore {
         if (mc == null || mc.getResourceManager() == null) {
             return Optional.empty();
         }
-        Optional<Resource> resource = mc.getResourceManager().getResource(loc);
-        if (resource.isEmpty()) {
+        final Resource resource;
+        try {
+            resource = mc.getResourceManager().getResource(loc);
+        } catch (IOException missing) {
             return Optional.empty();
         }
-        try (Reader reader = resource.get().openAsReader()) {
+        try (InputStream in = resource.getInputStream();
+             Reader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
             StringBuilder sb = new StringBuilder();
             char[] buf = new char[4096];
             int read;
@@ -146,7 +151,7 @@ public final class EscGuiProfileStore {
         if (mc == null || mc.getResourceManager() == null) {
             return ids;
         }
-        for (ResourceLocation loc : mc.getResourceManager().listResources("esc/gui", rl -> rl.getPath().endsWith(".json")).keySet()) {
+        for (ResourceLocation loc : mc.getResourceManager().listResources("esc/gui", path -> path.endsWith(".json"))) {
             String path = loc.getPath();
             String local = path.substring("esc/gui/".length());
             if (local.endsWith(".json")) {

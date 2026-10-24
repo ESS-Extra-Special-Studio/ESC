@@ -1,7 +1,7 @@
 package uk.co.extraspecialstudio.extraspecial.esc.gui.asset;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import uk.co.extraspecialstudio.extraspecial.esc.ui.EscGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import uk.co.extraspecialstudio.extraspecial.esc.gui.profile.EscGuiBindings;
 import uk.co.extraspecialstudio.extraspecial.esc.ui.EscRect;
@@ -14,7 +14,7 @@ import java.util.function.Consumer;
  * Runtime draw context passed to {@link EscAssetRenderer} implementations.
  */
 public final class EscAssetRenderContext {
-    private final GuiGraphics graphics;
+    private final EscGraphics graphics;
     private final Font font;
     private final EscRect area;
     private final EscUiStyle style;
@@ -24,7 +24,7 @@ public final class EscAssetRenderContext {
     private final Consumer<String> actionInvoker;
 
     public EscAssetRenderContext(
-        GuiGraphics graphics,
+        EscGraphics graphics,
         Font font,
         EscRect area,
         EscUiStyle style,
@@ -43,7 +43,7 @@ public final class EscAssetRenderContext {
         this.actionInvoker = actionInvoker;
     }
 
-    public GuiGraphics graphics() {
+    public EscGraphics graphics() {
         return graphics;
     }
 
