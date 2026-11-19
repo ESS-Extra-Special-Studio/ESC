@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Built-in ESC font identifiers for {@link net.minecraft.network.chat.Style#withFont(ResourceLocation)}.
- * Each id maps to assets under {@code extraspecialcore:font/&lt;id&gt;.json}. See {@code FONT_LICENSES.txt}.
+ * Each id maps to assets under {@code extraspecialcore:font/&lt;id&gt;.json}. See {@code META-INF/extraspecialcore/font_licenses.txt}.
  */
 public final class EscFonts {
 
