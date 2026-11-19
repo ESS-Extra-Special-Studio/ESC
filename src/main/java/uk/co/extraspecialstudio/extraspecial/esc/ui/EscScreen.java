@@ -57,6 +57,28 @@ public abstract class EscScreen extends Screen {
     }
 
     /**
+     * 1.20.2+ {@link Screen#render} already calls {@link #renderBackground} at the start of
+     * {@code super.render}. Leave this empty so vanilla world-dimming is not painted
+     * <em>over</em> chrome drawn before widgets (Pip-Boy panels, EscPanel, etc.).
+     * <p>
+     * Screens that need Forge-style world dimming should call {@link #renderWorldDim}
+     * once <em>before</em> painting EscPanel chrome (see Call Airdrop).
+     */
+    @Override
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    }
+
+    /**
+     * Classic Forge {@link #renderTransparentBackground} dim for in-world UIs.
+     * Call once before EscPanel / custom chrome — never from {@link #renderBackground}.
+     */
+    protected void renderWorldDim(GuiGraphics graphics) {
+        if (this.minecraft != null && this.minecraft.level != null) {
+            this.renderTransparentBackground(graphics);
+        }
+    }
+
+    /**
      * Draws content + default footer outlines. Subclasses that override {@link #render}
      * without calling {@code super.render} should call this when debugging layout.
      */

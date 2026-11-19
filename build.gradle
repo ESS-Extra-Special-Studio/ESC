@@ -223,7 +223,7 @@ tasks.register('copyToTestPacks') {
     doLast {
         def jar = tasks.named('jar', Jar).get().archiveFile.get().asFile
         def packs = [
-            file("${System.getProperty('user.home')}/curseforge/minecraft/Instances/C.Ideas/mods")
+            file("${System.getProperty('user.home')}/curseforge/minecraft/Instances/1.20.4 forge test pack/mods")
         ]
         packs.each { dest ->
             if (dest.exists()) {
