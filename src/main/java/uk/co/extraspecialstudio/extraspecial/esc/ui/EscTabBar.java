@@ -31,7 +31,6 @@ public final class EscTabBar {
         public String label() { return this.label; }
         public boolean enabled() { return this.enabled; }
 
-        
 
         public static Tab of(String id, String label) {
             return new Tab(id, label, true);
@@ -56,7 +55,9 @@ public final class EscTabBar {
         private final int fgDisabled;
         private final int underlineSelected;
         private final int underlineIdle;
+        /** When true, selected tab is drawn as {@code [ LABEL ]} with a rule gap under it (Fallout). */
         private final boolean bracketSelected;
+        /** When true, skip opaque tab cell fills (text + rule only). */
         private final boolean textOnly;
 
         public Style(int tabWidth, int tabHeight, int gap, int bgSelected, int bgIdle, int bgHover, int bgDisabled, int fgSelected, int fgIdle, int fgDisabled, int underlineSelected, int underlineIdle, boolean bracketSelected, boolean textOnly) {

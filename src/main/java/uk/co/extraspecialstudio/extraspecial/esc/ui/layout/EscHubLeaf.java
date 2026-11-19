@@ -14,11 +14,14 @@ public final class EscHubLeaf {
     private final String recommendHint;
 
     public EscHubLeaf(String id, String title, String subtitle, ResourceLocation icon, boolean enabled, String recommendHint) {
-    Objects.requireNonNull(id, "id");
-    Objects.requireNonNull(title, "title");
-    subtitle = subtitle == null ? "" : subtitle;
-    recommendHint = recommendHint == null ? "" : recommendHint;
-
+        Objects.requireNonNull(id, "id");
+        Objects.requireNonNull(title, "title");
+        if (subtitle == null) {
+            subtitle = "";
+        }
+        if (recommendHint == null) {
+            recommendHint = "";
+        }
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
@@ -41,8 +44,6 @@ public final class EscHubLeaf {
     public EscHubLeaf(String id, String title, String subtitle) {
         this(id, title, subtitle, null, true, "");
     }
-
-    
 
     public boolean disabled() {
         return !enabled;

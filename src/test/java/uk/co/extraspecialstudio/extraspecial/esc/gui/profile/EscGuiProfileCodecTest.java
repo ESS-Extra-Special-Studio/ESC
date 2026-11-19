@@ -36,7 +36,15 @@ class EscGuiProfileCodecTest {
 
     @Test
     void parsesDemoSettingsShape() {
-        String json = "{\n  \"id\": \"extraspecialcore:demo_settings\",\n  \"title\": \"Demo Settings\",\n  \"layout\": \"CLASSIC\",\n  \"components\": [\n    { \"asset\": \"esc:button_bar\", \"slot\": \"footer\", \"props\": { \"buttons\": \"apply,back\" } }\n  ],\n  \"actions\": { \"back\": \"action:back\" }\n}";
+        String json = "{"
+            + "\"id\": \"extraspecialcore:demo_settings\","
+            + "\"title\": \"Demo Settings\","
+            + "\"layout\": \"CLASSIC\","
+            + "\"components\": ["
+            + "{ \"asset\": \"esc:button_bar\", \"slot\": \"footer\", \"props\": { \"buttons\": \"apply,back\" } }"
+            + "],"
+            + "\"actions\": { \"back\": \"action:back\" }"
+            + "}";
         EscGuiProfile profile = EscGuiProfileCodec.fromJson(json);
         assertEquals("extraspecialcore:demo_settings", profile.id());
         assertEquals(1, profile.components().size());

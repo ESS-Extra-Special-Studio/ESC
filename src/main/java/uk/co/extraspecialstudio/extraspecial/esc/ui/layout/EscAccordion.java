@@ -240,8 +240,11 @@ public final class EscAccordion {
     private static int indexOfGroup(EscHubLayoutContext ctx, String sectionId, String groupId) {
         List<NavItem> nav = buildNav(ctx, sectionId);
         for (int i = 0; i < nav.size(); i++) {
-            if (nav.get(i) instanceof NavItem.Group && ((NavItem.Group) (nav.get(i))).group().id().equals(groupId)) {
-                return i;
+            if (nav.get(i) instanceof NavItem.Group) {
+                NavItem.Group g = (NavItem.Group) nav.get(i);
+                if (g.group().id().equals(groupId)) {
+                    return i;
+                }
             }
         }
         return 0;

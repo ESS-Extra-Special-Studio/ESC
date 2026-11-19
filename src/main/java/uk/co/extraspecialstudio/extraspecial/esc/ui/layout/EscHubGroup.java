@@ -19,13 +19,16 @@ public final class EscHubGroup {
     private final ResourceLocation icon;
 
     public EscHubGroup(String id, String title, List<EscHubLeaf> leaves, ResourceLocation icon) {
-    Objects.requireNonNull(id, "id");
-    Objects.requireNonNull(title, "title");
-    leaves = leaves == null ? java.util.Collections.emptyList() : java.util.Collections.unmodifiableList(new java.util.ArrayList<>(leaves));
-    if (icon == null) {
-    icon = firstLeafIcon(leaves);
-    }
-
+        Objects.requireNonNull(id, "id");
+        Objects.requireNonNull(title, "title");
+        if (leaves == null) {
+            leaves = java.util.Collections.emptyList();
+        } else {
+            leaves = java.util.Collections.unmodifiableList(new java.util.ArrayList<EscHubLeaf>(leaves));
+        }
+        if (icon == null) {
+            icon = firstLeafIcon(leaves);
+        }
         this.id = id;
         this.title = title;
         this.leaves = leaves;
@@ -40,8 +43,6 @@ public final class EscHubGroup {
     public EscHubGroup(String id, String title, List<EscHubLeaf> leaves) {
         this(id, title, leaves, firstLeafIcon(leaves));
     }
-
-    
 
     /** True when this group is a single openable entry (common for UTILITY). */
     public boolean singleton() {

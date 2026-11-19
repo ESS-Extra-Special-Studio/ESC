@@ -13,10 +13,11 @@ public final class EscHubSection {
     private final ResourceLocation icon;
 
     public EscHubSection(String id, String title, String subtitle, int badgeCount, ResourceLocation icon) {
-    Objects.requireNonNull(id, "id");
-    Objects.requireNonNull(title, "title");
-    subtitle = subtitle == null ? "" : subtitle;
-
+        Objects.requireNonNull(id, "id");
+        Objects.requireNonNull(title, "title");
+        if (subtitle == null) {
+            subtitle = "";
+        }
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
@@ -34,5 +35,4 @@ public final class EscHubSection {
         this(id, title, subtitle, badgeCount, null);
     }
 
-    
 }
