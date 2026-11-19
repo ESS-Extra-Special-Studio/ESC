@@ -1,4 +1,8 @@
-﻿Extra Special Core 2.1.0
+Extra Special Core 2.1.1
+Fixed:
+EscScreen on 1.20.2+ no longer lets vanilla Screen.render re-dim UI chrome painted before widgets (Pip-Boy / radio panels looked muddy). Use renderWorldDim before panel chrome when a world dim is wanted.
+Font license and menu sound readme files moved out of assets/ so resource-pack reload no longer logs invalid uppercase paths.
+Extra Special Core 2.1.0
 Added:
 Hold-to-aim action wheel (`EscActionWheel`). A consumer mod registers a key, options, and a confirm callback. ESC draws the wheel, plays the menu cue, and keeps hotbar keys from changing slots while it is open.
 Changed:
